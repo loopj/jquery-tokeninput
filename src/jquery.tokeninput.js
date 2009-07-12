@@ -547,7 +547,7 @@ $.TokenList = function (input, settings) {
         } else {
 			var queryStringDelimiter = settings.url.indexOf("?") < 0 ? "?" : "&";
 			var callback = function(results) {
-			  if($.isFunction(settings.onResult) {
+			  if($.isFunction(settings.onResult)) {
 			      results = settings.onResult.call(this, results);
 			  }
               cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
