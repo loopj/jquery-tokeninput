@@ -84,7 +84,7 @@ $.TokenList = function (input, settings) {
     var timeout;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\">")
+    var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
         .css({
             outline: "none"
         })
@@ -343,7 +343,7 @@ $.TokenList = function (input, settings) {
         
         token_count++;
         
-        if(settings.tokenLimit != null && settings.tokenLimit >= token_count) {
+        if(settings.tokenLimit != null && token_count >= settings.tokenLimit) {
             input_box.hide();
             hide_dropdown();
         }
