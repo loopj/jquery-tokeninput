@@ -195,7 +195,7 @@ $.TokenList = function (input, settings) {
     // The list to store the token items in
     var token_list = $("<ul />")
         .addClass(settings.classes.tokenList)
-        .insertAfter(hidden_input)
+        .insertBefore(hidden_input)
         .click(function (event) {
             var li = get_element_from_event(event, "li");
             if(li && li.get(0) != input_token.get(0)) {
@@ -259,7 +259,7 @@ $.TokenList = function (input, settings) {
                     .addClass(settings.classes.token)
                     .insertBefore(input_token);
 
-                $("<span>x</span>")
+                $("<span>&times;</span>")
                     .addClass(settings.classes.tokenDelete)
                     .appendTo(this_token)
                     .click(function () {
