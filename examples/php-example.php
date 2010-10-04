@@ -1,4 +1,4 @@
-<?
+<?php
 mysql_pconnect("localhost", "username", "password") or die("Could not connect");
 mysql_select_db("mydatabase") or die("Could not select database");
  

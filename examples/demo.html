@@ -2,21 +2,61 @@
 <head>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
 
-    <script type="text/javascript" src="jquery.tokeninput.js"></script>
+    <script type="text/javascript" src="../src/jquery.tokeninput.js"></script>
 
-    <link rel="stylesheet" href="styles/token-input.css" type="text/css" />
-    <link rel="stylesheet" href="styles/token-input-facebook.css" type="text/css" />
+    <link rel="stylesheet" href="../styles/token-input-mac.css" type="text/css" />
+    <link rel="stylesheet" href="../styles/token-input-facebook.css" type="text/css" />
+    <link rel="stylesheet" href="../styles/token-input.css" type="text/css" />
 
 
     <script type="text/javascript">
     $(document).ready(function() {
-        $("#tokenize").tokenInput("http://loopj.com/tokeninput/tvshows.php", {
-            hintText: "Type in the names of your favorite TV shows",
-            noResultsText: "No results",
-            searchingText: "Searching..."
-        });
-
-        $("#tokenize2").tokenInput("/tokeninput/tvshows.php", {
+        $("#tokenize-mac").tokenInput("tvshows.js", {
+    		  classes: {
+    		      fieldset: "token-input-mac",
+              tokenList: "token-input-list-mac",
+              token: "token-input-token-mac",
+              tokenDelete: "token-input-delete-token-mac",
+              selectedToken: "token-input-selected-token-mac",
+              highlightedToken: "token-input-highlighted-token-mac",
+              dropdown: "token-input-dropdown-mac",
+              dropdownCategory: "token-input-dropdown-category-mac",
+              dropdownItem: "token-input-dropdown-item-mac",
+              dropdownItemZebra: "token-input-dropdown-item-mac odd",
+              dropdownItemDescription: "token-input-dropdown-item-description-mac",
+              selectedDropdownItem: "token-input-selected-dropdown-item-mac",
+              inputToken: "token-input-input-token-mac"
+          },
+          categories: true,
+          description: true,
+          dropdownAnimation: 'show',
+          dropdownDuration: 1,
+          duplicates: false,
+          existingParam: 'existing',
+          hintText: "Type in the names of your favorite TV shows",
+          noResultsText: "No TV shows found!",
+          searchingText: "Searching...",
+          method: "POST",
+          minChars: 0,
+          onResult: null,
+          prePopulate: function() {
+            var json = [];
+            $.ajax({
+              async: false,
+              data: {
+                op: 'prepopulate',
+                prepopulate: ids.val().replace(/,$/, '')
+              },
+              success: function(data) {
+                json = eval(data);
+              },
+              url: 'prepopulate.js'
+            });
+            return json;
+          },
+          tokenDuplicates: false,
+    		});
+        $("#tokenize-facebook").tokenInput("tvshows.js", {
             classes: {
                 tokenList: "token-input-list-facebook",
                 token: "token-input-token-facebook",
@@ -30,21 +70,37 @@
                 inputToken: "token-input-input-token-facebook"
             }
         });
+        $("#tokenize").tokenInput("tvshows.js", {
+            hintText: "Type in the names of your favorite TV shows",
+            noResultsText: "No results",
+            searchingText: "Searching..."
+        });
     });
     </script>
 </head>
 
 <body>
     <h1>Jquery Tokenizing Autocomplete Input</h1>
-
     <div>
-        <h2>List style</h2>
-        <input type="text" id="tokenize" name="blah" />
+        <h2>Mac style (New)</h2>
+        <p><strong>Features:</strong>
+          <ul>
+            <li>Categories</li>
+            <li>Descriptions (the grey text on the right of the list item)</li>
+            <li>Duplicate support is also extended to the drop down list (hide items that are already in the token list)</li>
+            <li>Prepopulate tokens</li>
+          </ul>
+          Documentation is limited, please look at source code of HTML and JS to figure it out. Contact Mark Carver if you have any questions: <a href="mailto:mark.carver@me.com?subject=jQuery Tokenizing Autocomplete Input 1.2">mark.carver@me.com</a>
+        </p>
+        <input type="text" id="tokenize-mac" name="blah2" value="978" />
     </div>
-
     <div>
-        <h2>Facebook style</h2>
-        <input type="text" id="tokenize2" name="blah2" />
+        <h2>Facebook style (Original)</h2>
+        <input type="text" id="tokenize-facebook" name="blah2" />
+    </div>
+    <div>
+        <h2>List style (Original)</h2>
+        <input type="text" id="tokenize" name="blah" />
     </div>
 </body>
 </html>
