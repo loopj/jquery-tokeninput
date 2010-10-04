@@ -11,7 +11,8 @@
 
     <script type="text/javascript">
     $(document).ready(function() {
-        $("#tokenize-mac").tokenInput("tvshows.js", {
+        var tokenMac = $("#tokenize-mac");
+        tokenMac.tokenInput("tvshows.js", {
     		  classes: {
     		      fieldset: "token-input-mac",
               tokenList: "token-input-list-mac",
@@ -43,10 +44,11 @@
             var json = [];
             $.ajax({
               async: false,
-              data: {
-                op: 'prepopulate',
-                prepopulate: ids.val().replace(/,$/, '')
-              },
+              // Send existing values to your server so it can sort your list
+              // data: {
+              //   op: 'prepopulate',
+              //   prepopulate: tokenMac.val().replace(/,$/, '')
+              // },
               success: function(data) {
                 json = eval(data);
               },
