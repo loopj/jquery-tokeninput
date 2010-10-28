@@ -453,7 +453,7 @@ $.TokenList = function (input, settings) {
 
     // Populate the results dropdown with some results
     function populate_dropdown (query, results) {
-        if(results.length) {
+        if(results && results.length) {
             dropdown.empty();
             var dropdown_ul = $("<ul>")
                 .appendTo(dropdown)
