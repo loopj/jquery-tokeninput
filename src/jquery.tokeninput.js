@@ -297,16 +297,7 @@ $.TokenList = function (input, settings) {
 
     // Get an element of a particular type from an event (click/mouseover etc)
     function get_element_from_event (event, element_type) {
-        var target = $(event.target);
-        var element = null;
-
-        if(target.is(element_type)) {
-            element = target;
-        } else if(target.parent(element_type).length) {
-            element = target.parent(element_type+":first");
-        }
-
-        return element;
+        return $(event.target).closest(element_type);
     }
 
     // Inner function to a token to the list
