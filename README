@@ -38,3 +38,12 @@ How to Use This jQuery Plugin:
   </script>
 
 * A list of selected item ids is created inside the original text entry, process them as usual when the form is submitted.
+
+How to use the demo
+------------------------------
+If you're using Ruby, install Haml, Sinatra and Json gems first.
+
+       gem install sinatra haml json
+
+After that, run ruby ./examples/sinatra-example.rb
+It already has a small vocabulary and will work for your ad-hoc tests.
