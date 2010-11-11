@@ -13,6 +13,7 @@
 $.fn.tokenInput = function (url, options) {
     var settings = $.extend({
         url: url,
+        hidden_name: options.hidden_name || 'autocomplete',
         hintText: "Type in a search term",
         noResultsText: "No results",
         searchingText: "Searching...",
@@ -312,8 +313,14 @@ $.TokenList = function (input, settings) {
     // Inner function to a token to the list
     function insert_token(id, value) {
       var this_token = $("<li><p>"+ value +"</p> </li>")
-      .addClass(settings.classes.token)
-      .insertBefore(input_token);
+        .addClass(settings.classes.token)
+
+      if (settings.destination)
+        this_token.appendTo(settings.destination)
+      else
+        this_token.insertBefore(input_token)
+
+      $("<input type='hidden' name='" + settings.hidden_name + "[]' value='" + id + "'/>").appendTo(this_token)
 
       // The 'delete token' button
       $("<span>x</span>")
