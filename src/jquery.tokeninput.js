@@ -9,7 +9,6 @@
  */
 
 (function($) {
-
 $.fn.tokenInput = function (url, options) {
     var settings = $.extend({
         url: url,
@@ -21,7 +20,7 @@ $.fn.tokenInput = function (url, options) {
         minChars: 1,
         tokenLimit: null,
         jsonContainer: null,
-        method: "GET",
+        method: "POST",
         contentType: "json",
         queryParam: "q",
         onResult: null
@@ -82,8 +81,8 @@ $.TokenList = function (input, settings) {
     // Keep track of the timeout
     var timeout;
 
-    // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\">")
+    // Create a new text input an attach keyup events KKK
+    var input_box = $(input)
         .css({
             outline: "none"
         })
@@ -95,99 +94,8 @@ $.TokenList = function (input, settings) {
         .blur(function () {
             hide_dropdown();
         })
-        .keydown(function (event) {
-            var previous_token;
-            var next_token;
+    .keydown(keydown);
 
-            switch(event.keyCode) {
-                case KEY.LEFT:
-                case KEY.RIGHT:
-                case KEY.UP:
-                case KEY.DOWN:
-                    if(!$(this).val()) {
-                        previous_token = input_token.prev();
-                        next_token = input_token.next();
-
-                        if((previous_token.length && previous_token.get(0) === selected_token) || (next_token.length && next_token.get(0) === selected_token)) {
-                            // Check if there is a previous/next token and it is selected
-                            if(event.keyCode == KEY.LEFT || event.keyCode == KEY.UP) {
-                                deselect_token($(selected_token), POSITION.BEFORE);
-                            } else {
-                                deselect_token($(selected_token), POSITION.AFTER);
-                            }
-                        } else if((event.keyCode == KEY.LEFT || event.keyCode == KEY.UP) && previous_token.length) {
-                            // We are moving left, select the previous token if it exists
-                            select_token($(previous_token.get(0)));
-                        } else if((event.keyCode == KEY.RIGHT || event.keyCode == KEY.DOWN) && next_token.length) {
-                            // We are moving right, select the next token if it exists
-                            select_token($(next_token.get(0)));
-                        }
-                    } else {
-                        var dropdown_item = null;
-
-                        if(event.keyCode == KEY.DOWN || event.keyCode == KEY.RIGHT) {
-                            dropdown_item = $(selected_dropdown_item).next();
-                        } else {
-                            dropdown_item = $(selected_dropdown_item).prev();
-                        }
-
-                        if(dropdown_item.length) {
-                            select_dropdown_item(dropdown_item);
-                        }
-                        return false;
-                    }
-                    break;
-
-                case KEY.BACKSPACE:
-                    previous_token = input_token.prev();
-
-                    if(!$(this).val().length) {
-                        if(selected_token) {
-                            delete_token($(selected_token));
-                        } else if(previous_token.length) {
-                            select_token($(previous_token.get(0)));
-                        }
-
-                        return false;
-                    } else if($(this).val().length == 1) {
-                        hide_dropdown();
-                    } else {
-                        // set a timeout just long enough to let this function finish.
-                        setTimeout(function(){do_search(false);}, 5);
-                    }
-                    break;
-
-                case KEY.TAB:
-                case KEY.RETURN:
-                case KEY.COMMA:
-                  if(selected_dropdown_item) {
-                    add_token($(selected_dropdown_item));
-                    return false;
-                  }
-                  break;
-
-                case KEY.ESC:
-                  hide_dropdown();
-                  return true;
-
-                default:
-                    if(is_printable_character(event.keyCode)) {
-                      // set a timeout just long enough to let this function finish.
-                      setTimeout(function(){do_search(false);}, 5);
-                    }
-                    break;
-            }
-        });
-
-    // Keep a reference to the original input box
-    var hidden_input = $(input)
-                           .hide()
-                           .focus(function () {
-                               input_box.focus();
-                           })
-                           .blur(function () {
-                               input_box.blur();
-                           });
 
     // Keep a reference to the selected token and dropdown item
     var selected_token = null;
@@ -196,7 +104,7 @@ $.TokenList = function (input, settings) {
     // The list to store the token items in
     var token_list = $("<ul />")
         .addClass(settings.classes.tokenList)
-        .insertAfter(hidden_input)
+        .insertAfter(input_box)
         .click(function (event) {
             var li = get_element_from_event(event, "li");
             if(li && li.get(0) != input_token.get(0)) {
@@ -241,8 +149,8 @@ $.TokenList = function (input, settings) {
     var input_token = $("<li />")
         .addClass(settings.classes.inputToken)
         .appendTo(token_list)
-        .append(input_box);
-
+        .append();
+    input_box.appendTo(input_token)
     init_list();
 
     //
@@ -276,11 +184,91 @@ $.TokenList = function (input, settings) {
 
                 // Don't show the help dropdown, they've got the idea
                 hide_dropdown();
-
-                // Save this token id
-                var id_string = li_data[i].id + ","
-                hidden_input.val(hidden_input.val() + id_string);
             }
+        }
+    }
+
+    function keydown (event) {
+        var previous_token;
+        var next_token;
+
+        switch(event.keyCode) {
+            case KEY.LEFT:
+            case KEY.RIGHT:
+            case KEY.UP:
+            case KEY.DOWN:
+                if(!$(this).val()) {
+                    previous_token = input_token.prev();
+                    next_token = input_token.next();
+
+                    if((previous_token.length && previous_token.get(0) === selected_token) || (next_token.length && next_token.get(0) === selected_token)) {
+                        // Check if there is a previous/next token and it is selected
+                        if(event.keyCode == KEY.LEFT || event.keyCode == KEY.UP) {
+                            deselect_token($(selected_token), POSITION.BEFORE);
+                        } else {
+                            deselect_token($(selected_token), POSITION.AFTER);
+                        }
+                    } else if((event.keyCode == KEY.LEFT || event.keyCode == KEY.UP) && previous_token.length) {
+                        // We are moving left, select the previous token if it exists
+                        select_token($(previous_token.get(0)));
+                    } else if((event.keyCode == KEY.RIGHT || event.keyCode == KEY.DOWN) && next_token.length) {
+                        // We are moving right, select the next token if it exists
+                        select_token($(next_token.get(0)));
+                    }
+                } else {
+                    var dropdown_item = null;
+
+                    if(event.keyCode == KEY.DOWN || event.keyCode == KEY.RIGHT) {
+                        dropdown_item = $(selected_dropdown_item).next();
+                    } else {
+                        dropdown_item = $(selected_dropdown_item).prev();
+                    }
+
+                    if(dropdown_item.length) {
+                        select_dropdown_item(dropdown_item);
+                    }
+                    return false;
+                }
+                break;
+
+            case KEY.BACKSPACE:
+                previous_token = input_token.prev();
+
+                if(!$(this).val().length) {
+                    if(selected_token) {
+                        delete_token($(selected_token));
+                    } else if(previous_token.length) {
+                        select_token($(previous_token.get(0)));
+                    }
+
+                    return false;
+                } else if($(this).val().length == 1) {
+                    hide_dropdown();
+                } else {
+                    // set a timeout just long enough to let this function finish.
+                    setTimeout(function(){do_search(false);}, 5);
+                }
+                break;
+
+            case KEY.TAB:
+            case KEY.RETURN:
+            case KEY.COMMA:
+              if(selected_dropdown_item) {
+                add_token($(selected_dropdown_item));
+                return false;
+              }
+              break;
+
+            case KEY.ESC:
+              hide_dropdown();
+              return true;
+
+            default:
+                if(is_printable_character(event.keyCode)) {
+                  // set a timeout just long enough to let this function finish.
+                  setTimeout(function(){do_search(false);}, 5);
+                }
+                break;
         }
     }
 
@@ -349,10 +337,6 @@ $.TokenList = function (input, settings) {
         // Don't show the help dropdown, they've got the idea
         hide_dropdown();
 
-        // Save this token id
-        var id_string = li_data.id + ","
-        hidden_input.val(hidden_input.val() + id_string);
-        
         token_count++;
         
         if(settings.tokenLimit != null && settings.tokenLimit >= token_count) {
@@ -413,17 +397,6 @@ $.TokenList = function (input, settings) {
 
         // Show the input box and give it focus again
         input_box.focus();
-
-        // Delete this token's id from hidden input
-        var str = hidden_input.val()
-        var start = str.indexOf(token_data.id+",");
-        var end = str.indexOf(",", start) + 1;
-
-        if(end >= str.length) {
-            hidden_input.val(str.slice(0, start));
-        } else {
-            hidden_input.val(str.slice(0, start) + str.slice(end, str.length));
-        }
         
         token_count--;
         
@@ -545,25 +518,22 @@ $.TokenList = function (input, settings) {
 
     // Do the actual search
     function run_search(query) {
-        var cached_results = cache.get(query);
-        if(cached_results) {
-            populate_dropdown(query, cached_results);
-        } else {
-			var queryStringDelimiter = settings.url.indexOf("?") < 0 ? "?" : "&";
-			var callback = function(results) {
-			  if($.isFunction(settings.onResult)) {
+      var cached_results = cache.get(query);
+      if(cached_results) {
+        populate_dropdown(query, cached_results);
+      } else {
+			  var queryStringDelimiter = settings.url.indexOf("?") < 0 ? "?" : "&";
+			  var callback = function(results) {
+			    if($.isFunction(settings.onResult)) {
 			      results = settings.onResult.call(this, results);
-			  }
-              cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
-              populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
-            };
-            
-            if(settings.method == "POST") {
-			    $.post(settings.url + queryStringDelimiter + settings.queryParam + "=" + query, {}, callback, settings.contentType);
-		    } else {
-		        $.get(settings.url + queryStringDelimiter + settings.queryParam + "=" + query, {}, callback, settings.contentType);
-		    }
-        }
+			    }
+          cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+          populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+        };
+           
+        $.ajax({ url: settings.url, context: document.body, success: callback, data: { q: query } })
+      }
+        
     }
 };
 
