@@ -28,16 +28,16 @@ $.fn.tokenInput = function (url, options) {
     }, options);
 
     settings.classes = $.extend({
-        tokenList: "token-input-list",
-        token: "token-input-token",
-        tokenDelete: "token-input-delete-token",
-        selectedToken: "token-input-selected-token",
-        highlightedToken: "token-input-highlighted-token",
-        dropdown: "token-input-dropdown",
-        dropdownItem: "token-input-dropdown-item",
-        dropdownItem2: "token-input-dropdown-item2",
-        selectedDropdownItem: "token-input-selected-dropdown-item",
-        inputToken: "token-input-input-token"
+        tokenList: "input-list",
+        token: "input-token",
+        tokenDelete: "input-delete-token",
+        selectedToken: "input-selected-token",
+        highlightedToken: "input-highlighted-token",
+        dropdown: "input-dropdown",
+        dropdownItem: "input-dropdown-item",
+        dropdownItem2: "input-dropdown-item2",
+        selectedDropdownItem: "input-selected-dropdown-item",
+        inputToken: "input-input-token"
     }, options.classes);
 
     return this.each(function () {
