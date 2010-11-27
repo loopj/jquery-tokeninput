@@ -1,8 +1,3 @@
-=================================================
-jQuery Plugin: Tokenizing Autocomplete Text Entry
-       By James Smith - http://loopj.com
-=================================================
-
 Overview
 --------
 This is a jQuery plugin to allow users to select multiple items from a predefined list, using autocompletion as they type to find each item. You may have seen a similar type of text entry when filling in the recipients field sending messages on facebook.
@@ -47,3 +42,9 @@ If you're using Ruby, install Haml, Sinatra and Json gems first.
 
 After that, run ruby ./examples/sinatra-example.rb
 It already has a small vocabulary and will work for your ad-hoc tests.
+
+=================================================
+jQuery Plugin: Tokenizing Autocomplete Text Entry
+       Initially written by James Smith - http://loopj.com
+       Althrough, almost completely rewritten by @ifesdjeen
+=================================================
