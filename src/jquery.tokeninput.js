@@ -1,6 +1,6 @@
 /*
 * jQuery Plugin: Tokenizing Autocomplete Text Entry
-* Version 1.1
+* Version 1.2
 *
 * Copyright (c) 2009 James Smith (http://loopj.com)
 * Licensed jointly under the GPL and MIT licenses,
@@ -10,6 +10,8 @@
 *  + added deleteText [string] setting to change the text of the delete button on a token to something else
 *  + added preventDuplicates [boolean] setting to prevent tokens from being added which already exist in the list
 *  = slightly modified logic of is_printable_character to remove if (boolean expression) return boolean else return boolean logic
+*  + added onAdd [function] setting for when a token is added (return false in function to prevent the add)
+*  + added onDelete [function] setting for when a token is deleted (return false in function to prevent the delete)
 */
 
 (function($) {
@@ -26,6 +28,8 @@
 			method: "GET",
 			contentType: "json",
 			queryParam: "q",
+			onAdd: null,
+			onDelete: null,
 			onResult: null,
 			deleteText: 'x',
 			preventDuplicates: false
@@ -338,6 +342,11 @@
 		// Add a token to the token list based on user input
 		function add_token (item) {
 			var li_data = $.data(item.get(0), "tokeninput");
+			
+			if($.isFunction(settings.onAdd)) {
+				results = settings.onAdd.call(item, li_data.id, li_data.name);
+				if (results===false) return; //abandon the add if the callback returns false
+			}
 
 			// See if the token already exists and select it if we don't want duplicates
 			if (token_count > 0 && settings.preventDuplicates) {
@@ -431,6 +440,11 @@
 		// Delete a token from the token list
 		function delete_token (token) {
 			var token_data = $.data(token.get(0), "tokeninput");
+			
+			if($.isFunction(settings.onDelete)) {
+				results = settings.onDelete.call(token, token_data.id, token_data.name);
+				if (results===false) return; //abandon the delete if the callback returns false
+			}
 			
 			// Find the token in the saved list and delete it
 			saved_tokens.splice(find_saved_token(token_data.id), 1);
