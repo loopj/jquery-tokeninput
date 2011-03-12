@@ -25,7 +25,9 @@ $.fn.tokenInput = function (url, options) {
         queryParam: "q",
         onResult: null,
 				onAdd: null,
-				onDelete: null
+				onDelete: null,
+		prePopulate: null,
+inputID: 'input_token'
     }, options);
 
     settings.classes = $.extend({
@@ -84,7 +86,7 @@ $.TokenList = function (input, settings) {
     var timeout;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
+    var input_box = $('<input id="'+ settings.inputId +'" type="text">')
         .css({
             outline: "none"
         })
