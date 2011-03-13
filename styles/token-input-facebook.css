@@ -19,11 +19,6 @@ ul.token-input-list-facebook {
     list-style-type: none;
 }
 
-ul.token-input-list-facebook li {
-    padding: 0;
-    margin: 0;
-}
-
 ul.token-input-list-facebook li input {
     border: 0;
     width: 100px;
@@ -70,6 +65,9 @@ li.token-input-selected-token-facebook {
 
 li.token-input-input-token-facebook {
     float: left;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
 }
 
 div.token-input-dropdown-facebook {
@@ -101,6 +99,8 @@ div.token-input-dropdown-facebook ul {
 div.token-input-dropdown-facebook ul li {
     background-color: #fff;
     padding: 3px;
+    margin: 0;
+    list-style-type: none;
 }
 
 div.token-input-dropdown-facebook ul li.token-input-dropdown-item-facebook {
