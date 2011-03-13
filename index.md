@@ -12,21 +12,21 @@ download_url: https://github.com/loopj/jquery-tokeninput
 
 <script type="text/javascript"> 
 $(document).ready(function() {
-    $("#tokeninput-demo").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-        classes: {
-            tokenList: "token-input-list-facebook",
-            token: "token-input-token-facebook",
-            tokenDelete: "token-input-delete-token-facebook",
-            selectedToken: "token-input-selected-token-facebook",
-            highlightedToken: "token-input-highlighted-token-facebook",
-            dropdown: "token-input-dropdown-facebook",
-            dropdownItem: "token-input-dropdown-item-facebook",
-            dropdownItem2: "token-input-dropdown-item2-facebook",
-            selectedDropdownItem: "token-input-selected-dropdown-item-facebook",
-            inputToken: "token-input-input-token-facebook"
-        },
-        crossDomain: true
-    });
+$("#tokeninput-demo").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+classes: {
+tokenList: "token-input-list-facebook",
+token: "token-input-token-facebook",
+tokenDelete: "token-input-delete-token-facebook",
+selectedToken: "token-input-selected-token-facebook",
+highlightedToken: "token-input-highlighted-token-facebook",
+dropdown: "token-input-dropdown-facebook",
+dropdownItem: "token-input-dropdown-item-facebook",
+dropdownItem2: "token-input-dropdown-item2-facebook",
+selectedDropdownItem: "token-input-selected-dropdown-item-facebook",
+inputToken: "token-input-input-token-facebook"
+},
+crossDomain: true
+});
 });
 </script>
 
