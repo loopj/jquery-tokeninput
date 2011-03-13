@@ -7,8 +7,8 @@ github_url: https://github.com/loopj/jquery-tokeninput
 download_url: https://github.com/loopj/jquery-tokeninput
 ---
 
-<script type="text/javascript" src="http://loopj.com/tokeninput/jquery.tokeninput.js"></script>
-<link rel="stylesheet" href="http://loopj.com/tokeninput/token-input-facebook.css" type="text/css" />
+<script type="text/javascript" src="https://github.com/loopj/jquery-tokeninput/raw/master/src/jquery.tokeninput.js"></script>
+<link rel="stylesheet" href="https://github.com/loopj/jquery-tokeninput/raw/master/styles/token-input-facebook.css" type="text/css" />
 
 <script type="text/javascript"> 
 $(document).ready(function() {
@@ -24,7 +24,8 @@ $(document).ready(function() {
             dropdownItem2: "token-input-dropdown-item2-facebook",
             selectedDropdownItem: "token-input-selected-dropdown-item-facebook",
             inputToken: "token-input-input-token-facebook"
-        }
+        },
+        crossDomain: true
     });
 });
 </script>
