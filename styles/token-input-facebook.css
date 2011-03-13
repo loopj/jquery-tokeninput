@@ -19,6 +19,11 @@ ul.token-input-list-facebook {
     list-style-type: none;
 }
 
+ul.token-input-list-facebook li {
+    padding: 0;
+    margin: 0;
+}
+
 ul.token-input-list-facebook li input {
     border: 0;
     width: 100px;
