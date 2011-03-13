@@ -26,7 +26,7 @@ $.fn.tokenInput = function (url, options) {
         onResult: null,
         onAdd: null,
         onDelete: null,
-        crossDomain: false
+        crossDomain: true
     }, options);
 
     settings.classes = $.extend({
