@@ -11,7 +11,8 @@
         $("#tokenize").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
             hintText: "Type in the names of your favorite TV shows",
             noResultsText: "No results",
-            searchingText: "Searching..."
+            searchingText: "Searching...",
+            crossDomain: true
         });
 
         $("#tokenize2").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
@@ -26,7 +27,8 @@
                 dropdownItem2: "token-input-dropdown-item2-facebook",
                 selectedDropdownItem: "token-input-selected-dropdown-item-facebook",
                 inputToken: "token-input-input-token-facebook"
-            }
+            },
+            crossDomain: true
         });
     });
     </script>
