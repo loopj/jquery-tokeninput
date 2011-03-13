@@ -282,36 +282,36 @@ $.TokenList = function (input, settings) {
 
     // Inner function to a token to the list
     function insert_token(id, value) {
-      var this_token = $("<li><p>"+ value +"</p> </li>")
+        var this_token = $("<li><p>"+ value +"</p> </li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token);
 
-      // The 'delete token' button
-      $("<span>&times;</span>")
-          .addClass(settings.classes.tokenDelete)
-          .appendTo(this_token)
-          .click(function () {
-              delete_token($(this).parent());
-              return false;
-          });
+        // The 'delete token' button
+        $("<span>&times;</span>")
+            .addClass(settings.classes.tokenDelete)
+            .appendTo(this_token)
+            .click(function () {
+                delete_token($(this).parent());
+                return false;
+            });
 
-      $.data(this_token.get(0), "tokeninput", {"id": id, "name": value});
+        $.data(this_token.get(0), "tokeninput", {"id": id, "name": value});
 
-      // Clear input box and make sure it keeps focus
-      input_box
-          .val("")
-          .focus();
+        // Clear input box and make sure it keeps focus
+        input_box
+            .val("")
+            .focus();
 
-      // Don't show the help dropdown, they've got the idea
-      hide_dropdown();
+        // Don't show the help dropdown, they've got the idea
+        hide_dropdown();
 
-      // Save this token id
-      var id_string = li_data.id + ",";
-      hidden_input.val(hidden_input.val() + id_string);
+        // Save this token id
+        var id_string = id + ",";
+        hidden_input.val(hidden_input.val() + id_string);
 
-      token_count++;
+        token_count++;
 
-      return this_token;
+        return this_token;
     }
 
     // Add a token to the token list based on user input
