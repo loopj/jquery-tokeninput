@@ -12,7 +12,7 @@ download_url: https://github.com/loopj/jquery-tokeninput
 
 <script type="text/javascript"> 
 $(document).ready(function() {
-    $("#tokeninput-demo").tokenInput("http://loopj.com/tokeninput/tvshows.php", {
+    $("#tokeninput-demo").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
         classes: {
             tokenList: "token-input-list-facebook",
             token: "token-input-token-facebook",
