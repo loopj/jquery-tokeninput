@@ -25,7 +25,8 @@ $.fn.tokenInput = function (url, options) {
         queryParam: "q",
         onResult: null,
         onAdd: null,
-        onDelete: null
+        onDelete: null,
+        crossDomain: false
     }, options);
 
     settings.classes = $.extend({
@@ -523,7 +524,6 @@ $.TokenList = function (input, settings) {
         if(cached_results) {
             populate_dropdown(query, cached_results);
         } else {
-            var queryStringDelimiter = settings.url.indexOf("?") < 0 ? "?" : "&";
             var callback = function(results) {
               if($.isFunction(settings.onResult)) {
                   results = settings.onResult.call(this, results);
@@ -532,11 +532,32 @@ $.TokenList = function (input, settings) {
               populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
             };
 
-            if(settings.method === "POST") {
-                $.post(settings.url + queryStringDelimiter + settings.queryParam + "=" + encodeURIComponent(query), {}, callback, settings.contentType);
+            // Extract exisiting get params
+            var ajax_params = {};
+            ajax_params.data = {};
+            if(settings.url.indexOf("?") > -1) {
+                var parts = settings.url.split("?");
+                ajax_params.url = parts[0];
+
+                var param_array = parts[1].split("&");
+                for(var j=0; j<param_array.length; j++) {
+                  var kv = param_array[j].split("=");
+                  ajax_params.data[kv[0]] = kv[1];
+                }
             } else {
-                $.get(settings.url + queryStringDelimiter + settings.queryParam + "=" + encodeURIComponent(query), {}, callback, settings.contentType);
+                ajax_params.url = settings.url;
             }
+
+            // Prepare the request
+            ajax_params.data[settings.queryParam] = query;
+            ajax_params.type = settings.method;
+            ajax_params.success = callback;
+            ajax_params.contentType = settings.contentType;
+            if(settings.crossDomain) {
+                ajax_params.dataType = "jsonp";
+            }
+
+            $.ajax(ajax_params);
         }
     }
 };
