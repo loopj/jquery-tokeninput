@@ -454,13 +454,13 @@ $.TokenList = function (input, settings) {
                 var this_li = $("<li>" + highlight_term(value.name, query) + "</li>")
                                   .appendTo(dropdown_ul);
 
-                if(i%2) {
+                if(index % 2) {
                     this_li.addClass(settings.classes.dropdownItem);
                 } else {
                     this_li.addClass(settings.classes.dropdownItem2);
                 }
 
-                if(i === 0) {
+                if(index === 0) {
                     select_dropdown_item(this_li);
                 }
 
