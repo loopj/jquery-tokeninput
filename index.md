@@ -24,8 +24,7 @@ $(document).ready(function() {
             dropdownItem2: "token-input-dropdown-item2-facebook",
             selectedDropdownItem: "token-input-selected-dropdown-item-facebook",
             inputToken: "token-input-input-token-facebook"
-        },
-        crossDomain: true
+        }
     });
 });
 </script>

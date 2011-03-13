@@ -16,15 +16,15 @@ layout: default
 </div>
 
 <div id="project">
-    <div id="download">
-        <div class="download-button">
-            <a href="{{ download_url }}">
+    <div id="download" style="width: auto">
+        <div class="download-button" style="width: 150px">
+            <a href="{{ page.download_url }}">
                 Download
                 <em>version {{ page.version }} (latest)</em>
             </a>
         </div>
 
-        <p id="github">or <a href="{{ github_url }}" target="_blank">fork me on github</a></p>
+        <p id="github">or <a href="{{ page.github_url }}" target="_blank">fork me on github</a></p>
     </div>
 
     {{ content }}

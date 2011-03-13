@@ -8,13 +8,13 @@
 
     <script type="text/javascript">
     $(document).ready(function() {
-        $("#tokenize").tokenInput("/tokeninput/tvshows.php", {
+        $("#tokenize").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
             hintText: "Type in the names of your favorite TV shows",
             noResultsText: "No results",
             searchingText: "Searching..."
         });
 
-        $("#tokenize2").tokenInput("/tokeninput/tvshows.php", {
+        $("#tokenize2").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
             classes: {
                 tokenList: "token-input-list-facebook",
                 token: "token-input-token-facebook",
