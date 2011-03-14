@@ -27,6 +27,7 @@ $.fn.tokenInput = function (url, options) {
         tokenDelimiter: ",",
         preventDuplicates: false,
         prePopulate: null,
+        animateDropdown: true,
         onResult: null,
         onAdd: null,
         onDelete: null,
@@ -503,8 +504,12 @@ $.TokenList = function (input, settings) {
             });
 
             dropdown.show();
-            dropdown_ul.slideDown("fast");
 
+            if(settings.animateDropdown) {
+                dropdown_ul.slideDown("fast");
+            } else {
+                dropdown_ul.show();
+            }
         } else {
             if(settings.noResultsText) {
                 dropdown
