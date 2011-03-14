@@ -8,4 +8,5 @@ Tokeninput is a jQuery plugin which allows your users to select multiple items f
 Documentation
 -------------
 Full details and documentation can be found on the project page here:
-http://loopj.com/jquery-tokeninput/
+
+<http://loopj.com/jquery-tokeninput/>
