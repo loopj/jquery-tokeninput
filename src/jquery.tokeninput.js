@@ -23,6 +23,7 @@ $.fn.tokenInput = function (url, options) {
         method: "GET",
         contentType: "json",
         queryParam: "q",
+        preventDuplicates: false,
         prePopulate: null,
         onResult: null,
         onAdd: null,
@@ -310,6 +311,9 @@ $.TokenList = function (input, settings) {
         var id_string = id + ",";
         hidden_input.val(hidden_input.val() + id_string);
 
+        // Save this token for duplicate checking
+        saved_tokens.push(this_token);
+
         token_count++;
 
         return this_token;
@@ -321,6 +325,18 @@ $.TokenList = function (input, settings) {
         var this_token = insert_token(li_data.id, li_data.name);
         var callback = settings.onAdd;
 
+        // See if the token already exists and select it if we don't want duplicates
+        if(token_count > 0 && settings.preventDuplicates) {
+            var idx = find_saved_token(li_data.id);
+            if(idx > -1) {
+                // Don't insert the token, because it already exists
+                select_token(saved_tokens[idx]);
+                input_token.insertAfter(saved_tokens[idx]);
+                input_box.focus();
+                return;
+            }
+        }
+
         // Check the token limit
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
             input_box.hide();
@@ -331,6 +347,18 @@ $.TokenList = function (input, settings) {
         if($.isFunction(callback)) {
             callback(li_data.id);
         }
+    }
+
+    // Find the index of a saved token
+    function find_saved_token (id) {
+        var idx = -1;
+        for(var i=0; i<saved_tokens.length; i++) {
+            if($.data($(saved_tokens[i]).get(0), "tokeninput").id == id) {
+                idx = i;
+                break;
+            }
+        }
+        return idx;
     }
 
     // Select a token in the token list
