@@ -110,7 +110,7 @@ hintText
 
 noResultsText
 :   The text to show in the dropdown label when no results are found which 
-    match the current query. *default: "No results".
+    match the current query. *default: "No results"*.
 
 searchingText
 :   The text to show in the dropdown label when a search is currently in
