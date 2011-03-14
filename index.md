@@ -60,14 +60,15 @@ Features
 
 Installation & Setup
 --------------------
-**Create server-side code** (PHP, Rails, ASP.net, etc) to generate your
+
+### Create a server-side script to handle search requests ###
+Create a server-side script (PHP, Rails, ASP.net, etc) to generate your
 search results. The script can fetch data from wherever you like, for
-example a database or a hardcoded list, but it must do the following:
+example a database or a hardcoded list. Your script must accept a GET parameter
+named `q` which will contain the term to search for. E.g.
+http://www.example.com/myscript?q=query
 
-Take exactly one GET parameter named “q” which will contain the query string.
-E.g. http://www.example.com/myscript?q=query
-
-Output JSON search results in the following format:
+Your script should output JSON search results in the following format:
 {% highlight javascript %}
 [
     {"id":"856","name":"House"},
@@ -76,19 +77,15 @@ Output JSON search results in the following format:
 ]
 {% endhighlight %}
 
-**Include jQuery and Tokeninput Javascript** files on your page:
+### Include and initialize the plugin ###
+Include jQuery and Tokeninput Javascript and stylesheet files on your page, and
+attach to your text input:
+Tokeninput stylesheet:
 {% highlight html %}
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 <script type="text/javascript" src="yourfiles/jquery.tokeninput.js"></script>
-{% endhighlight %}
-
-**Include a Tokeninput css**, or roll your own:
-{% highlight html %}
 <link rel="stylesheet" type="text/css" href="yourfiles/token-input.css" />
-{% endhighlight %}
 
-**Activate the Tokeninput plugin** on your text input:
-{% highlight html %}
 <script type="text/javascript">
 $(document).ready(function () {
     $("#my-text-input").tokenInput("/url/to/your/script/");
