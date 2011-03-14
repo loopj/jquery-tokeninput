@@ -4,7 +4,7 @@ title: jQuery Tokeninput
 tagline: A jQuery Tokenizing Autocomplete Text Entry
 version: 1.2
 github_url: https://github.com/loopj/jquery-tokeninput
-download_url: https://github.com/loopj/jquery-tokeninput
+download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.2
 ---
 
 <script type="text/javascript" src="https://github.com/loopj/jquery-tokeninput/raw/master/src/jquery.tokeninput.js"></script>
