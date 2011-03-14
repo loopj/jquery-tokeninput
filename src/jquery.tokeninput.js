@@ -16,6 +16,7 @@ $.fn.tokenInput = function (url, options) {
         hintText: "Type in a search term",
         noResultsText: "No results",
         searchingText: "Searching...",
+        deleteText: "&times;",
         searchDelay: 300,
         minChars: 1,
         tokenLimit: null,
@@ -289,7 +290,7 @@ $.TokenList = function (input, settings) {
           .insertBefore(input_token);
 
         // The 'delete token' button
-        $("<span>&times;</span>")
+        $("<span>" + deleteText + "</span>")
             .addClass(settings.classes.tokenDelete)
             .appendTo(this_token)
             .click(function () {
