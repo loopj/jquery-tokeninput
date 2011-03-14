@@ -62,6 +62,7 @@ Installation & Setup
 --------------------
 
 ### Create a server-side script to handle search requests ###
+
 Create a server-side script (PHP, Rails, ASP.net, etc) to generate your
 search results. The script can fetch data from wherever you like, for
 example a database or a hardcoded list. Your script must accept a GET parameter
@@ -77,7 +78,9 @@ Your script should output JSON search results in the following format:
 ]
 {% endhighlight %}
 
+
 ### Include and initialize the plugin ###
+
 Include jQuery and Tokeninput Javascript and stylesheet files on your page, and
 attach to your text input:
 Tokeninput stylesheet:
