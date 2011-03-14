@@ -12,6 +12,8 @@ ul.token-input-list {
     margin: 0;
     padding: 0;
     background-color: #fff;
+    list-style-type: none;
+    clear: left;
 }
 
 ul.token-input-list li {
