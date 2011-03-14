@@ -24,6 +24,7 @@ $.fn.tokenInput = function (url, options) {
         method: "GET",
         contentType: "json",
         queryParam: "q",
+        tokenDelimiter: ",",
         preventDuplicates: false,
         prePopulate: null,
         onResult: null,
@@ -304,7 +305,7 @@ $.TokenList = function (input, settings) {
         hide_dropdown();
 
         // Save this token id
-        var id_string = id + ",";
+        var id_string = id + settings.tokenDelimiter;
         hidden_input.val(hidden_input.val() + id_string);
 
         // Save this token for duplicate checking
@@ -416,8 +417,8 @@ $.TokenList = function (input, settings) {
 
         // Delete this token's id from hidden input
         var str = hidden_input.val();
-        var start = str.indexOf(token_data.id+",");
-        var end = str.indexOf(",", start) + 1;
+        var start = str.indexOf(token_data.id + settings.tokenDelimiter);
+        var end = str.indexOf(settings.tokenDelimiter, start) + 1;
 
         if(end >= str.length) {
             hidden_input.val(str.slice(0, start));
