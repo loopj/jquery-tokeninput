@@ -53,6 +53,9 @@ Features
 - Smooth animations when results load
 - Select, delete and navigate items using the mouse or keyboard
 - Client-side result caching to reduce server load
+- *New!* Crossdomain support via JSONP
+- *New!* Callbacks when items are added or removed from the list
+- *New!* Preprocess results from the server with the onResult callback
 
 
 Installation & Setup
@@ -92,3 +95,79 @@ $(document).ready(function () {
 });
 </script>
 {% endhighlight %}
+
+
+Configuration
+-------------
+The tokeninput takes an optional second parameter on intitialization which
+allows you to customize the appearance and behaviour of the script, as well as
+add your own callbacks to intercept certain events. The following options are
+available:
+
+hintText
+:   The text to show in the dropdown label which appears when you first click 
+    in the search field. *default: "Type in a search term"*.
+
+noResultsText
+:   The text to show in the dropdown label when no results are found which 
+    match the current query. *default: "No results".
+
+searchingText
+:   The text to show in the dropdown label when a search is currently in
+    progress. *default: "Searching..."*.
+
+searchDelay
+:   The delay, in milliseconds, between the user finishing typing and the
+    search being performed. *default: 300*.
+
+minChars
+:   The minimum number of characters the user must enter before a search is
+    performed. *default: 1*.
+
+tokenLimit
+:   The maximum number of results allowed to be selected by the user. Use 
+    `null` to allow unlimited selections. *default: null*.
+
+jsonContainer
+:   The name of the json object in the response which contains the search
+    results. Use `null` to use the top level response object. *default: null*.
+
+method
+:   The HTTP method (eg. GET, POST) to use for the server request. *default:
+    "GET"*.
+
+queryParam
+:   The name of the query param which you expect to contain the search term
+    on the server-side. *default: "q"*.
+
+crossDomain
+:   Use JSONP cross-domain communication to the server instead of a normal
+    ajax request. *default: false*.
+
+onResult
+:   A function to call whenever we receive results back from the server. You 
+    can use this function to pre-process results from the server before they
+    are displayed to the user. *default: null*.
+
+onAdd
+:   A function to call whenever the user adds another token to their
+    selections. *defaut: null*.
+
+onDelete
+:   A function to call whenever the user removes a token from their selections.
+    *default: null*.
+
+
+Reporting Bugs
+--------------
+Please report any bugs or feature requests on the github issues page for this
+project here:
+
+<https://github.com/loopj/jquery-tokeninput/issues>
+
+
+License
+-------
+Tokeninput is released under a dual license. You can choose either the GPL or
+MIT license depending on the project you are using it in and how you wish to
+use it.
