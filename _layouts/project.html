@@ -8,15 +8,26 @@ layout: default
 </div>
 
 <div id="share">
-    <!-- Facebook Like Button -->
-    <iframe src="http://www.facebook.com/plugins/like.php?layout=button_count&amp;width=90&amp;action=like&amp;colorscheme=light&amp;height=21&amp;href={{ site.url }}{{ page.url }}" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:90px; height:21px; margin-top: 2px;" allowTransparency="true"></iframe>
+    <ul class="group">
+        <!-- Facebook Like Button -->
+        <li>
+            <fb:like href="{{ site.url }}" layout="button_count" show_faces="false" font=""></fb:like>
+        </li>
 
-    <!-- Tweet Button -->
-    <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="loopj">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+        <!-- Tweet Button -->
+        <li>
+            <a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="loopj">Tweet</a>
+        </li>
+
+        <!-- Fork Button -->
+        <li style="margin-top: -4px; margin-left: -18px;">
+            <a href="{{ page.github_url }}" class="gitforked-button gitforked-forks gitforked-watchers">Fork</a>
+        </li>
+    </ul>
 </div>
 
 <div id="project">
-    <div id="download" style="width: auto">
+    <div id="download">
         <div class="download-button">
             <a href="{{ page.download_url }}">
                 Download
