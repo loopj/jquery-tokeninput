@@ -77,7 +77,7 @@ $.TokenList = function (input, settings) {
 
     // Save the tokens
     var saved_tokens = [];
-    
+
     // Keep track of the number of tokens in the list
     var token_count = 0;
 
@@ -449,15 +449,19 @@ $.TokenList = function (input, settings) {
     }
 
     function show_dropdown_searching () {
-        dropdown
-            .html("<p>"+settings.searchingText+"</p>")
-            .show();
+        if(settings.searchingText) {
+            dropdown
+                .html("<p>"+settings.searchingText+"</p>")
+                .show();
+        }
     }
 
     function show_dropdown_hint () {
-        dropdown
-            .html("<p>"+settings.hintText+"</p>")
-            .show();
+        if(settings.hintText) {
+            dropdown
+                .html("<p>"+settings.hintText+"</p>")
+                .show();
+        }
     }
 
     // Highlight the query part of the search term
@@ -501,9 +505,11 @@ $.TokenList = function (input, settings) {
             dropdown_ul.slideDown("fast");
 
         } else {
-            dropdown
-                .html("<p>"+settings.noResultsText+"</p>")
-                .show();
+            if(settings.noResultsText) {
+                dropdown
+                    .html("<p>"+settings.noResultsText+"</p>")
+                    .show();
+            }
         }
     }
 
