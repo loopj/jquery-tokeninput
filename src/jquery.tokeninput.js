@@ -552,7 +552,7 @@ $.TokenList = function (input, settings) {
             ajax_params.data[settings.queryParam] = query;
             ajax_params.type = settings.method;
             ajax_params.success = callback;
-            ajax_params.contentType = settings.contentType;
+            ajax_params.dataType = settings.contentType;
             if(settings.crossDomain) {
                 ajax_params.dataType = "jsonp";
             }
