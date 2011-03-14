@@ -27,7 +27,7 @@ $.fn.tokenInput = function (url, options) {
         onAdd: null,
         onDelete: null,
         crossDomain: false
-    }, options);
+    }, options || {});
 
     settings.classes = $.extend({
         tokenList: "token-input-list",
@@ -40,7 +40,7 @@ $.fn.tokenInput = function (url, options) {
         dropdownItem2: "token-input-dropdown-item2",
         selectedDropdownItem: "token-input-selected-dropdown-item",
         inputToken: "token-input-input-token"
-    }, options.classes);
+    }, options.classes || {});
 
     return this.each(function () {
         var list = new $.TokenList(this, settings);
