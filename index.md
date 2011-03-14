@@ -129,6 +129,10 @@ searchingText
 :   The text to show in the dropdown label when a search is currently in
     progress. *default: "Searching..."*.
 
+deleteText
+:   The text to show on each token which deletes the token when clicked.
+    *default: &times;*.
+
 searchDelay
 :   The delay, in milliseconds, between the user finishing typing and the
     search being performed. *default: 300*.
@@ -148,6 +152,15 @@ jsonContainer
 method
 :   The HTTP method (eg. GET, POST) to use for the server request. *default:
     "GET"*.
+
+prePopulate
+:   Prepopulate the tokeninput with existing data. Set to an array of JSON
+    objects, eg: `[{id: 3, name: "test", id: 5, name: "awesome"}]`
+    to pre-fill the input. *default: null*.
+
+preventDuplicates
+:   Prevent user from selecting duplicate values by setting this to `true`.
+    *default: false*.
 
 queryParam
 :   The name of the query param which you expect to contain the search term
