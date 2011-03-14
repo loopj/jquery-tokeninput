@@ -59,6 +59,18 @@ Features
 - *New!* Preprocess results from the server with the onResult callback
 
 
+Screenshots
+-----------
+![List style](list-style.png)
+
+Vertical list style item selection
+
+
+![List style](facebook-style.png)
+
+Facebook style item selection
+
+
 Installation & Setup
 --------------------
 
