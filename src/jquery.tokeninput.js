@@ -323,7 +323,6 @@ $.TokenList = function (input, settings) {
     // Add a token to the token list based on user input
     function add_token (item) {
         var li_data = $.data(item.get(0), "tokeninput");
-        var this_token = insert_token(li_data.id, li_data.name);
         var callback = settings.onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
@@ -342,7 +341,11 @@ $.TokenList = function (input, settings) {
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
             input_box.hide();
             hide_dropdown();
+            return;
         }
+
+        // Insert the new tokens
+        insert_token(li_data.id, li_data.name);
 
         // Execute the onAdd callback if defined
         if($.isFunction(callback)) {
