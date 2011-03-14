@@ -34,7 +34,8 @@ Instant Demo
 ------------
 <input type="text" id="tokeninput-demo" />
 
-Start typing TV show names in the box above.
+Start typing TV show names in the box above.<br />
+More demos can be found [here](demo.html).
 
 
 Overview
