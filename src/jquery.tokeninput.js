@@ -290,7 +290,7 @@ $.TokenList = function (input, settings) {
           .insertBefore(input_token);
 
         // The 'delete token' button
-        $("<span>" + deleteText + "</span>")
+        $("<span>" + settings.deleteText + "</span>")
             .addClass(settings.classes.tokenDelete)
             .appendTo(this_token)
             .click(function () {
