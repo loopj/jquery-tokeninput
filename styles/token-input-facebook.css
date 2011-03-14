@@ -23,6 +23,7 @@ ul.token-input-list-facebook li input {
     padding: 3px 8px;
     background-color: white;
     margin: 2px 0;
+    -webkit-appearance: caret;
 }
 
 li.token-input-token-facebook {
