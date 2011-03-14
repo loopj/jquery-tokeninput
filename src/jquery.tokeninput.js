@@ -23,6 +23,7 @@ $.fn.tokenInput = function (url, options) {
         method: "GET",
         contentType: "json",
         queryParam: "q",
+        prePopulate: null,
         onResult: null,
         onAdd: null,
         onDelete: null,
