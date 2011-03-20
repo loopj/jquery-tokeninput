@@ -8,14 +8,6 @@
 
     <script type="text/javascript">
     $(document).ready(function() {
-        $("#tokenize").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-            hintText: "Type in the names of your favorite TV shows",
-            noResultsText: "No results",
-            searchingText: "Searching...",
-            crossDomain: true,
-            preventDuplicates: true
-        });
-
         $("#tokenize2").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
             classes: {
                 tokenList: "token-input-list-facebook",
@@ -38,10 +30,19 @@
 <body>
     <h1>Jquery Tokenizing Autocomplete Input</h1>
 
-    <div>
-        <h2>List style</h2>
-        <input type="text" id="tokenize" name="blah" />
-    </div>
+    <h2>List style</h2>
+    <input type="text" id="tokenize" name="blah" />
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#tokenize").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+            hintText: "Type in the names of your favorite TV shows",
+            noResultsText: "No results",
+            searchingText: "Searching...",
+            crossDomain: true,
+            preventDuplicates: true
+        });
+    });
+    </script>
 
     <div>
         <h2>Facebook style</h2>
