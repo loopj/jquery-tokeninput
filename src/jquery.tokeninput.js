@@ -314,12 +314,13 @@ $.TokenList = function (input, settings) {
 
         $.data(this_token.get(0), "tokeninput", {"id": id, "name": value});
 
-        // Save this token id
-        var id_string = id + settings.tokenDelimiter;
-        hidden_input.val(hidden_input.val() + id_string);
-
         // Save this token for duplicate checking
         saved_tokens.push(this_token);
+
+        // Update the hidden input
+        hidden_input.val(saved_tokens.map(function (el) {
+            return el.id;
+        }).join(settings.tokenDelimiter));
 
         token_count += 1;
 
@@ -434,16 +435,15 @@ $.TokenList = function (input, settings) {
         // Show the input box and give it focus again
         input_box.focus();
 
-        // Delete this token's id from hidden input
-        var str = hidden_input.val();
-        var start = str.indexOf(token_data.id + settings.tokenDelimiter);
-        var end = str.indexOf(settings.tokenDelimiter, start) + 1;
+        // Remove this token from the saved list
+        saved_tokens = $.grep(saved_tokens, function (val) {
+            return (val.id !== token_data.id);
+        });
 
-        if(end >= str.length) {
-            hidden_input.val(str.slice(0, start));
-        } else {
-            hidden_input.val(str.slice(0, start) + str.slice(end, str.length));
-        }
+        // Update the hidden input
+        hidden_input.val(saved_tokens.map(function (el) {
+            return el.id;
+        }).join(settings.tokenDelimiter));
 
         token_count -= 1;
 
@@ -456,7 +456,7 @@ $.TokenList = function (input, settings) {
 
         // Execute the onDelete callback if defined
         if($.isFunction(callback)) {
-          callback(token_data);
+            callback(token_data);
         }
     }
 
