@@ -380,15 +380,15 @@ $.TokenList = function (input, settings) {
             }
         }
 
+        // Insert the new tokens
+        insert_token(li_data.id, li_data.name);
+
         // Check the token limit
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
             input_box.hide();
             hide_dropdown();
             return;
         }
-
-        // Insert the new tokens
-        insert_token(li_data.id, li_data.name);
 
         // Clear input box and make sure it keeps focus
         input_box
