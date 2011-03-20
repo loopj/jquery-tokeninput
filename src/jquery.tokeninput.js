@@ -1,6 +1,6 @@
 /*
  * jQuery Plugin: Tokenizing Autocomplete Text Entry
- * Version 1.2
+ * Version 1.4
  *
  * Copyright (c) 2009 James Smith (http://loopj.com)
  * Licensed jointly under the GPL and MIT licenses,
@@ -8,54 +8,78 @@
  *
  */
 
-(function($) {
+(function ($) {
+// Default settings
+var DEFAULT_SETTINGS = {
+    hintText: "Type in a search term",
+    noResultsText: "No results",
+    searchingText: "Searching...",
+    deleteText: "&times;",
+    searchDelay: 300,
+    minChars: 1,
+    tokenLimit: null,
+    jsonContainer: null,
+    method: "GET",
+    contentType: "json",
+    queryParam: "q",
+    tokenDelimiter: ",",
+    preventDuplicates: false,
+    prePopulate: null,
+    animateDropdown: true,
+    onResult: null,
+    onAdd: null,
+    onDelete: null
+};
 
+// Default classes to use when theming
+var DEFAULT_CLASSES = {
+    tokenList: "token-input-list",
+    token: "token-input-token",
+    tokenDelete: "token-input-delete-token",
+    selectedToken: "token-input-selected-token",
+    highlightedToken: "token-input-highlighted-token",
+    dropdown: "token-input-dropdown",
+    dropdownItem: "token-input-dropdown-item",
+    dropdownItem2: "token-input-dropdown-item2",
+    selectedDropdownItem: "token-input-selected-dropdown-item",
+    inputToken: "token-input-input-token"
+};
+
+// Input box position "enum"
+var POSITION = {
+    BEFORE: 0,
+    AFTER: 1,
+    END: 2
+};
+
+// Keys "enum"
+var KEY = {
+    BACKSPACE: 8,
+    TAB: 9,
+    RETURN: 13,
+    ESC: 27,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    COMMA: 188
+};
+
+
+// Expose the .tokenInput function to jQuery as a plugin
 $.fn.tokenInput = function (url, options) {
-    var DEFAULT_SETTINGS = {
-        url: url,
-        hintText: "Type in a search term",
-        noResultsText: "No results",
-        searchingText: "Searching...",
-        deleteText: "&times;",
-        searchDelay: 300,
-        minChars: 1,
-        tokenLimit: null,
-        jsonContainer: null,
-        method: "GET",
-        contentType: "json",
-        queryParam: "q",
-        tokenDelimiter: ",",
-        preventDuplicates: false,
-        prePopulate: null,
-        animateDropdown: true,
-        onResult: null,
-        onAdd: null,
-        onDelete: null
-    };
-
-    var DEFAULT_CLASSES = {
-        tokenList: "token-input-list",
-        token: "token-input-token",
-        tokenDelete: "token-input-delete-token",
-        selectedToken: "token-input-selected-token",
-        highlightedToken: "token-input-highlighted-token",
-        dropdown: "token-input-dropdown",
-        dropdownItem: "token-input-dropdown-item",
-        dropdownItem2: "token-input-dropdown-item2",
-        selectedDropdownItem: "token-input-selected-dropdown-item",
-        inputToken: "token-input-input-token"
-    };
-
-    var settings = $.extend(DEFAULT_SETTINGS, options || {});
+    var settings = $.extend(DEFAULT_SETTINGS, options || {}, {url: url});
 
     return this.each(function () {
-        var list = new $.TokenList(this, settings);
+        new $.TokenList(this, settings);
     });
 };
 
+
+// TokenList class for each input
 $.TokenList = function (input, settings) {
     //
-    // Settings
+    // Initialization
     //
 
     // Make a smart guess about cross-domain if it wasn't explicitly specified
@@ -77,30 +101,6 @@ $.TokenList = function (input, settings) {
         settings.classes = DEFAULT_CLASSES;
     }
 
-
-    //
-    // Variables
-    //
-
-    // Input box position "enum"
-    var POSITION = {
-        BEFORE: 0,
-        AFTER: 1,
-        END: 2
-    };
-
-    // Keys "enum"
-    var KEY = {
-        BACKSPACE: 8,
-        TAB: 9,
-        RETURN: 13,
-        ESC: 27,
-        LEFT: 37,
-        UP: 38,
-        RIGHT: 39,
-        DOWN: 40,
-        COMMA: 188
-    };
 
     // Save the tokens
     var saved_tokens = [];
@@ -230,7 +230,7 @@ $.TokenList = function (input, settings) {
         .addClass(settings.classes.tokenList)
         .insertBefore(hidden_input)
         .click(function (event) {
-            var li = get_element_from_event(event, "li");
+            var li = $(event.target).closest("li");
             if(li && li.get(0) !== input_token.get(0)) {
                 toggle_select_token(li);
                 return false;
@@ -243,20 +243,20 @@ $.TokenList = function (input, settings) {
             }
         })
         .mouseover(function (event) {
-            var li = get_element_from_event(event, "li");
+            var li = $(event.target).closest("li");
             if(li && selected_token !== this) {
                 li.addClass(settings.classes.highlightedToken);
             }
         })
         .mouseout(function (event) {
-            var li = get_element_from_event(event, "li");
+            var li = $(event.target).closest("li");
             if(li && selected_token !== this) {
                 li.removeClass(settings.classes.highlightedToken);
             }
         })
         .mousedown(function (event) {
             // Stop user selecting text on tokens
-            var li = get_element_from_event(event, "li");
+            var li = $(event.target).closest("li");
             if(li){
                 return false;
             }
@@ -287,7 +287,7 @@ $.TokenList = function (input, settings) {
 
 
     //
-    // Functions
+    // Private functions
     //
 
     function is_printable_character(keycode) {
@@ -295,11 +295,6 @@ $.TokenList = function (input, settings) {
                 (keycode >= 96 && keycode <= 111) ||    // numpad 0-9 + - / * .
                 (keycode >= 186 && keycode <= 192) ||   // ; = , - . / ^
                 (keycode >= 219 && keycode <= 222));    // ( \ ) '
-    }
-
-    // Get an element of a particular type from an event (click/mouseover etc)
-    function get_element_from_event (event, element_type) {
-        return $(event.target).closest(element_type);
     }
 
     // Inner function to a token to the list
@@ -334,7 +329,7 @@ $.TokenList = function (input, settings) {
         // Save this token for duplicate checking
         saved_tokens.push(this_token);
 
-        token_count++;
+        token_count += 1;
 
         return this_token;
     }
@@ -377,7 +372,7 @@ $.TokenList = function (input, settings) {
         var idx = -1;
         $.each(saved_tokens, function(index, value) {
             if($.data($(value).get(0), "tokeninput").id === id) {
-                idx = i;
+                idx = index;
                 return false;
             }
         });
@@ -450,7 +445,7 @@ $.TokenList = function (input, settings) {
             hidden_input.val(str.slice(0, start) + str.slice(end, str.length));
         }
 
-        token_count--;
+        token_count -= 1;
 
         if(settings.tokenLimit !== null) {
             input_box
@@ -501,10 +496,10 @@ $.TokenList = function (input, settings) {
             var dropdown_ul = $("<ul>")
                 .appendTo(dropdown)
                 .mouseover(function (event) {
-                    select_dropdown_item(get_element_from_event(event, "li"));
+                    select_dropdown_item($(event.target).closest("li"));
                 })
                 .mousedown(function (event) {
-                    add_token(get_element_from_event(event, "li"));
+                    add_token($(event.target).closest("li"));
                     return false;
                 })
                 .hide();
@@ -651,7 +646,7 @@ $.TokenList.Cache = function (options) {
         }
 
         if(!data[query]) {
-            size++;
+            size += 1;
         }
 
         data[query] = results;
@@ -661,5 +656,4 @@ $.TokenList.Cache = function (options) {
         return data[query];
     };
 };
-
 }(jQuery));
