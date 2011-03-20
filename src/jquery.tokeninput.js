@@ -93,9 +93,9 @@ $.TokenList = function (input, settings) {
         settings.classes = $.extend(DEFAULT_CLASSES, settings.classes);
     } else if(settings.theme) {
         // Use theme-suffixed default class names
-        var theme_classes = {};
+        settings.classes = {};
         $.each(DEFAULT_CLASSES, function(key, value) { 
-            theme_classes[key] = value + "-" + settings.theme;
+            settings.classes[key] = value + "-" + settings.theme;
         });
     } else {
         settings.classes = DEFAULT_CLASSES;
