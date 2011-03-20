@@ -11,7 +11,7 @@
 (function($) {
 
 $.fn.tokenInput = function (url, options) {
-    var settings = $.extend({
+    var DEFAULT_SETTINGS = {
         url: url,
         hintText: "Type in a search term",
         noResultsText: "No results",
@@ -31,9 +31,9 @@ $.fn.tokenInput = function (url, options) {
         onResult: null,
         onAdd: null,
         onDelete: null
-    }, options || {});
+    };
 
-    settings.classes = $.extend({
+    var DEFAULT_CLASSES = {
         tokenList: "token-input-list",
         token: "token-input-token",
         tokenDelete: "token-input-delete-token",
@@ -44,7 +44,9 @@ $.fn.tokenInput = function (url, options) {
         dropdownItem2: "token-input-dropdown-item2",
         selectedDropdownItem: "token-input-selected-dropdown-item",
         inputToken: "token-input-input-token"
-    }, settings.classes || {});
+    };
+
+    var settings = $.extend(DEFAULT_SETTINGS, options || {});
 
     return this.each(function () {
         var list = new $.TokenList(this, settings);
@@ -52,6 +54,30 @@ $.fn.tokenInput = function (url, options) {
 };
 
 $.TokenList = function (input, settings) {
+    //
+    // Settings
+    //
+
+    // Make a smart guess about cross-domain if it wasn't explicitly specified
+    if(settings.crossDomain === undefined) {
+        settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
+    }
+
+    // Build class names
+    if(settings.classes) {
+        // Use custom class names
+        settings.classes = $.extend(DEFAULT_CLASSES, settings.classes);
+    } else if(settings.theme) {
+        // Use theme-suffixed default class names
+        var theme_classes = {};
+        $.each(DEFAULT_CLASSES, function(key, value) { 
+            theme_classes[key] = value + "-" + settings.theme;
+        });
+    } else {
+        settings.classes = DEFAULT_CLASSES;
+    }
+
+
     //
     // Variables
     //
@@ -249,28 +275,20 @@ $.TokenList = function (input, settings) {
         .appendTo(token_list)
         .append(input_box);
 
-    // Make a smart guess about cross-domain if it wasn't explicitly specified
-    if(settings.crossDomain === undefined) {
-        settings.crossDomain = (location.href.split(/\/+/g)[1] != settings.url.split(/\/+/g)[1]);
+    // Pre-populate list if items exist
+    hidden_input.val("");
+    li_data = settings.prePopulate;
+    if(li_data && li_data.length) {
+        $.each(li_data, function (index, value) {
+            insert_token(value.id, value.name);
+        });
     }
 
-    init_list();
 
 
     //
     // Functions
     //
-
-    // Pre-populate list if items exist
-    function init_list () {
-        hidden_input.val("");
-        li_data = settings.prePopulate;
-        if(li_data && li_data.length) {
-            $.each(li_data, function (index, value) {
-                insert_token(value.id, value.name);
-            });
-        }
-    }
 
     function is_printable_character(keycode) {
         return ((keycode >= 48 && keycode <= 90) ||     // 0-1a-z
@@ -357,12 +375,13 @@ $.TokenList = function (input, settings) {
     // Find the index of a saved token
     function find_saved_token (id) {
         var idx = -1;
-        for(var i=0; i<saved_tokens.length; i++) {
-            if($.data($(saved_tokens[i]).get(0), "tokeninput").id == id) {
+        $.each(saved_tokens, function(index, value) {
+            if($.data($(value).get(0), "tokeninput").id === id) {
                 idx = i;
-                break;
+                return false;
             }
-        }
+        });
+
         return idx;
     }
 
@@ -577,7 +596,7 @@ $.TokenList = function (input, settings) {
               cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
               // only populate the dropdown if the results are associated with the active search query
-              if(input_box.val().toLowerCase() == query) {
+              if(input_box.val().toLowerCase() === query) {
                   populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
               }
             };
@@ -590,10 +609,10 @@ $.TokenList = function (input, settings) {
                 ajax_params.url = parts[0];
 
                 var param_array = parts[1].split("&");
-                for(var j=0; j<param_array.length; j++) {
-                  var kv = param_array[j].split("=");
-                  ajax_params.data[kv[0]] = kv[1];
-                }
+                $.each(param_array, function (index, value) {
+                    var kv = value.split("=");
+                    ajax_params.data[kv[0]] = kv[1];
+                });
             } else {
                 ajax_params.url = settings.url;
             }
@@ -643,4 +662,4 @@ $.TokenList.Cache = function (options) {
     };
 };
 
-})(jQuery);
+}(jQuery));
