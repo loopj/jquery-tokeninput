@@ -30,17 +30,11 @@
 <body>
     <h1>Jquery Tokenizing Autocomplete Input</h1>
 
-    <h2>List style</h2>
+    <h2>Default Settings</h2>
     <input type="text" id="tokenize" name="blah" />
     <script type="text/javascript">
     $(document).ready(function() {
-        $("#tokenize").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-            hintText: "Type in the names of your favorite TV shows",
-            noResultsText: "No results",
-            searchingText: "Searching...",
-            crossDomain: true,
-            preventDuplicates: true
-        });
+        $("#tokenize").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
     });
     </script>
 
