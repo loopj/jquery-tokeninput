@@ -9,7 +9,7 @@
     <script type="text/javascript">
     $(document).ready(function() {
         $("input[type=button]").click(function () {
-            alert($(this).siblings("input[type=text]").val());
+            alert("Would submit: " + $(this).siblings("input[type=text]").val());
         });
     });
     </script>
