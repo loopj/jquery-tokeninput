@@ -68,7 +68,7 @@ var KEY = {
 
 // Expose the .tokenInput function to jQuery as a plugin
 $.fn.tokenInput = function (url, options) {
-    var settings = $.extend(DEFAULT_SETTINGS, options || {}, {url: url});
+    var settings = $.extend({}, DEFAULT_SETTINGS, options || {}, {url: url});
 
     return this.each(function () {
         new $.TokenList(this, settings);
@@ -90,7 +90,7 @@ $.TokenList = function (input, settings) {
     // Build class names
     if(settings.classes) {
         // Use custom class names
-        settings.classes = $.extend(DEFAULT_CLASSES, settings.classes);
+        settings.classes = $.extend({}, DEFAULT_CLASSES, settings.classes);
     } else if(settings.theme) {
         // Use theme-suffixed default class names
         settings.classes = {};
