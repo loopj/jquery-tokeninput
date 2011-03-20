@@ -363,7 +363,7 @@ $.TokenList = function (input, settings) {
 
         // Execute the onAdd callback if defined
         if($.isFunction(callback)) {
-            callback(li_data.id);
+            callback(li_data);
         }
     }
 
@@ -456,7 +456,7 @@ $.TokenList = function (input, settings) {
 
         // Execute the onDelete callback if defined
         if($.isFunction(callback)) {
-          callback(token_data.id);
+          callback(token_data);
         }
     }
 
