@@ -5,26 +5,6 @@
 
     <link rel="stylesheet" href="https://github.com/loopj/jquery-tokeninput/raw/master/styles/token-input.css" type="text/css" />
     <link rel="stylesheet" href="https://github.com/loopj/jquery-tokeninput/raw/master/styles/token-input-facebook.css" type="text/css" />
-
-    <script type="text/javascript">
-    $(document).ready(function() {
-        $("#tokenize2").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-            classes: {
-                tokenList: "token-input-list-facebook",
-                token: "token-input-token-facebook",
-                tokenDelete: "token-input-delete-token-facebook",
-                selectedToken: "token-input-selected-token-facebook",
-                highlightedToken: "token-input-highlighted-token-facebook",
-                dropdown: "token-input-dropdown-facebook",
-                dropdownItem: "token-input-dropdown-item-facebook",
-                dropdownItem2: "token-input-dropdown-item2-facebook",
-                selectedDropdownItem: "token-input-selected-dropdown-item-facebook",
-                inputToken: "token-input-input-token-facebook"
-            },
-            crossDomain: true
-        });
-    });
-    </script>
 </head>
 
 <body>
@@ -40,6 +20,13 @@
 
 
     <h2>Facebook style</h2>
-    <input type="text" id="tokenize2" name="blah2" />
+    <input type="text" id="demo-input-facebook-theme" name="blah2" />
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("#demo-input-facebook-theme").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+            theme: "facebook"
+        });
+    });
+    </script>
 </body>
 </html>
