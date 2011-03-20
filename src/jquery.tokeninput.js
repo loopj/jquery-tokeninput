@@ -312,14 +312,15 @@ $.TokenList = function (input, settings) {
                 return false;
             });
 
-        $.data(this_token.get(0), "tokeninput", {"id": id, "name": value});
+        var token_data = {"id": id, "name": value};
+        $.data(this_token.get(0), "tokeninput", token_data);
 
         // Save this token for duplicate checking
-        saved_tokens.push(this_token);
+        saved_tokens.push(token_data);
 
         // Update the hidden input
-        hidden_input.val(saved_tokens.map(function (el) {
-            return el.id;
+        hidden_input.val(saved_tokens.map(function (token) {
+            return token.id;
         }).join(settings.tokenDelimiter));
 
         token_count += 1;
@@ -334,14 +335,15 @@ $.TokenList = function (input, settings) {
 
         // See if the token already exists and select it if we don't want duplicates
         if(token_count > 0 && settings.preventDuplicates) {
-            var idx = find_saved_token(li_data.id);
-            if(idx > -1) {
-                // Don't insert the token, because it already exists
-                select_token(saved_tokens[idx]);
-                input_token.insertAfter(saved_tokens[idx]);
-                input_box.focus();
-                return;
-            }
+            // TODO: FIX
+            // var idx = find_saved_token(li_data.id);
+            // if(idx > -1) {
+            //     // Don't insert the token, because it already exists
+            //     select_token(saved_tokens[idx]);
+            //     input_token.insertAfter(saved_tokens[idx]);
+            //     input_box.focus();
+            //     return;
+            // }
         }
 
         // Check the token limit
@@ -366,19 +368,6 @@ $.TokenList = function (input, settings) {
         if($.isFunction(callback)) {
             callback(li_data);
         }
-    }
-
-    // Find the index of a saved token
-    function find_saved_token (id) {
-        var idx = -1;
-        $.each(saved_tokens, function(index, value) {
-            if($.data($(value).get(0), "tokeninput").id === id) {
-                idx = index;
-                return false;
-            }
-        });
-
-        return idx;
     }
 
     // Select a token in the token list
