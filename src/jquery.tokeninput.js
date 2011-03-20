@@ -94,7 +94,7 @@ $.TokenList = function (input, settings) {
     } else if(settings.theme) {
         // Use theme-suffixed default class names
         settings.classes = {};
-        $.each(DEFAULT_CLASSES, function(key, value) { 
+        $.each(DEFAULT_CLASSES, function(key, value) {
             settings.classes[key] = value + "-" + settings.theme;
         });
     } else {
@@ -312,6 +312,7 @@ $.TokenList = function (input, settings) {
                 return false;
             });
 
+        // Store data on the token
         var token_data = {"id": id, "name": value};
         $.data(this_token.get(0), "tokeninput", token_data);
 
@@ -335,16 +336,22 @@ $.TokenList = function (input, settings) {
 
         // See if the token already exists and select it if we don't want duplicates
         if(token_count > 0 && settings.preventDuplicates) {
+            var found_existing_token = null;
             token_list.children().each(function () {
                 var existing_token = $(this);
-                var existing_data = $.data(existing_token, "tokeninput");
+                var existing_data = $.data(existing_token.get(0), "tokeninput");
                 if(existing_data && existing_data.id === li_data.id) {
-                    select_token(existing_token);
-                    input_token.insertAfter(existing_token);
-                    input_box.focus();
-                    return;
+                    found_existing_token = existing_token;
+                    return false;
                 }
             });
+
+            if(found_existing_token) {
+                select_token(found_existing_token);
+                input_token.insertAfter(found_existing_token);
+                input_box.focus();
+                return;
+            }
         }
 
         // Check the token limit
