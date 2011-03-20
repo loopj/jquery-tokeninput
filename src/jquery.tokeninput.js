@@ -30,8 +30,7 @@ $.fn.tokenInput = function (url, options) {
         animateDropdown: true,
         onResult: null,
         onAdd: null,
-        onDelete: null,
-        crossDomain: false
+        onDelete: null
     }, options || {});
 
     settings.classes = $.extend({
@@ -250,12 +249,17 @@ $.TokenList = function (input, settings) {
         .appendTo(token_list)
         .append(input_box);
 
+    // Make a smart guess about cross-domain if it wasn't explicitly specified
+    if(settings.crossDomain === undefined) {
+        settings.crossDomain = (location.href.split(/\/+/g)[1] != settings.url.split(/\/+/g)[1]);
+    }
+
     init_list();
+
 
     //
     // Functions
     //
-
 
     // Pre-populate list if items exist
     function init_list () {
