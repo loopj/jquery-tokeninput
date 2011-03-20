@@ -216,6 +216,7 @@ $.TokenList = function (input, settings) {
     // Keep a reference to the original input box
     var hidden_input = $(input)
                            .hide()
+                           .val("")
                            .focus(function () {
                                input_box.focus();
                            })
