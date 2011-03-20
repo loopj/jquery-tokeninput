@@ -314,14 +314,6 @@ $.TokenList = function (input, settings) {
 
         $.data(this_token.get(0), "tokeninput", {"id": id, "name": value});
 
-        // Clear input box and make sure it keeps focus
-        input_box
-            .val("")
-            .focus();
-
-        // Don't show the help dropdown, they've got the idea
-        hide_dropdown();
-
         // Save this token id
         var id_string = id + settings.tokenDelimiter;
         hidden_input.val(hidden_input.val() + id_string);
@@ -360,6 +352,14 @@ $.TokenList = function (input, settings) {
 
         // Insert the new tokens
         insert_token(li_data.id, li_data.name);
+
+        // Clear input box and make sure it keeps focus
+        input_box
+            .val("")
+            .focus();
+
+        // Don't show the help dropdown, they've got the idea
+        hide_dropdown();
 
         // Execute the onAdd callback if defined
         if($.isFunction(callback)) {
