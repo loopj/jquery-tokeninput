@@ -30,7 +30,7 @@
     </div>
 
 
-    <h2>Facebook Theme</h2>
+    <h2 id="theme">Facebook Theme</h2>
     <div>
         <input type="text" id="demo-input-facebook-theme" name="blah2" />
         <input type="button" value="Submit" />
@@ -74,7 +74,7 @@
     </div>
 
 
-    <h2 id="custom-limits">Custom Search Delay and Search Limit</h2>
+    <h2 id="custom-limits">Custom Search Delay, Search Limit &amp; Token Limit</h2>
     <div>
         <input type="text" id="demo-input-custom-limits" name="blah" />
         <input type="button" value="Submit" />
@@ -82,7 +82,8 @@
         $(document).ready(function() {
             $("#demo-input-custom-limits").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
                 searchDelay: 2000,
-                minChars: 4
+                minChars: 4,
+                tokenLimit: 3
             });
         });
         </script>
@@ -117,7 +118,7 @@
     </div>
 
 
-    <h2 id="prevent-pre-populated">Pre-populated</h2>
+    <h2 id="pre-populated">Pre-populated</h2>
     <div>
         <input type="text" id="demo-input-pre-populated" name="blah" />
         <input type="button" value="Submit" />
@@ -149,7 +150,7 @@
     </div>
 
 
-    <h2 id="disable-onresult">Modify Response with onResult Callback</h2>
+    <h2 id="onresult">Modify Response with onResult Callback</h2>
     <div>
         <input type="text" id="demo-input-onresult" name="blah" />
         <input type="button" value="Submit" />
@@ -169,7 +170,7 @@
     </div>
 
 
-    <h2 id="disable-onadd-ondelete">Using onAdd and onDelete Callbacks</h2>
+    <h2 id="onadd-ondelete">Using onAdd and onDelete Callbacks</h2>
     <div>
         <input type="text" id="demo-input-onadd-ondelete" name="blah" />
         <input type="button" value="Submit" />

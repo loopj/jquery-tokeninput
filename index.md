@@ -2,9 +2,9 @@
 layout: project
 title: jQuery Tokeninput
 tagline: A jQuery Tokenizing Autocomplete Text Entry
-version: 1.3
+version: 1.4
 github_url: https://github.com/loopj/jquery-tokeninput
-download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.3
+download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.4
 ---
 
 <script type="text/javascript" src="https://github.com/loopj/jquery-tokeninput/raw/master/src/jquery.tokeninput.js"></script>
@@ -107,31 +107,51 @@ available:
 
 hintText
 :   The text to show in the dropdown label which appears when you first click 
-    in the search field. *default: "Type in a search term"*.
+    in the search field. *default: "Type in a search term"*
+    [(demo)](demo.html#custom-labels).
 
 noResultsText
 :   The text to show in the dropdown label when no results are found which 
-    match the current query. *default: "No results"*.
+    match the current query. *default: "No results"*
+    [(demo)](demo.html#custom-labels).
 
 searchingText
 :   The text to show in the dropdown label when a search is currently in
-    progress. *default: "Searching..."*.
+    progress. *default: "Searching..."* [(demo)](demo.html#custom-labels).
 
 deleteText
 :   The text to show on each token which deletes the token when clicked.
-    *default: &times;*.
+    *default: &times;* [(demo)](demo.html#custom-delete).
+
+theme
+:   Set this to a string, eg "facebook" when including theme css files to set
+    the css class suffix [(demo)](demo.html#theme).
+
+animateDropdown
+:   Set this to `false` to disable animation of the dropdown *default: true*
+    [(demo)](demo.html#disable-animation).
 
 searchDelay
 :   The delay, in milliseconds, between the user finishing typing and the
-    search being performed. *default: 300*.
+    search being performed. *default: 300* [(demo)](demo.html#custom-limits).
 
 minChars
 :   The minimum number of characters the user must enter before a search is
-    performed. *default: 1*.
+    performed. *default: 1* [(demo)](demo.html#custom-limits).
 
 tokenLimit
 :   The maximum number of results allowed to be selected by the user. Use 
-    `null` to allow unlimited selections. *default: null*.
+    `null` to allow unlimited selections. *default: null*
+    [(demo)](demo.html#custom-limits).
+
+prePopulate
+:   Prepopulate the tokeninput with existing data. Set to an array of JSON
+    objects, eg: `[{id: 3, name: "test", id: 5, name: "awesome"}]`
+    to pre-fill the input. *default: null* [(demo)](demo.html#pre-populated).
+
+preventDuplicates
+:   Prevent user from selecting duplicate values by setting this to `true`.
+    *default: false* [(demo)](demo.html#prevent-duplicates).
 
 jsonContainer
 :   The name of the json object in the response which contains the search
@@ -140,15 +160,6 @@ jsonContainer
 method
 :   The HTTP method (eg. GET, POST) to use for the server request. *default:
     "GET"*.
-
-prePopulate
-:   Prepopulate the tokeninput with existing data. Set to an array of JSON
-    objects, eg: `[{id: 3, name: "test", id: 5, name: "awesome"}]`
-    to pre-fill the input. *default: null*.
-
-preventDuplicates
-:   Prevent user from selecting duplicate values by setting this to `true`.
-    *default: false*.
 
 queryParam
 :   The name of the query param which you expect to contain the search term
@@ -161,19 +172,20 @@ crossDomain
 onResult
 :   A function to call whenever we receive results back from the server. You 
     can use this function to pre-process results from the server before they
-    are displayed to the user. *default: null*.
+    are displayed to the user. *default: null*
+    [(demo)](demo.html#onresult).
 
 onAdd
 :   A function to call whenever the user adds another token to their
-    selections. *defaut: null*.
+    selections. *defaut: null* [(demo)](demo.html#onadd-ondelete).
 
 onDelete
 :   A function to call whenever the user removes a token from their selections.
-    *default: null*.
+    *default: null* [(demo)](demo.html#onadd-ondelete).
 
 
-Reporting Bugs
---------------
+Reporting Bugs or Feature Requests
+----------------------------------
 Please report any bugs or feature requests on the github issues page for this
 project here:
 
