@@ -111,8 +111,9 @@ $.TokenList = function (input, settings) {
     // Basic cache to save on db hits
     var cache = new $.TokenList.Cache();
 
-    // Keep track of the timeout
+    // Keep track of the timeout, old vals
     var timeout;
+    var input_val;
 
     // Create a new text input an attach keyup events
     var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
@@ -127,6 +128,7 @@ $.TokenList = function (input, settings) {
         .blur(function () {
             hide_dropdown();
         })
+        .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
             var previous_token;
             var next_token;
@@ -275,6 +277,21 @@ $.TokenList = function (input, settings) {
         .appendTo(token_list)
         .append(input_box);
 
+    // Magic element to help us resize the text input
+    var input_resizer = $("<tester/>")
+        .insertAfter(input_box)
+        .css({
+            position: "absolute",
+            top: -9999,
+            left: -9999,
+            width: "auto",
+            fontSize: input_box.css("fontSize"),
+            fontFamily: input_box.css("fontFamily"),
+            fontWeight: input_box.css("fontWeight"),
+            letterSpacing: input_box.css("letterSpacing"),
+            whiteSpace: "nowrap"
+        });
+
     // Pre-populate list if items exist
     hidden_input.val("");
     li_data = settings.prePopulate;
@@ -289,6 +306,15 @@ $.TokenList = function (input, settings) {
     //
     // Private functions
     //
+
+    function resize_input() {
+        if(input_val === (input_val = input_box.val())) {return;}
+
+        // Enter new content into resizer and resize input accordingly
+        var escaped = input_val.replace(/&/g, '&amp;').replace(/\s/g,' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        input_resizer.html(escaped);
+        input_box.width(input_resizer.width() + 30);
+    }
 
     function is_printable_character(keycode) {
         return ((keycode >= 48 && keycode <= 90) ||     // 0-1a-z
