@@ -335,15 +335,16 @@ $.TokenList = function (input, settings) {
 
         // See if the token already exists and select it if we don't want duplicates
         if(token_count > 0 && settings.preventDuplicates) {
-            // TODO: FIX
-            // var idx = find_saved_token(li_data.id);
-            // if(idx > -1) {
-            //     // Don't insert the token, because it already exists
-            //     select_token(saved_tokens[idx]);
-            //     input_token.insertAfter(saved_tokens[idx]);
-            //     input_box.focus();
-            //     return;
-            // }
+            token_list.children().each(function () {
+                var existing_token = $(this);
+                var existing_data = $.data(existing_token, "tokeninput");
+                if(existing_data && existing_data.id === li_data.id) {
+                    select_token(existing_token);
+                    input_token.insertAfter(existing_token);
+                    input_box.focus();
+                    return;
+                }
+            });
         }
 
         // Check the token limit
