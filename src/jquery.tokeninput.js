@@ -44,7 +44,7 @@ $.fn.tokenInput = function (url, options) {
         dropdownItem2: "token-input-dropdown-item2",
         selectedDropdownItem: "token-input-selected-dropdown-item",
         inputToken: "token-input-input-token"
-    }, options.classes || {});
+    }, settings.classes || {});
 
     return this.each(function () {
         var list = new $.TokenList(this, settings);
