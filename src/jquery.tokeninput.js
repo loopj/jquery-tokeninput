@@ -231,18 +231,18 @@ $.TokenList = function (input, settings) {
     // The list to store the token items in
     var token_list = $("<ul />")
         .addClass(settings.classes.tokenList)
-        .insertBefore(hidden_input)
         .click(function (event) {
             var li = $(event.target).closest("li");
-            if(li && li.get(0) !== input_token.get(0)) {
+            if(li && li.get(0) && $.data(li.get(0), "tokeninput")) {
                 toggle_select_token(li);
-                return false;
             } else {
-                input_box.focus();
-
+                // Deselect selected token
                 if(selected_token) {
                     deselect_token($(selected_token), POSITION.END);
                 }
+
+                // Focus input box
+                input_box.focus();
             }
         })
         .mouseover(function (event) {
@@ -257,13 +257,7 @@ $.TokenList = function (input, settings) {
                 li.removeClass(settings.classes.highlightedToken);
             }
         })
-        .mousedown(function (event) {
-            // Stop user selecting text on tokens
-            var li = $(event.target).closest("li");
-            if(li){
-                return false;
-            }
-        });
+        .insertBefore(hidden_input);
 
 
     // The list to store the dropdown items in
@@ -347,9 +341,10 @@ $.TokenList = function (input, settings) {
         saved_tokens.push(token_data);
 
         // Update the hidden input
-        hidden_input.val(saved_tokens.map(function (token) {
-            return token.id;
-        }).join(settings.tokenDelimiter));
+        var token_ids = $.map(saved_tokens, function (el) {
+            return el.id;
+        });
+        hidden_input.val(token_ids.join(settings.tokenDelimiter));
 
         token_count += 1;
 
@@ -384,9 +379,6 @@ $.TokenList = function (input, settings) {
         // Insert the new tokens
         insert_token(li_data.id, li_data.name);
 
-        // Clear input box
-        input_box.val("");
-
         // Check the token limit
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
             input_box.hide();
@@ -395,6 +387,9 @@ $.TokenList = function (input, settings) {
         } else {
             input_box.focus();
         }
+
+        // Clear input box
+        input_box.val("");
 
         // Don't show the help dropdown, they've got the idea
         hide_dropdown();
@@ -435,13 +430,16 @@ $.TokenList = function (input, settings) {
     }
 
     // Toggle selection of a token in the token list
-    function toggle_select_token (token) {
-        if(selected_token === token.get(0)) {
+    function toggle_select_token(token) {
+        var previous_selected_token = selected_token;
+
+        if(selected_token) {
+            deselect_token($(selected_token), POSITION.END);
+        }
+
+        if(previous_selected_token === token.get(0)) {
             deselect_token(token, POSITION.END);
         } else {
-            if(selected_token) {
-                deselect_token($(selected_token), POSITION.END);
-            }
             select_token(token);
         }
     }
@@ -465,9 +463,10 @@ $.TokenList = function (input, settings) {
         });
 
         // Update the hidden input
-        hidden_input.val(saved_tokens.map(function (el) {
+        var token_ids = $.map(saved_tokens, function (el) {
             return el.id;
-        }).join(settings.tokenDelimiter));
+        });
+        hidden_input.val(token_ids.join(settings.tokenDelimiter));
 
         token_count -= 1;
 
@@ -486,10 +485,8 @@ $.TokenList = function (input, settings) {
 
     // Hide and clear the results dropdown
     function hide_dropdown () {
-        setTimeout(function() {
-            dropdown.hide().empty();
-            selected_dropdown_item = null;
-        }, 300);
+        dropdown.hide().empty();
+        selected_dropdown_item = null;
     }
 
     function show_dropdown_searching () {
