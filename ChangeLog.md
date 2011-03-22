@@ -1,3 +1,6 @@
+jQuery Tokeninput ChangeLog
+===========================
+
 Version 1.4.1 (2011-03-21)
 --------------------------
 - Fix IE 7/8 bug introduced in 1.4
