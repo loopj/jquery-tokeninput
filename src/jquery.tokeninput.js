@@ -25,6 +25,7 @@ var DEFAULT_SETTINGS = {
     tokenDelimiter: ",",
     preventDuplicates: false,
     prePopulate: null,
+    prePopulateWithDataPre: null,
     animateDropdown: true,
     onResult: null,
     onAdd: null,
@@ -295,6 +296,18 @@ $.TokenList = function (input, settings) {
             insert_token(value.id, value.name);
         });
     }
+  
+    // Pre-populate with data-pre from original input
+    if(settings.prePopulateWithDataPre) {
+      // Read data from original input box
+      li_data = $(input).data('pre');
+      if(li_data && li_data.length) {
+          $.each(li_data, function (index, value) {
+              insert_token(value.id, value.name);
+          });
+      }
+    }
+  
 
 
 
