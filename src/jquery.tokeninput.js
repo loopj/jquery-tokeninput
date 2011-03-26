@@ -28,6 +28,7 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     onResult: null,
     onAdd: null,
+    onBeforeAdd: null,
     onDelete: null
 };
 
@@ -354,7 +355,8 @@ $.TokenList = function (input, settings) {
     // Add a token to the token list based on user input
     function add_token (item) {
         var li_data = $.data(item.get(0), "tokeninput");
-        var callback = settings.onAdd;
+        var callback_onAdd = settings.onAdd;
+        var callback_onBeforeAdd = settings.onBeforeAdd;
 
         // See if the token already exists and select it if we don't want duplicates
         if(token_count > 0 && settings.preventDuplicates) {
@@ -376,6 +378,11 @@ $.TokenList = function (input, settings) {
             }
         }
 
+        // Execute the onAdd callback if defined
+        if($.isFunction(callback_onBeforeAdd)) {
+            callback_onBeforeAdd(li_data);
+        }
+
         // Insert the new tokens
         insert_token(li_data.id, li_data.name);
 
@@ -395,8 +402,8 @@ $.TokenList = function (input, settings) {
         hide_dropdown();
 
         // Execute the onAdd callback if defined
-        if($.isFunction(callback)) {
-            callback(li_data);
+        if($.isFunction(callback_onAdd)) {
+            callback_onAdd(li_data);
         }
     }
 
