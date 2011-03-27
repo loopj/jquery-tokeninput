@@ -54,15 +54,38 @@ var POSITION = {
 
 // Keys "enum"
 var KEY = {
-    BACKSPACE: 8,
-    TAB: 9,
-    RETURN: 13,
-    ESC: 27,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
+    ALT: 18
+    BACKSPACE: 8
+    CAPS_LOCK: 20
     COMMA: 188
+    COMMAND: 91
+    COMMAND_LEFT: 91
+    COMMAND_RIGHT: 93
+    CONTROL: 17
+    DELETE: 46
+    DOWN: 40
+    END: 35
+    ENTER: 13
+    ESCAPE: 27
+    HOME: 36
+    INSERT: 45
+    LEFT: 37
+    MENU: 93
+    NUMPAD_ADD: 107
+    NUMPAD_DECIMAL: 110
+    NUMPAD_DIVIDE: 111
+    NUMPAD_ENTER: 108
+    NUMPAD_MULTIPLY: 106
+    NUMPAD_SUBTRACT: 109
+    PAGE_DOWN: 34
+    PAGE_UP: 33
+    PERIOD: 190
+    RIGHT: 39
+    SHIFT: 16
+    SPACE: 32
+    TAB: 9
+    UP: 38
+    WINDOWS: 91
 };
 
 
@@ -192,7 +215,7 @@ $.TokenList = function (input, settings) {
                     break;
 
                 case KEY.TAB:
-                case KEY.RETURN:
+                case KEY.ENTER:
                 case KEY.COMMA:
                   if(selected_dropdown_item) {
                     add_token($(selected_dropdown_item));
@@ -200,14 +223,14 @@ $.TokenList = function (input, settings) {
                   }
                   break;
 
-                case KEY.ESC:
+                case KEY.ESCAPE:
                   hide_dropdown();
                   return true;
 
                 default:
-                    if(is_printable_character(event.keyCode)) {
-                      // set a timeout just long enough to let this function finish.
-                      setTimeout(function(){do_search(false);}, 5);
+                    if(String.fromCharCode(event.which)) {
+                        // set a timeout just long enough to let this function finish.
+                        setTimeout(function(){do_search(false);}, 5);
                     }
                     break;
             }
