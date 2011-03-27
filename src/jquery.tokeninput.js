@@ -84,7 +84,11 @@ $.TokenList = function (input, settings) {
 
     // Make a smart guess about cross-domain if it wasn't explicitly specified
     if(settings.crossDomain === undefined) {
-        settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
+        if(settings.url.indexOf("://") === -1) {
+            settings.crossDomain = false;
+        } else {
+            settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
+        }
     }
 
     // Build class names
