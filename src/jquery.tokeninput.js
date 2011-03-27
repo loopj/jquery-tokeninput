@@ -528,7 +528,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function show_dropdown_hint () {
         if(settings.hintText) {
-            dropdown.html("<p>"+settings.hintText+"</p>")
+            dropdown.html("<p>"+settings.hintText+"</p>");
             show_dropdown();
         }
     }
