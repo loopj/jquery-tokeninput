@@ -2,9 +2,9 @@
 layout: project
 title: jQuery Tokeninput
 tagline: A jQuery Tokenizing Autocomplete Text Entry
-version: 1.4.1
+version: 1.4.2
 github_url: https://github.com/loopj/jquery-tokeninput
-download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.4.1
+download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.4.2
 ---
 
 <script type="text/javascript" src="https://github.com/loopj/jquery-tokeninput/raw/master/src/jquery.tokeninput.js"></script>
@@ -86,7 +86,7 @@ Include jQuery and Tokeninput Javascript and stylesheet files on your page, and
 attach to your text input:
 Tokeninput stylesheet:
 {% highlight html %}
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="yourfiles/jquery.tokeninput.js"></script>
 <link rel="stylesheet" type="text/css" href="yourfiles/token-input.css" />
 
