@@ -73,28 +73,37 @@ var KEY = {
 
 
 // Expose the .tokenInput function to jQuery as a plugin
-$.fn.tokenInput = function (url, options) {
-    var settings = $.extend({}, DEFAULT_SETTINGS, options || {}, {url: url});
+$.fn.tokenInput = function (url_or_data, options) {
+    var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
 
     return this.each(function () {
-        new $.TokenList(this, settings);
+        new $.TokenList(this, url_or_data, settings);
     });
 };
 
 
 // TokenList class for each input
-$.TokenList = function (input, settings) {
+$.TokenList = function (input, url_or_data, settings) {
     //
     // Initialization
     //
 
-    // Make a smart guess about cross-domain if it wasn't explicitly specified
-    if(settings.crossDomain === undefined) {
-        if(settings.url.indexOf("://") === -1) {
-            settings.crossDomain = false;
-        } else {
-            settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
+    // Configure the data source
+    if($.type(url_or_data) == "string") {
+        // Set the url to query against
+        settings.url = url_or_data;
+
+        // Make a smart guess about cross-domain if it wasn't explicitly specified
+        if(settings.crossDomain === undefined) {
+            if(settings.url.indexOf("://") === -1) {
+                settings.crossDomain = false;
+            } else {
+                settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
+            }
         }
+    } else if($.type(url_or_data) == "object") {
+        // Set the local data to search through
+        settings.local_data = url_or_data;
     }
 
     // Build class names
@@ -197,7 +206,7 @@ $.TokenList = function (input, settings) {
                         hide_dropdown();
                     } else {
                         // set a timeout just long enough to let this function finish.
-                        setTimeout(function(){do_search(false);}, 5);
+                        setTimeout(function(){do_search();}, 5);
                     }
                     break;
 
@@ -218,7 +227,7 @@ $.TokenList = function (input, settings) {
                 default:
                     if(String.fromCharCode(event.which)) {
                         // set a timeout just long enough to let this function finish.
-                        setTimeout(function(){do_search(false);}, 5);
+                        setTimeout(function(){do_search();}, 5);
                     }
                     break;
             }
@@ -589,21 +598,21 @@ $.TokenList = function (input, settings) {
 
     // Do a search and show the "searching" dropdown if the input is longer
     // than settings.minChars
-    function do_search(immediate) {
+    function do_search() {
         var query = input_box.val().toLowerCase();
 
         if(query && query.length) {
             if(selected_token) {
                 deselect_token($(selected_token), POSITION.AFTER);
             }
-            if (query.length >= settings.minChars) {
+
+            if(query.length >= settings.minChars) {
                 show_dropdown_searching();
-                if (immediate) {
+                clearTimeout(timeout);
+
+                timeout = setTimeout(function(){
                     run_search(query);
-                } else {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(function(){run_search(query);}, settings.searchDelay);
-                }
+                }, settings.searchDelay);
             } else {
                 hide_dropdown();
             }
@@ -616,44 +625,49 @@ $.TokenList = function (input, settings) {
         if(cached_results) {
             populate_dropdown(query, cached_results);
         } else {
-            var callback = function(results) {
-              if($.isFunction(settings.onResult)) {
-                  results = settings.onResult.call(this, results);
-              }
-              cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+            if(settings.url) {
+                // Extract exisiting get params
+                var ajax_params = {};
+                ajax_params.data = {};
+                if(settings.url.indexOf("?") > -1) {
+                    var parts = settings.url.split("?");
+                    ajax_params.url = parts[0];
 
-              // only populate the dropdown if the results are associated with the active search query
-              if(input_box.val().toLowerCase() === query) {
-                  populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
-              }
-            };
+                    var param_array = parts[1].split("&");
+                    $.each(param_array, function (index, value) {
+                        var kv = value.split("=");
+                        ajax_params.data[kv[0]] = kv[1];
+                    });
+                } else {
+                    ajax_params.url = settings.url;
+                }
 
-            // Extract exisiting get params
-            var ajax_params = {};
-            ajax_params.data = {};
-            if(settings.url.indexOf("?") > -1) {
-                var parts = settings.url.split("?");
-                ajax_params.url = parts[0];
+                // Prepare the request
+                ajax_params.data[settings.queryParam] = query;
+                ajax_params.type = settings.method;
+                ajax_params.dataType = settings.contentType;
+                if(settings.crossDomain) {
+                    ajax_params.dataType = "jsonp";
+                }
 
-                var param_array = parts[1].split("&");
-                $.each(param_array, function (index, value) {
-                    var kv = value.split("=");
-                    ajax_params.data[kv[0]] = kv[1];
-                });
-            } else {
-                ajax_params.url = settings.url;
+                // Attach the success callback
+                ajax_params.success = function(results) {
+                  if($.isFunction(settings.onResult)) {
+                      results = settings.onResult.call(this, results);
+                  }
+                  cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+
+                  // only populate the dropdown if the results are associated with the active search query
+                  if(input_box.val().toLowerCase() === query) {
+                      populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+                  }
+                };
+
+                // Make the request
+                $.ajax(ajax_params);
+            } else if(settings.local_data) {
+                alert("Would do local search");
             }
-
-            // Prepare the request
-            ajax_params.data[settings.queryParam] = query;
-            ajax_params.type = settings.method;
-            ajax_params.success = callback;
-            ajax_params.dataType = settings.contentType;
-            if(settings.crossDomain) {
-                ajax_params.dataType = "jsonp";
-            }
-
-            $.ajax(ajax_params);
         }
     }
 };
