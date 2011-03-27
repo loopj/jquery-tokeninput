@@ -107,7 +107,11 @@ $.TokenList = function (input, settings) {
 
     // Make a smart guess about cross-domain if it wasn't explicitly specified
     if(settings.crossDomain === undefined) {
-        settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
+        if(settings.url.indexOf("://") === -1) {
+            settings.crossDomain = false;
+        } else {
+            settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
+        }
     }
 
     // Build class names
@@ -312,7 +316,7 @@ $.TokenList = function (input, settings) {
 
     // Pre-populate list if items exist
     hidden_input.val("");
-    li_data = settings.prePopulate;
+    li_data = settings.prePopulate || hidden_input.data("pre");
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
             insert_token(value.id, value.name);
