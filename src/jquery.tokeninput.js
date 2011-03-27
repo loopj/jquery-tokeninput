@@ -279,23 +279,17 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .insertBefore(hidden_input);
 
-
-    // The list to store the dropdown items in
-    var dropdown = $("<div>")
-        .addClass(settings.classes.dropdown)
-        .appendTo("body")
-        .css({
-            position: "absolute",
-            top: $(token_list).offset().top + $(token_list).height(),
-            left: $(token_list).offset().left
-        })
-        .hide();
-
     // The token holding the input box
     var input_token = $("<li />")
         .addClass(settings.classes.inputToken)
         .appendTo(token_list)
         .append(input_box);
+
+    // The list to store the dropdown items in
+    var dropdown = $("<div>")
+        .addClass(settings.classes.dropdown)
+        .appendTo("body")
+        .hide();
 
     // Magic element to help us resize the text input
     var input_resizer = $("<tester/>")
@@ -514,19 +508,28 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_dropdown_item = null;
     }
 
+    function show_dropdown() {
+        dropdown
+            .css({
+                position: "absolute",
+                top: $(token_list).offset().top + $(token_list).outerHeight(),
+                left: $(token_list).offset().left,
+                zindex: 999
+            })
+            .show();
+    }
+
     function show_dropdown_searching () {
         if(settings.searchingText) {
-            dropdown
-                .html("<p>"+settings.searchingText+"</p>")
-                .show();
+            dropdown.html("<p>"+settings.searchingText+"</p>");
+            show_dropdown();
         }
     }
 
     function show_dropdown_hint () {
         if(settings.hintText) {
-            dropdown
-                .html("<p>"+settings.hintText+"</p>")
-                .show();
+            dropdown.html("<p>"+settings.hintText+"</p>")
+            show_dropdown();
         }
     }
 
@@ -567,7 +570,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 $.data(this_li.get(0), "tokeninput", {"id": value.id, "name": value.name});
             });
 
-            dropdown.show();
+            show_dropdown();
 
             if(settings.animateDropdown) {
                 dropdown_ul.slideDown("fast");
@@ -576,9 +579,8 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         } else {
             if(settings.noResultsText) {
-                dropdown
-                    .html("<p>"+settings.noResultsText+"</p>")
-                    .show();
+                dropdown.html("<p>"+settings.noResultsText+"</p>");
+                show_dropdown();
             }
         }
     }
