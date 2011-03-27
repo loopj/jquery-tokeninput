@@ -1,6 +1,14 @@
 jQuery Tokeninput ChangeLog
 ===========================
 
+Version 1.4.2 (2011-03-26)
+--------------------------
+- Implemented basic local data search to search without an ajax request
+- Better support for unicode searches
+- Support for pre-population using the data-pre attribute on the original input
+- Fix cross-domain auto detection for relative and absolute path urls
+- Absolutely position the dropdown so it shows above all elements
+
 Version 1.4.1 (2011-03-21)
 --------------------------
 - Fix IE 7/8 bug introduced in 1.4
