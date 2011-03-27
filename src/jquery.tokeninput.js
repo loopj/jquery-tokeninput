@@ -283,7 +283,12 @@ $.TokenList = function (input, url_or_data, settings) {
     // The list to store the dropdown items in
     var dropdown = $("<div>")
         .addClass(settings.classes.dropdown)
-        .insertAfter(token_list)
+        .appendTo("body")
+        .css({
+            position: "absolute",
+            top: $(token_list).offset().top + $(token_list).height(),
+            left: $(token_list).offset().left
+        })
         .hide();
 
     // The token holding the input box
