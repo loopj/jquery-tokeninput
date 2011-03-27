@@ -293,7 +293,7 @@ $.TokenList = function (input, settings) {
 
     // Pre-populate list if items exist
     hidden_input.val("");
-    li_data = settings.prePopulate;
+    li_data = settings.prePopulate || hidden_input.data("pre");
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
             insert_token(value.id, value.name);
