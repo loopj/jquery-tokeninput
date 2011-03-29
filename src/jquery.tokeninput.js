@@ -246,6 +246,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Keep a reference to the selected token and dropdown item
     var selected_token = null;
+    var selected_token_index = 0;
     var selected_dropdown_item = null;
 
     // The list to store the token items in
@@ -339,7 +340,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Inner function to a token to the list
     function insert_token(id, value) {
-        var this_token = $("<li><p>"+ value +"</p> </li>")
+        var this_token = $("<li><p>"+ value +"</p></li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token);
 
@@ -357,7 +358,8 @@ $.TokenList = function (input, url_or_data, settings) {
         $.data(this_token.get(0), "tokeninput", token_data);
 
         // Save this token for duplicate checking
-        saved_tokens.push(token_data);
+        saved_tokens = saved_tokens.slice(0,selected_token_index).concat([token_data]).concat(saved_tokens.slice(selected_token_index));
+        selected_token_index++;
 
         // Update the hidden input
         var token_ids = $.map(saved_tokens, function (el) {
@@ -438,10 +440,13 @@ $.TokenList = function (input, url_or_data, settings) {
 
         if(position === POSITION.BEFORE) {
             input_token.insertBefore(token);
+            selected_token_index--;
         } else if(position === POSITION.AFTER) {
             input_token.insertAfter(token);
+            selected_token_index++;
         } else {
             input_token.appendTo(token_list);
+            selected_token_index = token_count;
         }
 
         // Show the input box and give it focus again
@@ -469,6 +474,9 @@ $.TokenList = function (input, url_or_data, settings) {
         var token_data = $.data(token.get(0), "tokeninput");
         var callback = settings.onDelete;
 
+        var index = token.prevAll().length;
+        if(index > selected_token_index) index--;
+
         // Delete the token
         token.remove();
         selected_token = null;
@@ -477,9 +485,8 @@ $.TokenList = function (input, url_or_data, settings) {
         input_box.focus();
 
         // Remove this token from the saved list
-        saved_tokens = $.grep(saved_tokens, function (val) {
-            return (val.id !== token_data.id);
-        });
+        saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
+        if(index < selected_token_index) selected_token_index--;
 
         // Update the hidden input
         var token_ids = $.map(saved_tokens, function (el) {
