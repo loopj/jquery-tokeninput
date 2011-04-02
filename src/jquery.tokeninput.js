@@ -89,7 +89,7 @@ $.TokenList = function (input, url_or_data, settings) {
     //
 
     // Configure the data source
-    if($.type(url_or_data) === "string") {
+    if(typeof(url_or_data) === "string") {
         // Set the url to query against
         settings.url = url_or_data;
 
@@ -101,7 +101,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
             }
         }
-    } else if($.type(url_or_data) === "array") {
+    } else if(typeof(url_or_data) === "object") {
         // Set the local data to search through
         settings.local_data = url_or_data;
     }
@@ -669,7 +669,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 ajax_params.success = function(results) {
                   if($.isFunction(settings.onResult)) {
                       results = settings.onResult.call(this, results);
-                  }
+                  }¡
                   cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
                   // only populate the dropdown if the results are associated with the active search query
