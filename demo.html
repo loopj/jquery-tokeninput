@@ -54,6 +54,21 @@
         </script>
     </div>
 
+    <h2>Local Data Search using Callback to provide data</h2>
+    <div>
+        A - B - C
+        <input type="text" class="local-callback-sample" name="bar" data-values='[{"id": 1, "name": "A"}, {"id": 2, "name": "B"}, {"id": 3, "name": "C"}]'>
+        one - two - three
+        <input type="text" class="local-callback-sample" name="foo" data-values='[{"id": 1, "name": "one"}, {"id": 2, "name": "two"}, {"id": 3, "name": "three"}]'>
+        <input type="button" value="Submit" />
+
+      <script type="text/javascript">
+        $(function() {
+            $(".local-callback-sample").tokenInput(function(input){return($(input).data('values'));});
+        });
+        </script>
+    </div>
+
 
     <h2 id="theme">Facebook Theme</h2>
     <div>

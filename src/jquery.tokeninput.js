@@ -74,9 +74,8 @@ var KEY = {
 
 // Expose the .tokenInput function to jQuery as a plugin
 $.fn.tokenInput = function (url_or_data, options) {
-    var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
-
     return this.each(function () {
+        var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
         new $.TokenList(this, url_or_data, settings);
     });
 };
@@ -104,6 +103,9 @@ $.TokenList = function (input, url_or_data, settings) {
     } else if(typeof(url_or_data) === "object") {
         // Set the local data to search through
         settings.local_data = url_or_data;
+    } else if($.isFunction(url_or_data)) {
+        //use callback to get local data
+        settings.local_data = url_or_data(input);
     }
 
     // Build class names

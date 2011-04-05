@@ -1,6 +1,11 @@
 jQuery Tokeninput ChangeLog
 ===========================
 
+Version 1.4.3 (2011-04-05) by Ervin Weber
+--------------------------
+- Allow more than item in jQuery wrapped set by having separate settings for each item
+- Allow callback function to provide local data for search
+
 Version 1.4.2 (2011-03-26)
 --------------------------
 - Implemented basic local data search to search without an ajax request
