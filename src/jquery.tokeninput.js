@@ -668,7 +668,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 // Attach the success callback
                 ajax_params.success = function(results) {
                   if($.isFunction(settings.onResult)) {
-                      results = settings.onResult.call(this, results);
+                      results = settings.onResult.call(this, results, query);
                   }
                   cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
@@ -687,7 +687,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 });
 
                 if($.isFunction(settings.onResult)) {
-                    results = settings.onResult.call(this, results);
+                    results = settings.onResult.call(this, results, query);
                 }
                 cache.add(query, results);
                 populate_dropdown(query, results);
