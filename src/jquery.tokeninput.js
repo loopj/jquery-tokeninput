@@ -686,6 +686,9 @@ $.TokenList = function (input, url_or_data, settings) {
                     return row.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
                 });
 
+                if($.isFunction(settings.onResult)) {
+                    results = settings.onResult.call(this, results);
+                }
                 cache.add(query, results);
                 populate_dropdown(query, results);
             }
