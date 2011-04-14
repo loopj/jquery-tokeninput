@@ -312,7 +312,7 @@ $.TokenList = function (input, url_or_data, settings) {
     hidden_input.val("");
     var li_data = settings.prePopulate || hidden_input.data("pre");
     if(settings.processPrePopulate && $.isFunction(settings.onResult)) {
-        li_data = settings.onResult.call(this, li_data);
+        li_data = settings.onResult.call(hidden_input, li_data);
     }    
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
@@ -421,7 +421,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Execute the onAdd callback if defined
         if($.isFunction(callback)) {
-            callback(li_data);
+            callback.call(hidden_input,li_data);
         }
     }
 
@@ -509,7 +509,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Execute the onDelete callback if defined
         if($.isFunction(callback)) {
-            callback(token_data);
+            callback.call(hidden_input,token_data);
         }
     }
 
@@ -672,7 +672,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 // Attach the success callback
                 ajax_params.success = function(results) {
                   if($.isFunction(settings.onResult)) {
-                      results = settings.onResult.call(this, results);
+                      results = settings.onResult.call(hidden_input, results);
                   }
                   cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
@@ -691,7 +691,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 });
 
                 if($.isFunction(settings.onResult)) {
-                    results = settings.onResult.call(this, results);
+                    results = settings.onResult.call(hidden_input, results);
                 }
                 cache.add(query, results);
                 populate_dropdown(query, results);
