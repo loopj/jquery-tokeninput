@@ -25,6 +25,7 @@ var DEFAULT_SETTINGS = {
     tokenDelimiter: ",",
     preventDuplicates: false,
     prePopulate: null,
+    processPrePopulate: false,
     animateDropdown: true,
     onResult: null,
     onAdd: null,
@@ -310,6 +311,9 @@ $.TokenList = function (input, url_or_data, settings) {
     // Pre-populate list if items exist
     hidden_input.val("");
     li_data = settings.prePopulate || hidden_input.data("pre");
+    if(settings.processPrePopulate && $.isFunction(settings.onResult)) {
+        li_data = settings.onResult.call(this, li_data);
+    }    
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
             insert_token(value.id, value.name);
