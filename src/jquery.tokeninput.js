@@ -310,7 +310,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Pre-populate list if items exist
     hidden_input.val("");
-    li_data = settings.prePopulate || hidden_input.data("pre");
+    var li_data = settings.prePopulate || hidden_input.data("pre");
     if(settings.processPrePopulate && $.isFunction(settings.onResult)) {
         li_data = settings.onResult.call(this, li_data);
     }    
