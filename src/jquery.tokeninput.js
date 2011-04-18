@@ -313,10 +313,10 @@ $.TokenList = function (input, url_or_data, settings) {
     var li_data = settings.prePopulate || hidden_input.data("pre");
     if(settings.processPrePopulate && $.isFunction(settings.onResult)) {
         li_data = settings.onResult.call(hidden_input, li_data);
-    }    
+    }
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
-            insert_token(value.id, value.name);
+            insert_token(value);
         });
     }
 
@@ -343,8 +343,8 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Inner function to a token to the list
-    function insert_token(id, value) {
-        var this_token = $("<li><p>"+ value +"</p></li>")
+    function insert_token(object) {
+        var this_token = $("<li><p>"+ object.name +"</p></li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token);
 
@@ -358,7 +358,7 @@ $.TokenList = function (input, url_or_data, settings) {
             });
 
         // Store data on the token
-        var token_data = {"id": id, "name": value};
+        var token_data = object;
         $.data(this_token.get(0), "tokeninput", token_data);
 
         // Save this token for duplicate checking
@@ -402,7 +402,7 @@ $.TokenList = function (input, url_or_data, settings) {
         }
 
         // Insert the new tokens
-        insert_token(li_data.id, li_data.name);
+        insert_token(li_data);
 
         // Check the token limit
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
@@ -577,7 +577,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     select_dropdown_item(this_li);
                 }
 
-                $.data(this_li.get(0), "tokeninput", {"id": value.id, "name": value.name});
+                $.data(this_li.get(0), "tokeninput", value);
             });
 
             show_dropdown();
