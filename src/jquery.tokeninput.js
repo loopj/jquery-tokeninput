@@ -23,6 +23,7 @@ var DEFAULT_SETTINGS = {
     contentType: "json",
     queryParam: "q",
     tokenDelimiter: ",",
+    tokenValue: "id",
     preventDuplicates: false,
     prePopulate: null,
     processPrePopulate: false,
@@ -366,10 +367,10 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_token_index++;
 
         // Update the hidden input
-        var token_ids = $.map(saved_tokens, function (el) {
-            return el.id;
+        var token_values = $.map(saved_tokens, function (el) {
+            return el[settings.tokenValue];
         });
-        hidden_input.val(token_ids.join(settings.tokenDelimiter));
+        hidden_input.val(token_values.join(settings.tokenDelimiter));
 
         token_count += 1;
 
