@@ -313,7 +313,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var li_data = settings.prePopulate || hidden_input.data("pre");
     if(settings.processPrePopulate && $.isFunction(settings.onResult)) {
         li_data = settings.onResult.call(hidden_input, li_data);
-    }
+    }    
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
             insert_token(value);
@@ -542,10 +542,14 @@ $.TokenList = function (input, url_or_data, settings) {
             show_dropdown();
         }
     }
+    
+    RegExp.escape = function(text) {
+      return text.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+    };
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
-        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
+        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + RegExp.escape(term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
     }
 
     // Populate the results dropdown with some results
