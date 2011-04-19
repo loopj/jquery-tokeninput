@@ -90,16 +90,22 @@ $.TokenList = function (input, url_or_data, settings) {
     //
 
     // Configure the data source
-    if(typeof(url_or_data) === "string") {
+    if($.type(url_or_data) === "string" || $.type(url_or_data) === "function") {
         // Set the url to query against
         settings.url = url_or_data;
 
+        // If the URL is a function, evaluate it here to do our initalization work
+        var url = settings.url;
+        if($.type(url_or_data) === "function") {
+           url = settings.url.call();
+        }
+
         // Make a smart guess about cross-domain if it wasn't explicitly specified
         if(settings.crossDomain === undefined) {
-            if(settings.url.indexOf("://") === -1) {
+            if(url.indexOf("://") === -1) {
                 settings.crossDomain = false;
             } else {
-                settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
+                settings.crossDomain = (location.href.split(/\/+/g)[1] !== url.split(/\/+/g)[1]);
             }
         }
     } else if(typeof(url_or_data) === "object") {
@@ -645,11 +651,16 @@ $.TokenList = function (input, url_or_data, settings) {
         } else {
             // Are we doing an ajax search or local data search?
             if(settings.url) {
+                var url = settings.url;
+                // If we have a function passed as URL, evaluate it
+                if(typeof settings.url == 'function') {
+                    url = settings.url.call();
+                }
                 // Extract exisiting get params
                 var ajax_params = {};
                 ajax_params.data = {};
-                if(settings.url.indexOf("?") > -1) {
-                    var parts = settings.url.split("?");
+                if(url.indexOf("?") > -1) {
+                    var parts = url.split("?");
                     ajax_params.url = parts[0];
 
                     var param_array = parts[1].split("&");
@@ -658,7 +669,7 @@ $.TokenList = function (input, url_or_data, settings) {
                         ajax_params.data[kv[0]] = kv[1];
                     });
                 } else {
-                    ajax_params.url = settings.url;
+                    ajax_params.url = url;
                 }
 
                 // Prepare the request
