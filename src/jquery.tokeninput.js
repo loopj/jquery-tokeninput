@@ -35,6 +35,7 @@ var DEFAULT_SETTINGS = {
 // Default classes to use when theming
 var DEFAULT_CLASSES = {
     tokenList: "token-input-list",
+    tokenListFocused: "token-input-focus",
     token: "token-input-token",
     tokenDelete: "token-input-delete-token",
     selectedToken: "token-input-selected-token",
@@ -144,9 +145,11 @@ $.TokenList = function (input, url_or_data, settings) {
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
                 show_dropdown_hint();
             }
+            token_list.addClass(settings.classes.tokenListFocused);
         })
         .blur(function () {
             hide_dropdown();
+            token_list.removeClass(settings.classes.tokenListFocused);
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
