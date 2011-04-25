@@ -19,6 +19,7 @@ var DEFAULT_SETTINGS = {
     minChars: 1,
     tokenLimit: null,
     jsonContainer: null,
+    allowCustomEntry: false,
     method: "GET",
     contentType: "json",
     queryParam: "q",
@@ -145,7 +146,9 @@ $.TokenList = function (input, url_or_data, settings) {
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
                 show_dropdown_hint();
             }
-            token_list.addClass(settings.classes.tokenListFocused);
+            if($(input_box).is(":visible")) {
+                token_list.addClass(settings.classes.tokenListFocused);
+            }
         })
         .blur(function () {
             hide_dropdown();
@@ -181,16 +184,45 @@ $.TokenList = function (input, url_or_data, settings) {
                         }
                     } else {
                         var dropdown_item = null;
+                        
+                        if(settings.allowCustomEntry == true) {
 
-                        if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
-                            dropdown_item = $(selected_dropdown_item).next();
+                            if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
+                                if($(selected_dropdown_item).length) {
+                                    if($(selected_dropdown_item).next().length) {
+                                        dropdown_item = $(selected_dropdown_item).next();
+                                    } else {
+                                        deselect_dropdown_item($(selected_dropdown_item));
+                                    }
+                                } else {
+                                    dropdown_item = $(dropdown).find('li:first-child');
+                                }
+                            } else {
+                                if($(selected_dropdown_item).length) {
+                                    if($(selected_dropdown_item).prev().length) {
+                                        dropdown_item = $(selected_dropdown_item).prev();
+                                    } else {
+                                        deselect_dropdown_item($(selected_dropdown_item));
+                                    }
+                                } else {
+                                    dropdown_item = $(dropdown).find('li:last-child');
+                                }
+                            }
+                            
                         } else {
-                            dropdown_item = $(selected_dropdown_item).prev();
+                        
+                            if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
+                                dropdown_item = $(selected_dropdown_item).next();
+                            } else {
+                                dropdown_item = $(selected_dropdown_item).prev();
+                            }
+                        
                         }
-
-                        if(dropdown_item.length) {
+                        
+                        if(dropdown_item != null) {
                             select_dropdown_item(dropdown_item);
                         }
+                        
                         return false;
                     }
                     break;
@@ -218,11 +250,16 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
                 case KEY.COMMA:
-                  if(selected_dropdown_item) {
-                    add_token($(selected_dropdown_item));
-                    return false;
-                  }
-                  break;
+                    if(selected_dropdown_item) {
+                        add_token($(selected_dropdown_item));
+                        return false;
+                    }
+                    
+                    if(settings.allowCustomEntry == true) {
+                        add_token($(input_box).val());
+                        return false;
+                    }
+                    break;
 
                 case KEY.ESCAPE:
                   hide_dropdown();
@@ -381,7 +418,11 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Add a token to the token list based on user input
     function add_token (item) {
-        var li_data = $.data(item.get(0), "tokeninput");
+        if(typeof(item) === "string") {
+            var li_data = {id: item, name: item};
+        } else {
+            var li_data = $.data(item.get(0), "tokeninput");
+        }
         var callback = settings.onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
@@ -579,9 +620,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 } else {
                     this_li.addClass(settings.classes.dropdownItem2);
                 }
-
-                if(index === 0) {
-                    select_dropdown_item(this_li);
+                
+                if(settings.allowCustomEntry == false) {
+                    if(index === 0) {
+                        select_dropdown_item(this_li);
+                    }
                 }
 
                 $.data(this_li.get(0), "tokeninput", value);
