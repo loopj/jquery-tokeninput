@@ -255,7 +255,7 @@ $.TokenList = function (input, url_or_data, settings) {
                         return false;
                     }
                     
-                    if(settings.allowCustomEntry == true) {
+                    if(settings.allowCustomEntry == true && $(input_box).val() != '') {
                         add_token($(input_box).val());
                         return false;
                     }
