@@ -209,6 +209,10 @@ $.TokenList = function (input, url_or_data, settings) {
                                 }
                             }
                             
+                            if(dropdown_item != null) {
+                                select_dropdown_item(dropdown_item);
+                            }
+                            
                         } else {
                         
                             if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
@@ -216,11 +220,11 @@ $.TokenList = function (input, url_or_data, settings) {
                             } else {
                                 dropdown_item = $(selected_dropdown_item).prev();
                             }
+                            
+                            if(dropdown_item.length) {
+                                select_dropdown_item(dropdown_item);
+                            }
                         
-                        }
-                        
-                        if(dropdown_item != null) {
-                            select_dropdown_item(dropdown_item);
                         }
                         
                         return false;
