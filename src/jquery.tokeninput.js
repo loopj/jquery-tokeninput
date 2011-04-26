@@ -145,6 +145,8 @@ $.TokenList = function (input, url_or_data, settings) {
         .focus(function () {
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
                 show_dropdown_hint();
+            } else {
+                $(this).blur();
             }
             if($(input_box).is(":visible")) {
                 token_list.addClass(settings.classes.tokenListFocused);
