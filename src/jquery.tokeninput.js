@@ -258,13 +258,12 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.COMMA:
                     if(selected_dropdown_item) {
                         add_token($(selected_dropdown_item));
-                        return false;
                     }
                     
                     if(settings.allowCustomEntry == true && $(input_box).val() != '') {
                         add_token($(input_box).val());
-                        return false;
                     }
+                    return false;
                     break;
 
                 case KEY.ESCAPE:
