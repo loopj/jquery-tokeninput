@@ -62,6 +62,14 @@ li.token-input-selected-token span {
     color: #bbb;
 }
 
+li.token-input-insert-before {
+  border-top: 1px solid red;
+}
+
+li.token-input-insert-after {
+  border-bottom: 1px solid red;
+}
+
 div.token-input-dropdown {
     position: absolute;
     width: 400px;
