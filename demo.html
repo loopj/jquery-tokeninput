@@ -212,5 +212,18 @@
         });
         </script>
     </div>
+    
+    <h2 id="allowcreation">Allow to Create on the fly</h2>
+    <div>
+        <input type="text" id="demo-input-allowcreation" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-allowcreation").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                allowCreation: true
+            });
+        });
+        </script>
+    </div>
 </body>
 </html>

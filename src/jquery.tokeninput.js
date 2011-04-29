@@ -29,7 +29,8 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     onResult: null,
     onAdd: null,
-    onDelete: null
+    onDelete: null,
+    allowCreation: false
 };
 
 // Default classes to use when theming
@@ -578,7 +579,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     select_dropdown_item(this_li);
                 }
 
-                $.data(this_li.get(0), "tokeninput", {"id": value.id, "name": value.name});
+                $.data(this_li.get(0), "tokeninput", value);
             });
 
             show_dropdown();
@@ -674,6 +675,10 @@ $.TokenList = function (input, url_or_data, settings) {
                   if($.isFunction(settings.onResult)) {
                       results = settings.onResult.call(hidden_input, results);
                   }
+                  
+                  if(settings.allowCreation) {
+                      results.push({name: input_box.val() + ' (new)', id: input_box.val(), _new: true});
+                  }
                   cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
                   // only populate the dropdown if the results are associated with the active search query
@@ -693,7 +698,13 @@ $.TokenList = function (input, url_or_data, settings) {
                 if($.isFunction(settings.onResult)) {
                     results = settings.onResult.call(hidden_input, results);
                 }
-                cache.add(query, results);
+                
+                if(settings.allowCreation) {
+                    results.push({name: input_box.val() + ' (new)', id: input_box.val(), _new: true});
+                }
+                
+                cache.add(query, results);                
+                
                 populate_dropdown(query, results);
             }
         }
