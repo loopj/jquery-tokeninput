@@ -579,7 +579,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     select_dropdown_item(this_li);
                 }
 
-                $.data(this_li.get(0), "tokeninput", value);
+                $.data(this_li.get(0), "tokeninput", {"id": value.id, "name": value.name});
             });
 
             show_dropdown();
@@ -677,7 +677,7 @@ $.TokenList = function (input, url_or_data, settings) {
                   }
                   
                   if(settings.allowCreation) {
-                      results.push({name: input_box.val() + ' (new)', id: input_box.val(), _new: true});
+                      results.push({name: input_box.val() + ' (new)', id: input_box.val()});
                   }
                   cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
@@ -700,7 +700,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
                 
                 if(settings.allowCreation) {
-                    results.push({name: input_box.val() + ' (new)', id: input_box.val(), _new: true});
+                    results.push({name: input_box.val() + ' (new)', id: input_box.val()});
                 }
                 
                 cache.add(query, results);                
