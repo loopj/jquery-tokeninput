@@ -511,7 +511,7 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_token = token.get(0);
 
         // Hide input box
-        input_box.val("");
+        input_box.val("").css('color', 'transparent');
 
         // Hide dropdown if it is visible (eg if we clicked to select token)
         hide_dropdown();
@@ -521,6 +521,8 @@ $.TokenList = function (input, url_or_data, settings) {
     function deselect_token (token, position) {
         token.removeClass(settings.classes.selectedToken);
         selected_token = null;
+        
+        input_box.css('color', '');
 
         if(position === POSITION.BEFORE) {
             input_token.insertBefore(token);
@@ -566,7 +568,7 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_token = null;
 
         // Show the input box and give it focus again
-        input_box.focus();
+        input_box.focus().css('color', '');
 
         // Remove this token from the saved list
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
