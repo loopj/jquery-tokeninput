@@ -154,9 +154,9 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         })
         .blur(function () {
-            hide_dropdown();
             deselect_token($(selected_token));
             token_list.removeClass(settings.classes.tokenListFocused);
+            hide_dropdown();
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
@@ -270,6 +270,13 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
                 case KEY.COMMA:
+                    
+                    if(event.keyCode == KEY.TAB && !$(input_box).val().length) {
+                        hide_dropdown();
+                        $(this).blur();
+                        return true;
+                    }
+                
                     if(selected_dropdown_item) {
                         add_token($(selected_dropdown_item));
                     }
@@ -277,6 +284,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     if(settings.allowCustomEntry == true && $(input_box).val() != '') {
                         add_token($(input_box).val());
                     }
+                    
                     return false;
                     break;
 
