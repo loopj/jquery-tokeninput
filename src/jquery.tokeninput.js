@@ -643,9 +643,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 dropdown_ul.show();
             }
         } else {
-            if(settings.noResultsText) {
+            if(settings.noResultsText && !settings.allowCustomEntry) {
                 dropdown.html("<p>"+settings.noResultsText+"</p>");
                 show_dropdown();
+            } else {
+                hide_dropdown();
             }
         }
     }
