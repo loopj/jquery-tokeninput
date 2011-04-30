@@ -231,7 +231,8 @@ $.TokenList = function (input, url_or_data, settings) {
                         
                         }
                         
-                        return false;
+                        // we need to allow caret moving here
+                        return true;
                     }
                     break;
 
