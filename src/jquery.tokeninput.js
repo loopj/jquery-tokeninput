@@ -70,6 +70,7 @@ var KEY = {
     UP: 38,
     RIGHT: 39,
     DOWN: 40,
+    DELETE: 46,
     NUMPAD_ENTER: 108,
     COMMA: 188
 };
@@ -252,6 +253,18 @@ $.TokenList = function (input, url_or_data, settings) {
                     }
                     break;
 
+                case KEY.DELETE:
+                    next_token = input_token.next();
+                    if(!$(this).val().length) {
+                        if(selected_token) {
+                            delete_token($(selected_token));
+                        } else if(next_token.length) {
+                            select_token($(next_token.get(0)));
+                        }
+                    }
+                
+                    break;
+                
                 case KEY.TAB:
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
