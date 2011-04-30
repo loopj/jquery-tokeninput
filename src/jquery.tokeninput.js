@@ -290,7 +290,7 @@ $.TokenList = function (input, url_or_data, settings) {
                         add_token($(selected_dropdown_item));
                     }
                     
-                    if(settings.allowCustomEntry == true && $(input_box).val() != '') {
+                    if(settings.allowCustomEntry == true && $.trim($(input_box).val()) != '') {
                         add_token($(input_box).val());
                     }
                     
@@ -455,6 +455,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Add a token to the token list based on user input
     function add_token (item) {
+        
         if(typeof(item) === "string") {
             var li_data = {id: item, name: item};
         } else {
