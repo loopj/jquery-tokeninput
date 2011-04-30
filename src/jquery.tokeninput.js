@@ -155,6 +155,7 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .blur(function () {
             hide_dropdown();
+            deselect_token($(selected_token));
             token_list.removeClass(settings.classes.tokenListFocused);
         })
         .bind("keyup keydown blur update", resize_input)
@@ -314,6 +315,7 @@ $.TokenList = function (input, url_or_data, settings) {
         .click(function (event) {
             var li = $(event.target).closest("li");
             if(li && li.get(0) && $.data(li.get(0), "tokeninput")) {
+                input_box.focus();
                 toggle_select_token(li);
             } else {
                 // Deselect selected token
