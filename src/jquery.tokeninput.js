@@ -154,7 +154,9 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         })
         .blur(function () {
-            deselect_token($(selected_token));
+            if(selected_token) {
+                deselect_token($(selected_token));
+            }
             token_list.removeClass(settings.classes.tokenListFocused);
             hide_dropdown();
         })
@@ -180,9 +182,15 @@ $.TokenList = function (input, url_or_data, settings) {
                                 deselect_token($(selected_token), POSITION.AFTER);
                             }
                         } else if((event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) && previous_token.length) {
+                            if(selected_token) {
+                                deselect_token($(selected_token));
+                            }
                             // We are moving left, select the previous token if it exists
                             select_token($(previous_token.get(0)));
                         } else if((event.keyCode === KEY.RIGHT || event.keyCode === KEY.DOWN) && next_token.length) {
+                            if(selected_token) {
+                                deselect_token($(selected_token));
+                            }
                             // We are moving right, select the next token if it exists
                             select_token($(next_token.get(0)));
                         }
