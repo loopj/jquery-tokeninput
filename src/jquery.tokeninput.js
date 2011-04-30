@@ -126,7 +126,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
 
     // Save the tokens
-    var saved_tokens = [];
+    var saved_tokens = {};
 
     // Keep track of the number of tokens in the list
     var token_count = 0;
@@ -309,6 +309,12 @@ $.TokenList = function (input, url_or_data, settings) {
                     break;
             }
         });
+        
+    var unique_counter = 0;
+    function get_unique_id() {
+        unique_counter++;
+        return 'u' + unique_counter;
+    }
 
     // Keep a reference to the original input box
     var hidden_input = $(input)
@@ -421,9 +427,13 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Inner function to a token to the list
     function insert_token(object) {
+        
+        var uniqueid = get_unique_id();
+        
         var this_token = $("<li><p>"+ object.name +"</p></li>")
           .addClass(settings.classes.token)
-          .insertBefore(input_token);
+          .insertBefore(input_token)
+          .attr('data-uniqueid', uniqueid);
 
         // The 'delete token' button
         $("<span>" + settings.deleteText + "</span>")
@@ -439,14 +449,11 @@ $.TokenList = function (input, url_or_data, settings) {
         $.data(this_token.get(0), "tokeninput", token_data);
 
         // Save this token for duplicate checking
-        saved_tokens = saved_tokens.slice(0,selected_token_index).concat([token_data]).concat(saved_tokens.slice(selected_token_index));
+        
+        saved_tokens[uniqueid] = token_data;
+        update_hidden_input();
+        
         selected_token_index++;
-
-        // Update the hidden input
-        var token_ids = $.map(saved_tokens, function (el) {
-            return el.id;
-        });
-        hidden_input.val(token_ids.join(settings.tokenDelimiter));
 
         token_count += 1;
 
@@ -457,7 +464,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function add_token (item) {
         
         if(typeof(item) === "string") {
-            var li_data = {id: item, name: item};
+            var li_data = {name: item};
         } else {
             var li_data = $.data(item.get(0), "tokeninput");
         }
@@ -563,7 +570,9 @@ $.TokenList = function (input, url_or_data, settings) {
 
         var index = token.prevAll().length;
         if(index > selected_token_index) index--;
-
+        
+        var uniqueid = $(token).attr('data-uniqueid');
+        
         // Delete the token
         token.remove();
         selected_token = null;
@@ -572,14 +581,10 @@ $.TokenList = function (input, url_or_data, settings) {
         input_box.focus().css('color', '');
 
         // Remove this token from the saved list
-        saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
+        delete saved_tokens[uniqueid];
+        update_hidden_input();
+        
         if(index < selected_token_index) selected_token_index--;
-
-        // Update the hidden input
-        var token_ids = $.map(saved_tokens, function (el) {
-            return el.id;
-        });
-        hidden_input.val(token_ids.join(settings.tokenDelimiter));
 
         token_count -= 1;
 
@@ -594,6 +599,20 @@ $.TokenList = function (input, url_or_data, settings) {
         if($.isFunction(callback)) {
             callback.call(hidden_input,token_data);
         }
+    }
+    
+    // Update the hidden input value
+    function update_hidden_input() {
+        var token_ids = [];
+        $.each(saved_tokens, function (index, value) {
+            if(value.id) {
+                token_ids[token_ids.length] = value.id;
+            } else {
+                token_ids[token_ids.length] = "'" + value.name.replace(/\'/gi, "\\'") + "'";
+            }
+        });
+        
+        hidden_input.val(token_ids.join(settings.tokenDelimiter));
     }
 
     // Hide and clear the results dropdown
