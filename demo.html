@@ -212,5 +212,18 @@
         });
         </script>
     </div>
+    
+    <h2 id="allowcustomentry">Allowing Custom Entry</h2>
+    <div>
+        <input type="text" id="demo-input-allowcustomentry" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-allowcustomentry").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                allowCustomEntry: true
+            });
+        });
+        </script>
+    </div>
 </body>
 </html>
