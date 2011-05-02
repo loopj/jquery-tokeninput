@@ -95,10 +95,7 @@ $.TokenList = function (input, url_or_data, settings) {
         settings.url = url_or_data;
 
         // If the URL is a function, evaluate it here to do our initalization work
-        var url = settings.url;
-        if($.type(url_or_data) === "function") {
-           url = settings.url.call();
-        }
+        var url = computeURL();
 
         // Make a smart guess about cross-domain if it wasn't explicitly specified
         if(settings.crossDomain === undefined) {
@@ -645,17 +642,14 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Do the actual search
     function run_search(query) {
-        var cached_results = cache.get(query);
+        var cache_key = query + computeURL();
+        var cached_results = cache.get(cache_key);
         if(cached_results) {
             populate_dropdown(query, cached_results);
         } else {
             // Are we doing an ajax search or local data search?
             if(settings.url) {
-                var url = settings.url;
-                // If we have a function passed as URL, evaluate it
-                if(typeof settings.url == 'function') {
-                    url = settings.url.call();
-                }
+                var url = computeURL();
                 // Extract exisiting get params
                 var ajax_params = {};
                 ajax_params.data = {};
@@ -685,7 +679,7 @@ $.TokenList = function (input, url_or_data, settings) {
                   if($.isFunction(settings.onResult)) {
                       results = settings.onResult.call(hidden_input, results);
                   }
-                  cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+                  cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
                   // only populate the dropdown if the results are associated with the active search query
                   if(input_box.val().toLowerCase() === query) {
@@ -704,10 +698,19 @@ $.TokenList = function (input, url_or_data, settings) {
                 if($.isFunction(settings.onResult)) {
                     results = settings.onResult.call(hidden_input, results);
                 }
-                cache.add(query, results);
+                cache.add(cache_key, results);
                 populate_dropdown(query, results);
             }
         }
+    }
+
+    // compute the dynamic URL
+    function computeURL() {
+        var url = settings.url;
+        if(typeof settings.url == 'function') {
+            url = settings.url.call();
+        }
+        return url;
     }
 };
 
