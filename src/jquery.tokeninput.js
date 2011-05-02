@@ -227,8 +227,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 default:
                     if(String.fromCharCode(event.which)) {
-                        // set a timeout just long enough to let this function finish.
-                        setTimeout(function(){do_search();}, 5);
+                        if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
+                            // set a timeout just long enough to let this function finish.
+                            setTimeout(function(){do_search();}, 5);
+                        }
                     }
                     break;
             }
