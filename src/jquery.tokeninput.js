@@ -409,14 +409,11 @@ $.TokenList = function (input, url_or_data, settings) {
         // Check the token limit
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
             input_box.hide();
-            hide_dropdown();
-            return;
         } else {
             input_box.focus();
+            // Clear input box
+            input_box.val("");
         }
-
-        // Clear input box
-        input_box.val("");
 
         // Don't show the help dropdown, they've got the idea
         hide_dropdown();
