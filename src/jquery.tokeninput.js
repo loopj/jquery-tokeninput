@@ -146,8 +146,6 @@ $.TokenList = function (input, url_or_data, settings) {
         .focus(function () {
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
                 show_dropdown_hint();
-            } else {
-                $(this).blur();
             }
             if($(input_box).is(":visible")) {
                 token_list.addClass(settings.classes.tokenListFocused);
@@ -480,9 +478,15 @@ $.TokenList = function (input, url_or_data, settings) {
             token_list.children().each(function () {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
-                if(existing_data && existing_data.id === li_data.id) {
-                    found_existing_token = existing_token;
-                    return false;
+                if(existing_data) {
+                    if(existing_data.id && existing_data.id === li_data.id) {
+                        found_existing_token = existing_token;
+                        return false;
+                    }
+                    if(!existing_data.id && existing_data.name === li_data.name) {
+                        found_existing_token = existing_token;
+                        return false;
+                    }
                 }
             });
 
@@ -496,6 +500,9 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Insert the new tokens
         insert_token(li_data);
+        
+        // Clear input box
+        input_box.val("");
 
         // Check the token limit
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
@@ -503,9 +510,6 @@ $.TokenList = function (input, url_or_data, settings) {
             hide_dropdown();
         } else {
             input_box.focus();
-            
-            // Clear input box
-            input_box.val("");
 
             // Don't show the help dropdown, they've got the idea
             hide_dropdown();
@@ -732,6 +736,10 @@ $.TokenList = function (input, url_or_data, settings) {
     // than settings.minChars
     function do_search() {
         var query = input_box.val();
+        
+        if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
+            return false;
+        }
 
         if(query && query.length) {
             if(selected_token) {
