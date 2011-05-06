@@ -523,14 +523,36 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     function show_dropdown() {
-        dropdown
-            .css({
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: token_list.width()
-            })
-            .show();
+        var dropdown_height = $("ul", dropdown).height(),
+            bottom_height_left = $(document).height() - $(token_list).offset().top - $(token_list).outerHeight(),
+            top_height_left = $(token_list).offset().top;
+
+        if (dropdown_height > bottom_height_left && dropdown_height < top_height_left) {
+            // Show dropdown to the top, ergo 'dropup'
+            dropdown
+                .css({
+                    position: "absolute",
+                    bottom: $(token_list).outerHeight(),
+                    top: '',
+                    left: 0,
+                    width: token_list.width()
+                })
+                .addClass('token-input-dropdown-top-facebook')
+                .removeClass('token-input-dropdown-bottom-facebook')
+                .show();
+        } else {
+            dropdown
+                .css({
+                    position: "absolute",
+                    top: 0,
+                    bottom: '',
+                    left: 0,
+                    width: token_list.width()
+                })
+                .removeClass('token-input-dropdown-top-facebook')
+                .addClass('token-input-dropdown-bottom-facebook')
+                .show();
+        }
     }
 
     function show_dropdown_searching () {
