@@ -1,0 +1,216 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="src/jquery.tokeninput.js"></script>
+
+    <link rel="stylesheet" href="styles/token-input.css" type="text/css" />
+    <link rel="stylesheet" href="styles/token-input-facebook.css" type="text/css" />
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("input[type=button]").click(function () {
+            alert("Would submit: " + $(this).siblings("input[type=text]").val());
+        });
+    });
+    </script>
+</head>
+
+<body>
+    <h1>jQuery Tokeninput Demos</h1>
+
+    <h2>Simple Server-Backed Search</h2>
+    <div>
+        <input type="text" id="demo-input" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
+        });
+        </script>
+    </div>
+
+
+    <h2>Simple Local Data Search</h2>
+    <div>
+        <input type="text" id="demo-input-local" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-local").tokenInput([
+                {id: 7, name: "Ruby"},
+                {id: 11, name: "Python"},
+                {id: 13, name: "JavaScript"},
+                {id: 17, name: "ActionScript"},
+                {id: 19, name: "Scheme"},
+                {id: 23, name: "Lisp"},
+                {id: 29, name: "C#"},
+                {id: 31, name: "Fortran"},
+                {id: 37, name: "Visual Basic"},
+                {id: 41, name: "C"},
+                {id: 43, name: "C++"},
+                {id: 47, name: "Java"}
+            ]);
+        });
+        </script>
+    </div>
+
+
+    <h2 id="theme">Facebook Theme</h2>
+    <div>
+        <input type="text" id="demo-input-facebook-theme" name="blah2" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-facebook-theme").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                theme: "facebook"
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="custom-labels">Custom Labels</h2>
+    <div>
+        <input type="text" id="demo-input-custom-labels" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-custom-labels").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                hintText: "I can has tv shows?",
+                noResultsText: "O noes",
+                searchingText: "Meowing..."
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="custom-delete">Custom Delete Icon</h2>
+    <div>
+        <input type="text" id="demo-input-custom-delete" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-custom-delete").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                deleteText: "&#x2603;"
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="custom-limits">Custom Search Delay, Search Limit &amp; Token Limit</h2>
+    <div>
+        <input type="text" id="demo-input-custom-limits" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-custom-limits").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                searchDelay: 2000,
+                minChars: 4,
+                tokenLimit: 3
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="prevent-custom-delimiter">Custom Token Delimiter</h2>
+    <div>
+        <input type="text" id="demo-input-custom-delimiter" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-custom-delimiter").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                tokenDelimiter: "|"
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="prevent-duplicates">No Duplicates</h2>
+    <div>
+        <input type="text" id="demo-input-prevent-duplicates" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-prevent-duplicates").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                preventDuplicates: true
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="pre-populated">Pre-populated</h2>
+    <div>
+        <input type="text" id="demo-input-pre-populated" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-pre-populated").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                prePopulate: [
+                    {id: 123, name: "Slurms MacKenzie"},
+                    {id: 555, name: "Bob Hoskins"},
+                    {id: 9000, name: "Kriss Akabusi"}
+                ]
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="disable-animation">Disable Animation on Dropdown</h2>
+    <div>
+        <input type="text" id="demo-input-disable-animation" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-disable-animation").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                animateDropdown: false
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="onresult">Modify Response with onResult Callback</h2>
+    <div>
+        <input type="text" id="demo-input-onresult" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-onresult").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                onResult: function (results) {
+                    $.each(results, function (index, value) {
+                        value.name = "OMG: " + value.name;
+                    });
+
+                    return results;
+                }
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="onadd-ondelete">Using onAdd and onDelete Callbacks</h2>
+    <div>
+        <input type="text" id="demo-input-onadd-ondelete" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-onadd-ondelete").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                onAdd: function (item) {
+                    alert("Added " + item.name);
+                },
+                onDelete: function (item) {
+                    alert("Deleted " + item.name);
+                }
+            });
+        });
+        </script>
+    </div>
+</body>
+</html>
