@@ -26,6 +26,7 @@ var DEFAULT_SETTINGS = {
     preventDuplicates: false,
     prePopulate: null,
     processPrePopulate: false,
+    makeSortable: false,
     animateDropdown: true,
     onResult: null,
     onAdd: null,
@@ -360,7 +361,9 @@ $.TokenList = function (input, url_or_data, settings) {
           .addClass(settings.classes.token)
           .insertBefore(input_token);
           
-          addDragFunctionality(this_token);
+          if(settings.makeSortable) {
+            addDragFunctionality(this_token);
+          };
 
         // The 'delete token' button
         $("<span>" + settings.deleteText + "</span>")
