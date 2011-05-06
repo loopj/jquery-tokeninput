@@ -28,7 +28,6 @@ ul.token-input-list-mac {
     font-size: 12px;
     font-family: Verdana;
     min-height: 1px;
-    z-index: 999;
     margin: 0;
     padding: 3px;
     background: transparent;
@@ -131,6 +130,7 @@ div.token-input-dropdown-mac {
     -moz-box-shadow: 0 5px 20px 0 rgba(0,0,0,0.25);
     -webkit-box-shadow: 0 5px 20px 0 rgba(0,0,0,0.25);
     clip:rect(0px, 1000px, 1000px, -10px);
+    z-index: 1005;
 }
 
 div.token-input-dropdown-mac p {

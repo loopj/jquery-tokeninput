@@ -9,7 +9,6 @@ ul.token-input-list-facebook {
     font-size: 12px;
     font-family: Verdana;
     min-height: 1px;
-    z-index: 999;
     margin: 0;
     padding: 0;
     background-color: #fff;
@@ -80,7 +79,7 @@ div.token-input-dropdown-facebook {
     cursor: default;
     font-size: 11px;
     font-family: Verdana;
-    z-index: 1;
+    z-index: 1005;
 }
 
 div.token-input-dropdown-facebook p {
