@@ -25,7 +25,6 @@ var DEFAULT_SETTINGS = {
     tokenDelimiter: ",",
     preventDuplicates: false,
     prePopulate: null,
-    prePopulateWithDataPre: null,
     animateDropdown: true,
     onResult: null,
     onAdd: null,
@@ -290,22 +289,11 @@ $.TokenList = function (input, settings) {
 
     // Pre-populate list if items exist
     hidden_input.val("");
-    li_data = settings.prePopulate;
+    li_data = settings.prePopulate || hidden_input.data("pre");
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
-            insert_token(value.id, value.name);
+            insert_token(value.id, value.name, value.img);
         });
-    }
-  
-    // Pre-populate with data-pre from original input
-    if(settings.prePopulateWithDataPre) {
-      // Read data from original input box
-      li_data = $(input).data('pre');
-      if(li_data && li_data.length) {
-          $.each(li_data, function (index, value) {
-              insert_token(value.id, value.name);
-          });
-      }
     }
   
 
@@ -332,8 +320,8 @@ $.TokenList = function (input, settings) {
     }
 
     // Inner function to a token to the list
-    function insert_token(id, value) {
-        var this_token = $("<li><p>"+ value +"</p> </li>")
+    function insert_token(id, value, img) {
+        var this_token = $("<li>"+compose_img_link(img)+" <p>"+ value +"</p> </li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token);
 
@@ -347,14 +335,14 @@ $.TokenList = function (input, settings) {
             });
 
         // Store data on the token
-        var token_data = {"id": id, "name": value};
+        var token_data = {"id": id, "name": value, "img": img};
         $.data(this_token.get(0), "tokeninput", token_data);
 
         // Save this token for duplicate checking
         saved_tokens.push(token_data);
 
         // Update the hidden input
-        var token_ids = $.map(saved_tokens, function (el) {
+        var token_ids = $.map(saved_tokens, function(el) {
             return el.id;
         });
         hidden_input.val(token_ids.join(settings.tokenDelimiter));
@@ -390,7 +378,7 @@ $.TokenList = function (input, settings) {
         }
 
         // Insert the new tokens
-        insert_token(li_data.id, li_data.name);
+        insert_token(li_data.id, li_data.name, li_data.img);
 
         // Check the token limit
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
@@ -522,6 +510,15 @@ $.TokenList = function (input, settings) {
     function highlight_term(value, term) {
         return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
     }
+    
+    // Compose image link used in dropdown and in the tokenizer
+    function compose_img_link(img) {
+        if(img == undefined) {
+          return "";
+        } else {
+          return "<img src=\"" + img + "\" style=\"vertical-align:middle;overflow:hidden;\" />";
+        }
+    }
 
     // Populate the results dropdown with some results
     function populate_dropdown (query, results) {
@@ -539,7 +536,7 @@ $.TokenList = function (input, settings) {
                 .hide();
 
             $.each(results, function(index, value) {
-                var this_li = $("<li>" + highlight_term(value.name, query) + "</li>")
+                var this_li = $("<li>" + compose_img_link(value.img) + "&nbsp;" + highlight_term(value.name, query) + "</li>")
                                   .appendTo(dropdown_ul);
 
                 if(index % 2) {
