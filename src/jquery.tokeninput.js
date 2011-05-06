@@ -588,7 +588,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     select_dropdown_item(this_li);
                 }
 
-                $.data(this_li.get(0), "tokeninput", {"id": value.id, "name": value.name});
+                $.data(this_li.get(0), "tokeninput", {"id": value.id, "name": value.name, "img": value.img});
             });
 
             show_dropdown();
