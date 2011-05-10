@@ -225,5 +225,26 @@
         });
         </script>
     </div>
+    
+    <h2 id="parsename">Using local data with parseName function</h2>
+    <div>
+        <input type="text" id="demo-input-parsename" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-parsename").tokenInput([
+                {id: 1, name: 'New York', state: 'NY'},
+                {id: 2, name: 'Palo Alto', state: 'CA'},
+                {id: 3, name: 'San Francisco', state: 'CA'},
+                {id: 4, name: 'Boston', state: 'MA'}
+            ],
+            {
+                parseName: function(element) {
+                    return element.name + ', '+ element.state;
+                }
+            });
+        });
+        </script>
+    </div>
 </body>
 </html>

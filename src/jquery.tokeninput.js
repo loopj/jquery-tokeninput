@@ -27,6 +27,7 @@ var DEFAULT_SETTINGS = {
     preventDuplicates: false,
     prePopulate: null,
     processPrePopulate: false,
+    parseName: null,
     animateDropdown: true,
     onResult: null,
     onAdd: null,
@@ -430,7 +431,14 @@ $.TokenList = function (input, url_or_data, settings) {
         
         var uniqueid = get_unique_id();
         
-        var this_token = $("<li><p>"+ object.name +"</p></li>")
+        var token_name;
+        if(settings.parseName) {
+            token_name = settings.parseName(object);
+        } else {
+            token_name = object.name;
+        }
+        
+        var this_token = $("<li><p>"+ token_name +"</p></li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token)
           .attr('data-uniqueid', uniqueid);
@@ -671,7 +679,15 @@ $.TokenList = function (input, url_or_data, settings) {
                 .hide();
 
             $.each(results, function(index, value) {
-                var this_li = $("<li>" + highlight_term(value.name, query) + "</li>")
+                
+                var token_name;
+                if(settings.parseName) {
+                    token_name = settings.parseName(value);
+                } else {
+                    token_name = value.name;
+                }
+                
+                var this_li = $("<li>" + highlight_term(token_name, query) + "</li>")
                                   .appendTo(dropdown_ul);
 
                 if(index % 2) {
