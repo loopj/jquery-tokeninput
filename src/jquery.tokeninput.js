@@ -234,7 +234,7 @@ $.TokenList = function (input, url_or_data, settings) {
                                 dropdown_item = $(selected_dropdown_item).prev();
                             }
                             
-                            if(dropdown_item.length) {
+                            if(dropdown_item && dropdown_item.length) {
                                 select_dropdown_item(dropdown_item);
                             }
                         
@@ -480,6 +480,11 @@ $.TokenList = function (input, url_or_data, settings) {
         } else {
             var li_data = $.data(item.get(0), "tokeninput");
         }
+        
+        if(!li_data) {
+            return false;
+        }
+        
         var callback = settings.onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
