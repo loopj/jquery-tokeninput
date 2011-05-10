@@ -28,6 +28,7 @@ var DEFAULT_SETTINGS = {
     prePopulate: null,
     processPrePopulate: false,
     parseName: null,
+    searchColumns: ['name'],
     animateDropdown: true,
     onResult: null,
     onAdd: null,
@@ -822,11 +823,13 @@ $.TokenList = function (input, url_or_data, settings) {
             } else if(settings.local_data) {
                 // Do the search through local data
                 var results = $.grep(settings.local_data, function (row) {
-                    if(row.name.toLowerCase().removeDiacritics().indexOf(query.toLowerCase().removeDiacritics()) > -1) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    var founded = false;
+                    $(settings.searchColumns).each(function(i, item) {
+                        if(row[item].toString().toLowerCase().removeDiacritics().indexOf(query.toString().toLowerCase().removeDiacritics()) > -1) {
+                            founded = true;
+                        }
+                    });
+                    return founded;
                 });
 
                 if($.isFunction(settings.onResult)) {

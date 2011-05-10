@@ -228,7 +228,7 @@
         </script>
     </div>
     
-    <h2 id="parsename">Using local data with parseName function</h2>
+    <h2 id="parsename">Using local data with parseName function and searchColumns setting</h2>
     <div>
         <input type="text" id="demo-input-parsename" name="blah" />
         <input type="button" value="Submit" />
@@ -245,7 +245,8 @@
             {
                 parseName: function(element) {
                     return element.name + ', '+ element.state;
-                }
+                },
+                searchColumns: ['name', 'state']
             });
         });
         </script>
