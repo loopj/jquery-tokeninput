@@ -200,7 +200,7 @@ $.TokenList = function (input, url_or_data, settings) {
                         
                         if(settings.allowCustomEntry == true) {
 
-                            if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
+                            if(event.keyCode === KEY.DOWN) {
                                 if($(selected_dropdown_item).length) {
                                     if($(selected_dropdown_item).next().length) {
                                         dropdown_item = $(selected_dropdown_item).next();
@@ -210,7 +210,7 @@ $.TokenList = function (input, url_or_data, settings) {
                                 } else {
                                     dropdown_item = $(dropdown).find('li:first-child');
                                 }
-                            } else {
+                            } else if(event.keyCode === KEY.UP) {
                                 if($(selected_dropdown_item).length) {
                                     if($(selected_dropdown_item).prev().length) {
                                         dropdown_item = $(selected_dropdown_item).prev();
@@ -228,9 +228,9 @@ $.TokenList = function (input, url_or_data, settings) {
                             
                         } else {
                         
-                            if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
+                            if(event.keyCode === KEY.DOWN) {
                                 dropdown_item = $(selected_dropdown_item).next();
-                            } else {
+                            } else if(event.keyCode === KEY.UP) {
                                 dropdown_item = $(selected_dropdown_item).prev();
                             }
                             
@@ -240,8 +240,12 @@ $.TokenList = function (input, url_or_data, settings) {
                         
                         }
                         
-                        // we need to allow caret moving here
-                        return true;
+                        if(event.keyCode === KEY.LEFT || event.keyCode === KEY.RIGHT) {
+                            // we need to allow caret moving here
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                     break;
 
