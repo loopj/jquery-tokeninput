@@ -27,6 +27,7 @@ var DEFAULT_SETTINGS = {
     prePopulate: null,
     processPrePopulate: false,
     makeSortable: false,
+    escapeHTML: true,
     animateDropdown: true,
     onResult: null,
     onAdd: null,
@@ -357,7 +358,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Inner function to a token to the list
     function insert_token(id, value) {
-        var this_token = $("<li><p>"+ value +"</p></li>")
+        var this_token = $("<li><p>"+ escapeHTML(value) +"</p></li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token);
           
@@ -670,7 +671,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 .hide();
 
             $.each(results, function(index, value) {
-                var this_li = $("<li>" + highlight_term(value.name, query) + "</li>")
+                var this_li = $("<li>" + highlight_term(escapeHTML(value.name), query) + "</li>")
                                   .appendTo(dropdown_ul);
 
                 if(index % 2) {
@@ -718,6 +719,13 @@ $.TokenList = function (input, url_or_data, settings) {
         item.removeClass(settings.classes.selectedDropdownItem);
         selected_dropdown_item = null;
     }
+    
+    
+    function escapeHTML(text) {
+      if(!settings.escapeHTML) return text;
+      return $("<p></p>").text(text).html();
+    }
+    
 
     // Do a search and show the "searching" dropdown if the input is longer
     // than settings.minChars
