@@ -29,7 +29,8 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     onResult: null,
     onAdd: null,
-    onDelete: null
+    onDelete: null,
+    parseAjaxParams: true
 };
 
 // Default classes to use when theming
@@ -648,7 +649,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 // Extract exisiting get params
                 var ajax_params = {};
                 ajax_params.data = {};
-                if(settings.url.indexOf("?") > -1) {
+                if(settings.parseAjaxParams && settings.url.indexOf("?") > -1) {
                     var parts = settings.url.split("?");
                     ajax_params.url = parts[0];
 
