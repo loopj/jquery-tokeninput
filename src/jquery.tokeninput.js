@@ -227,8 +227,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 default:
                     if(String.fromCharCode(event.which)) {
-                        // set a timeout just long enough to let this function finish.
-                        setTimeout(function(){do_search();}, 5);
+                        if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
+                            // set a timeout just long enough to let this function finish.
+                            setTimeout(function(){do_search();}, 5);
+                        }
                     }
                     break;
             }
@@ -373,6 +375,12 @@ $.TokenList = function (input, url_or_data, settings) {
 
         token_count += 1;
 
+        // Check the token limit
+        if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
+            input_box.hide();
+            hide_dropdown();
+        }
+
         return this_token;
     }
 
@@ -407,14 +415,11 @@ $.TokenList = function (input, url_or_data, settings) {
         // Check the token limit
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
             input_box.hide();
-            hide_dropdown();
-            return;
         } else {
             input_box.focus();
+            // Clear input box
+            input_box.val("");
         }
-
-        // Clear input box
-        input_box.val("");
 
         // Don't show the help dropdown, they've got the idea
         hide_dropdown();
