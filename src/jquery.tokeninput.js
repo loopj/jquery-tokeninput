@@ -29,7 +29,8 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     onResult: null,
     onAdd: null,
-    onDelete: null
+    onDelete: null,
+    allowNewItems: false
 };
 
 // Default classes to use when theming
@@ -217,8 +218,17 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.COMMA:
                   if(selected_dropdown_item) {
                     add_token($(selected_dropdown_item));
+
+                    return false;
+                  } else if (settings.allowNewItems) {
+                    if($(this).val().length > 0) {
+                      _add_token($(this).val(), $(this).val());
+                      $(this).val("");
+                    }
+
                     return false;
                   }
+
                   break;
 
                 case KEY.ESCAPE:
@@ -586,8 +596,12 @@ $.TokenList = function (input, url_or_data, settings) {
                     this_li.addClass(settings.classes.dropdownItem2);
                 }
 
-                if(index === 0) {
-                    select_dropdown_item(this_li);
+                // Select the first item, unless we allow the user to add new
+                // items.
+                if (settings.allowNewItems) {
+                    if(index === 0) {
+                        select_dropdown_item(this_li);
+                    }
                 }
 
                 $.data(this_li.get(0), "tokeninput", {"id": value.id, "name": value.name});
