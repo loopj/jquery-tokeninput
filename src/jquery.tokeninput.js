@@ -386,7 +386,13 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Add a token to the token list based on user input
     function add_token (item) {
-        var li_data = $.data(item.get(0), "tokeninput");
+        var token_data = $.data(item.get(0), "tokeninput")
+        _add_token(token_data.id, token_data.name);
+    }
+
+    // Add a token to the token list with the id and name passed as args
+    function _add_token (id, name) {
+        var li_data = {id: id, name: name};
         var callback = settings.onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
