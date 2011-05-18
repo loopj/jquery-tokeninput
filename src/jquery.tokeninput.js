@@ -30,7 +30,8 @@ var DEFAULT_SETTINGS = {
     onResult: null,
     onAdd: null,
     onDelete: null,
-    allowNewItems: false
+    allowNewItems: false,
+    newItemFilter: null
 };
 
 // Default classes to use when theming
@@ -221,9 +222,18 @@ $.TokenList = function (input, url_or_data, settings) {
 
                     return false;
                   } else if (settings.allowNewItems) {
-                    if($(this).val().length > 0) {
-                      _add_token($(this).val(), $(this).val());
-                      $(this).val("");
+                    var new_item_name = $(this).val();
+
+                    if (new_item_name > 0) {
+                      if (typeof(settings.newItemFilter) === "function") {
+                        var addItem = function (name) {
+                          _add_token(name, name);
+                        };
+
+                        settings.newItemFilter(addItem, new_item_name);
+                      } else {
+                        _add_token(new_item_name, new_item_name);
+                      }
                     }
 
                     return false;
