@@ -510,6 +510,9 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Insert the new tokens
         insert_token(li_data);
+        
+        // Clear input box
+        input_box.val("");
 
         // Check the token limit
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
@@ -517,9 +520,6 @@ $.TokenList = function (input, url_or_data, settings) {
             hide_dropdown();
         } else {
             input_box.focus();
-            
-            // Clear input box
-            input_box.val("");
 
             // Don't show the help dropdown, they've got the idea
             hide_dropdown();
