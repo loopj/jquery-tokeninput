@@ -234,16 +234,30 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         });
 
+    if ($(input).get(0).tagName == 'SELECT') {
+    // Create a new input to store selected tokens, original will be delete later
+      var hidden_input = $("<input type=\"text\"  name=\"" + $(input).attr('name') + "\" autocomplete=\"off\">")
+                             .hide()
+                             .val("")
+                             .focus(function () {
+                                 input_box.focus();
+                             })
+                             .blur(function () {
+                                 input_box.blur();
+                             })
+                             .insertBefore(input);
+    } else {
     // Keep a reference to the original input box
-    var hidden_input = $(input)
-                           .hide()
-                           .val("")
-                           .focus(function () {
-                               input_box.focus();
-                           })
-                           .blur(function () {
-                               input_box.blur();
-                           });
+      var hidden_input = $(input)
+                             .hide()
+                             .val("")
+                             .focus(function () {
+                                 input_box.focus();
+                             })
+                             .blur(function () {
+                                 input_box.blur();
+                             });
+    }
 
     // Keep a reference to the selected token and dropdown item
     var selected_token = null;
@@ -318,6 +332,13 @@ $.TokenList = function (input, url_or_data, settings) {
         $.each(li_data, function (index, value) {
             insert_token(value.id, value.name);
         });
+    }
+    
+    // Pre-populate from SELECT options
+    if ($(input).get(0).tagName == 'SELECT') {
+      $(input).children('option').each(function () {
+        insert_token($(this).attr('value'), $(this).attr('label'));
+      });
     }
 
 
@@ -697,6 +718,10 @@ $.TokenList = function (input, url_or_data, settings) {
                 populate_dropdown(query, results);
             }
         }
+    }
+    
+    if ($(input).get(0).tagName == 'SELECT') {
+      $(input).remove();
     }
 };
 
