@@ -160,7 +160,7 @@
         </script>
     </div>
 
-
+    
     <h2 id="disable-animation">Disable Animation on Dropdown</h2>
     <div>
         <input type="text" id="demo-input-disable-animation" name="blah" />
@@ -209,6 +209,21 @@
                     alert("Deleted " + item.name);
                 }
             });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="select-pre-populated">Aplied on a SELECT with pre-populating values</h2>
+    <div>
+        <select id="demo-select-pre-populated" name="blah">
+          <option value="1398" label="Side Order of Life">Side Order of Life</option>
+          <option value="1530" label="The Life and Times of Tim">The Life and Times of Tim</option>
+        </select>
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-select-pre-populated").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
         });
         </script>
     </div>
