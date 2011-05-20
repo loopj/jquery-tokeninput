@@ -337,7 +337,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // Pre-populate from SELECT options
     if ($(input).get(0).tagName == 'SELECT') {
       $(input).children('option').each(function () {
-        insert_token($(this).attr('value'), $(this).attr('label'));
+        insert_token($(this).attr('value'), $(this).text());
       });
     }
 
