@@ -317,6 +317,7 @@ $.TokenList = function (input, url_or_data, settings) {
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
             insert_token(value.id, value.name);
+            // check for token limit
             if(settings.tokenLimit === null || parseInt(settings.tokenLimit) > parseInt(token_count)) {
               input_box.focus();
             } else {
