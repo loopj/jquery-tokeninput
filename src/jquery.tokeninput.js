@@ -655,7 +655,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     var param_array = parts[1].split("&");
                     $.each(param_array, function (index, value) {
                         var kv = value.split("=");
-                        ajax_params.data[kv[0]] = kv[1];
+                        ajax_params.data[kv[0]] = value.substring(parseInt(kv[0].length)+1);
                     });
                 } else {
                     ajax_params.url = settings.url;
