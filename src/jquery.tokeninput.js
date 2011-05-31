@@ -28,6 +28,7 @@ var DEFAULT_SETTINGS = {
     processPrePopulate: false,
     animateDropdown: true,
     onResult: null,
+    onError: null,
     onAdd: null,
     onDelete: null,
     parseAjaxParams: true
@@ -677,6 +678,18 @@ $.TokenList = function (input, url_or_data, settings) {
                   }
                   cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
+                  // only populate the dropdown if the results are associated with the active search query
+                  if(input_box.val().toLowerCase() === query) {
+                      populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+                  }
+                };
+                
+                // Attach the error callback
+                ajax_params.error = function(results) {
+                  if($.isFunction(settings.onError)) {
+                      results = settings.onError.call(hidden_input, results);
+                  }
+                  
                   // only populate the dropdown if the results are associated with the active search query
                   if(input_box.val().toLowerCase() === query) {
                       populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
