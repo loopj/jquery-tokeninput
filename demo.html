@@ -228,6 +228,27 @@
         </script>
     </div>
     
+    <h2 id="customformatter">Custom Result Formatter for JSON</h2>
+    <div>
+        <input type="text" id="demo-input-customformatter" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-customformatter").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                allowCustomEntry: true,
+                tokensFormatter: function(tokens)
+                {
+                    var result = [];
+                    console.log(tokens);
+                    for(var key in tokens)
+                        result.push('"' + tokens[key].name.replace(/"/g, '\\"') + '"');
+                    return '[' + result.join(',') + ']';
+                }
+            });
+        });
+        </script>
+    </div>
+
     <h2 id="parsename">Using local data with parseName function and searchColumns setting</h2>
     <div>
         <input type="text" id="demo-input-parsename" name="blah" />
