@@ -451,10 +451,10 @@ $.TokenList = function (input, url_or_data, settings) {
         if(settings.parseName) {
             token_name = settings.parseName(object);
         } else {
-            token_name = object.name;
+            token_name = "<p>"+ object.name +"</p>";
         }
         
-        var this_token = $("<li><p>"+ token_name +"</p></li>")
+        var this_token = $("<li>"+ token_name +"</li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token)
           .attr('data-uniqueid', uniqueid);
