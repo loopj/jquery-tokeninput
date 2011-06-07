@@ -70,6 +70,14 @@ li.token-input-input-token-facebook {
     list-style-type: none;
 }
 
+li.token-input-insert-before-facebook {
+  border-left: 1px solid red;
+}
+
+li.token-input-insert-after-facebook {
+  border-right: 1px solid red;
+}
+
 div.token-input-dropdown-facebook {
     position: absolute;
     width: 400px;

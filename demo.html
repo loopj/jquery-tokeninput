@@ -71,6 +71,21 @@
     </div>
 
 
+    <h2 id="theme">Facebook Theme & Sortable</h2>
+    <div>
+        <input type="text" id="demo-input-facebook-theme-sortable" name="blah2" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-facebook-theme-sortable").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                theme: "facebook",
+                makeSortable: true
+            });
+        });
+        </script>
+    </div>
+
+
     <h2 id="custom-labels">Custom Labels</h2>
     <div>
         <input type="text" id="demo-input-custom-labels" name="blah" />
