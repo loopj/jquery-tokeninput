@@ -30,16 +30,16 @@ li.token-input-token-facebook {
     overflow: hidden; 
     height: auto !important; 
     height: 15px;
-    margin: 3px;
-    padding: 1px 3px;
+    margin: 3px 0px 0 3px;
+    padding: 1px 1px 1px 3px;
     background-color: #eff2f7;
     color: #000;
     cursor: default;
     border: 1px solid #ccd5e4;
     font-size: 11px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
     float: left;
     white-space: nowrap;
 }
@@ -52,9 +52,15 @@ li.token-input-token-facebook p {
 
 li.token-input-token-facebook span {
     color: #a6b3cf;
-    margin-left: 5px;
+    margin-left: 3px;
     font-weight: bold;
     cursor: pointer;
+    padding: 0 2px;
+}
+
+li.token-input-token-facebook span:hover {
+    color: #fff;
+    background: #5670a6;
 }
 
 li.token-input-selected-token-facebook {
