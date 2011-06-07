@@ -86,25 +86,25 @@ var KEY = {
 
 
 // Expose the .tokenInput function to jQuery as a plugin
-$.fn.tokenInput = function (url_or_data, options) {
+$.fn.tokenInput = function (url_or_data_or_function, options) {
     var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
 
     return this.each(function () {
-        new $.TokenList(this, url_or_data, settings);
+        new $.TokenList(this, url_or_data_or_function, settings);
     });
 };
 
 
 // TokenList class for each input
-$.TokenList = function (input, url_or_data, settings) {
+$.TokenList = function (input, url_or_data_or_function, settings) {
     //
     // Initialization
     //
 
     // Configure the data source
-    if(typeof(url_or_data) === "string") {
+    if(typeof(url_or_data_or_function) === "string") {
         // Set the url to query against
-        settings.url = url_or_data;
+        settings.url = url_or_data_or_function;
 
         // Make a smart guess about cross-domain if it wasn't explicitly specified
         if(settings.crossDomain === undefined) {
@@ -114,9 +114,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
             }
         }
-    } else if(typeof(url_or_data) === "object") {
+	} else if(typeof(url_or_data_or_function) === "function") {
+		settings.sourceFunction = url_or_data_or_function;
+    } else if(typeof(url_or_data_or_function) === "object") {
         // Set the local data to search through
-        settings.local_data = url_or_data;
+        settings.local_data = url_or_data_or_function;
     }
 
     // Build class names
@@ -675,6 +677,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // Deselect a token in the token list
     function deselect_token (token, position) {
         token.removeClass(settings.classes.selectedToken);
+ 
         selected_token = null;
         
         input_box.css('color', '');
