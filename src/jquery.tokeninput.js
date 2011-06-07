@@ -24,6 +24,8 @@ var DEFAULT_SETTINGS = {
     contentType: "json",
     queryParam: "q",
     tokenDelimiter: ",",
+    tokenQuote: "'",
+    tokenQuoteEscaped: "\\'",
     preventDuplicates: false,
     prePopulate: null,
     processPrePopulate: false,
@@ -32,7 +34,8 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     onResult: null,
     onAdd: null,
-    onDelete: null
+    onDelete: null,
+    tokensFormatter: null
 };
 
 // Default classes to use when theming
@@ -448,10 +451,10 @@ $.TokenList = function (input, url_or_data, settings) {
         if(settings.parseName) {
             token_name = settings.parseName(object);
         } else {
-            token_name = object.name;
+            token_name = "<p>"+ object.name +"</p>";
         }
         
-        var this_token = $("<li><p>"+ token_name +"</p></li>")
+        var this_token = $("<li>"+ token_name +"</li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token)
           .attr('data-uniqueid', uniqueid);
@@ -633,18 +636,24 @@ $.TokenList = function (input, url_or_data, settings) {
         }
     }
     
-    // Update the hidden input value
-    function update_hidden_input() {
+    function format_tokens(tokens) {
         var token_ids = [];
-        $.each(saved_tokens, function (index, value) {
-            if(value.id) {
-                token_ids[token_ids.length] = value.id;
-            } else {
-                token_ids[token_ids.length] = "'" + value.name.replace(/\'/gi, "\\'") + "'";
-            }
+        var regex = new RegExp(settings.tokenQuote, "gi");
+
+        $.each(tokens, function (index, value) {
+            token_ids.push(value.id
+                ? value.id
+                : settings.tokenQuote + value.name.replace(regex, settings.tokenQuoteEscaped) + settings.tokenQuote
+                );
         });
-        
-        hidden_input.val(token_ids.join(settings.tokenDelimiter));
+
+        return token_ids.join(settings.tokenDelimiter);
+    }
+    
+	// Update the hidden input value
+    function update_hidden_input() {
+        var formatter = settings.tokensFormatter || format_tokens;
+        hidden_input.val(formatter(saved_tokens));
     }
 
     // Hide and clear the results dropdown
@@ -659,7 +668,8 @@ $.TokenList = function (input, url_or_data, settings) {
                 position: "absolute",
                 top: $(token_list).offset().top + $(token_list).outerHeight(),
                 left: $(token_list).offset().left,
-                zindex: 999
+                zindex: 999,
+                width: $(token_list).width()
             })
             .show();
     }
