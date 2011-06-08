@@ -502,8 +502,7 @@ $.TokenList = function (input, url_or_data, settings) {
             return el.id;
         });
         
-        
-        hidden_input.val(token_ids.join(settings.tokenDelimiter));
+        update_hidden_input();
 
         token_count += 1;
 
@@ -652,7 +651,7 @@ $.TokenList = function (input, url_or_data, settings) {
         };
       });
       saved_tokens = tokens;
-      hidden_input.val(ids.join(settings.tokenDelimiter));
+      update_hidden_input();
     }
     
     
