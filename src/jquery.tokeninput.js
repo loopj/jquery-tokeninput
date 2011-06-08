@@ -317,6 +317,13 @@ $.TokenList = function (input, url_or_data, settings) {
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
             insert_token(value.id, value.name);
+            // check for token limit
+            if(settings.tokenLimit === null || parseInt(settings.tokenLimit) > parseInt(token_count)) {
+              input_box.focus();
+            } else {
+              input_box.hide();
+              return;
+            }
         });
     }
 
@@ -655,7 +662,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     var param_array = parts[1].split("&");
                     $.each(param_array, function (index, value) {
                         var kv = value.split("=");
-                        ajax_params.data[kv[0]] = kv[1];
+                        ajax_params.data[kv[0]] = value.substring(parseInt(kv[0].length)+1);
                     });
                 } else {
                     ajax_params.url = settings.url;
