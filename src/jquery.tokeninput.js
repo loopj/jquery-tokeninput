@@ -503,8 +503,6 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
         var token_ids = $.map(saved_tokens, function (el) {
             return el.id;
         });
-        
-        update_hidden_input();
 
         token_count += 1;
 
