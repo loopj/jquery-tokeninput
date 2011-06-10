@@ -317,6 +317,7 @@ $.TokenList = function (input, url_or_data, settings) {
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
             insert_token(value.id, value.name);
+						checkTokenLimit();
         });
     }
 
@@ -325,6 +326,16 @@ $.TokenList = function (input, url_or_data, settings) {
     //
     // Private functions
     //
+
+		function checkTokenLimit(){
+      if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
+          input_box.hide();
+          hide_dropdown();
+          return;
+      } else {
+          input_box.focus();
+      }
+		}
 
     function resize_input() {
         if(input_val === (input_val = input_box.val())) {return;}
@@ -404,14 +415,7 @@ $.TokenList = function (input, url_or_data, settings) {
         // Insert the new tokens
         insert_token(li_data.id, li_data.name);
 
-        // Check the token limit
-        if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
-            input_box.hide();
-            hide_dropdown();
-            return;
-        } else {
-            input_box.focus();
-        }
+        checkTokenLimit();
 
         // Clear input box
         input_box.val("");
