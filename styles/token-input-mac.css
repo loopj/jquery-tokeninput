@@ -112,6 +112,14 @@ li.token-input-input-token-mac input {
   margin: 0;
 }
 
+li.token-input-insert-before-mac {
+  border-left: 1px solid red;
+}
+
+li.token-input-insert-after-mac {
+  border-right: 1px solid red;
+}
+
 div.token-input-dropdown-mac {
     position: absolute;
     border: 1px solid #A4BDEC;
