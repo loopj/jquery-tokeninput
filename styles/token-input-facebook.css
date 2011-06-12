@@ -87,15 +87,18 @@ li.token-input-input-token-facebook {
     list-style-type: none;
 }
 li.token-input-dragged-token-facebook {
-    opacity: 0.7;
+    opacity: 0;
+}
+li.token-input-dragged-clone-facebook {
     position: absolute;
     margin: 5px 0 0 5px;
     padding: 2px 6px;
     list-style: none;
     font-size: 11px;
     font-family: Verdana;
+    cursor: move;
 }
-li.token-input-dragged-token-facebook span {
+li.token-input-dragged-clone-facebook span {
     display: none;
 }
 

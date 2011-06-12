@@ -49,6 +49,7 @@ var DEFAULT_CLASSES = {
     selectedToken: "token-input-selected-token",
     highlightedToken: "token-input-highlighted-token",
     draggedToken: "token-input-dragged-token",
+    draggedClone: "token-input-dragged-clone",
     dropdown: "token-input-dropdown",
     dropdownItem: "token-input-dropdown-item",
     dropdownItem2: "token-input-dropdown-item2",
@@ -588,8 +589,7 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
             
             dragToken = token;
             
-            dragTimeout = window.setTimeout(function() {
-                var previous_selected_token = selected_token;
+            dragTimeout = window.setTimeout(function(e) {
                 
                 if(selected_token == token) {
                     return;
@@ -601,7 +601,10 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
                 
                 select_token(token);
                 
-                $(token).clone().appendTo('body').addClass(settings.classes.draggedToken);
+                var position = $(token).position();
+                
+                $(token).clone().appendTo('body').addClass(settings.classes.draggedClone).css({'top': position.top, 'left': position.left});
+                token.addClass(settings.classes.draggedToken);
                 
                 dragging = true;
                 
@@ -615,13 +618,14 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
                     return;
                 }
                 
-                $('li.'+settings.classes.draggedToken).remove();
+                dragging = false;
+                
+                $('li.'+settings.classes.draggedClone).remove();
+                $('li.'+settings.classes.draggedToken).removeClass(settings.classes.draggedToken);
             
                 if(selected_token) {
                     deselect_token($(selected_token), POSITION.END);
                 }
-                
-                dragging = false;
                 
                 if(dragDestination) {
                     move_token(token, dragDestination);
@@ -658,7 +662,7 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
         $('body').mousemove(function(e) {
             if(!dragging) return;
             
-            $('li.'+settings.classes.draggedToken).css({'top': e.pageY, 'left': e.pageX});
+            $('li.'+settings.classes.draggedClone).css({'top': e.pageY, 'left': e.pageX});
         });
     }
     
@@ -677,6 +681,7 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
         index_tokens();
         first = $.data(first.get(0), "tokeninput");
         last = $.data(last.get(0), "tokeninput");
+        if(!first || !last) return;
         return last.index > first.index 
     }
     

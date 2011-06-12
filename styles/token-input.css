@@ -62,13 +62,16 @@ li.token-input-selected-token span {
     color: #bbb;
 }
 li.token-input-dragged-token {
+    opacity: 0;
+}
+li.token-input-dragged-clone {
     opacity: 0.5;
     position: absolute;
     margin: 5px 0 0 5px;
     font-size: 12px;
     font-family: Verdana;
 }
-li.token-input-dragged-token span {
+li.token-input-dragged-clone span {
     display: none;
 }
 
