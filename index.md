@@ -187,16 +187,16 @@ onDelete
 
 Methods
 -------
-`selector.tokeninput("add", {id: x, name: y});`
+`selector.tokenInput("add", {id: x, name: y});`
 :   Add a new token to the tokeninput with id `x` and name `y`.
 
-`selector.tokeninput("remove", {id: x});`
+`selector.tokenInput("remove", {id: x});`
 :   Remove the tokens with id `x` from the tokeninput.
 
-`selector.tokeninput("remove", {name: y});`
+`selector.tokenInput("remove", {name: y});`
 :   Remove the tokens with name `y` from the tokeninput.
 
-`selector.tokeninput("clear");`
+`selector.tokenInput("clear");`
 :   Clear all tokens from the tokeninput.
 
 
