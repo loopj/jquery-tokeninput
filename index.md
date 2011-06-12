@@ -42,9 +42,10 @@ Features
 - Smooth animations when results load
 - Select, delete and navigate items using the mouse or keyboard
 - Client-side result caching to reduce server load
-- *New!* Crossdomain support via JSONP
-- *New!* Callbacks when items are added or removed from the list
-- *New!* Preprocess results from the server with the onResult callback
+- Crossdomain support via JSONP
+- Callbacks when items are added or removed from the list
+- Preprocess results from the server with the onResult callback
+- Programatically add, remove and clear tokens
 
 
 Screenshots
@@ -182,6 +183,21 @@ onAdd
 onDelete
 :   A function to call whenever the user removes a token from their selections.
     *default: null* [(demo)](demo.html#onadd-ondelete).
+
+
+Methods
+-------
+`selector.tokeninput("add", {id: x, name: y});`
+:   Add a new token to the tokeninput with id `x` and name `y`.
+
+`selector.tokeninput("remove", {id: x});`
+:   Remove the tokens with id `x` from the tokeninput.
+
+`selector.tokeninput("remove", {name: y});`
+:   Remove the tokens with name `y` from the tokeninput.
+
+`selector.tokeninput("clear");`
+:   Clear all tokens from the tokeninput.
 
 
 Reporting Bugs or Feature Requests
