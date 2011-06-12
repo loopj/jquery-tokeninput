@@ -1,6 +1,13 @@
 jQuery Tokeninput ChangeLog
 ===========================
 
+Version 1.5.0 (2011-06-12)
+--------------------------
+- Added add/remove/clear methods to programatically modify tokens
+- Support setting of ids on dynamic input (for html label targetting)
+- Fix token limit bug when using prepopulate
+- Various other bug fixes
+
 Version 1.4.2 (2011-03-26)
 --------------------------
 - Implemented basic local data search to search without an ajax request
