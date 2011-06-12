@@ -29,7 +29,8 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     onResult: null,
     onAdd: null,
-    onDelete: null
+    onDelete: null,
+    idPrefix: "token-input-"
 };
 
 // Default classes to use when theming
@@ -162,6 +163,7 @@ $.TokenList = function (input, url_or_data, settings) {
         .css({
             outline: "none"
         })
+        .attr("id", settings.idPrefix + input.id)
         .focus(function () {
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
                 show_dropdown_hint();
@@ -169,6 +171,7 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .blur(function () {
             hide_dropdown();
+            $(this).val("");
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
