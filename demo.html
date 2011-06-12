@@ -212,5 +212,39 @@
         });
         </script>
     </div>
+
+
+    <h2 id="plugin-methods">Using the add, remove and clear Methods</h2>
+    <div>
+        <a href="#" id="plugin-methods-add">Add Token</a> | 
+        <a href="#" id="plugin-methods-remove">Remove Token</a> | 
+        <a href="#" id="plugin-methods-clear">Clear Tokens</a><br />
+
+        <input type="text" id="demo-input-plugin-methods" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-plugin-methods").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
+
+            // Add a token programatically
+            $("#plugin-methods-add").click(function () {
+                $("#demo-input-plugin-methods").tokenInput("add", {id: 999, name: "James was here"});
+                return false;
+            });
+
+            // Remove a token programatically
+            $("#plugin-methods-remove").click(function () {
+                $("#demo-input-plugin-methods").tokenInput("remove", {name: "James was here"});
+                return false;
+            });
+
+            // Clear all tokens
+            $("#plugin-methods-clear").click(function () {
+                $("#demo-input-plugin-methods").tokenInput("clear");
+                return false;
+            });
+        });
+        </script>
+    </div>
 </body>
 </html>
