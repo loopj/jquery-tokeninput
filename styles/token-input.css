@@ -61,13 +61,23 @@ li.token-input-selected-token {
 li.token-input-selected-token span {
     color: #bbb;
 }
+li.token-input-dragged-token {
+    opacity: 0.5;
+    position: absolute;
+    margin: 5px 0 0 5px;
+    font-size: 12px;
+    font-family: Verdana;
+}
+li.token-input-dragged-token span {
+    display: none;
+}
 
 li.token-input-insert-before {
-  border-top: 1px solid red;
+    border-top: 1px solid red;
 }
 
 li.token-input-insert-after {
-  border-bottom: 1px solid red;
+    border-bottom: 1px solid red;
 }
 
 div.token-input-dropdown {

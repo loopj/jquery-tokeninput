@@ -48,6 +48,7 @@ var DEFAULT_CLASSES = {
     tokenDelete: "token-input-delete-token",
     selectedToken: "token-input-selected-token",
     highlightedToken: "token-input-highlighted-token",
+    draggedToken: "token-input-dragged-token",
     dropdown: "token-input-dropdown",
     dropdownItem: "token-input-dropdown-item",
     dropdownItem2: "token-input-dropdown-item2",
@@ -407,6 +408,8 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
     // True during dragging process    
     var dragging = false;
     
+    var dragTimeout;
+    
     // the dragged Token
     var dragToken;
     
@@ -580,78 +583,126 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
     //  Drag and Drop  Functionality
     //
     function addDragFunctionality(token) {
-      token.bind('mousedown',function(){ 
-        var token = $(this)
-        dragToken = token;
-        token.addClass(settings.classes.selectedToken);
-        dragging= true;
-        $(document).one('mouseup',function(){
-          token.removeClass(settings.classes.selectedToken);
-          dragging=false;
-          move_token(token, dragDestination);
-          reindex_results();
+        token.bind('mousedown', function() {
+            var token = $(this);
+            
+            dragToken = token;
+            
+            dragTimeout = window.setTimeout(function() {
+                var previous_selected_token = selected_token;
+                
+                if(selected_token == token) {
+                    return;
+                }
+                
+                if(selected_token) {
+                    deselect_token($(selected_token), POSITION.END);
+                }
+                
+                select_token(token);
+                
+                $(token).clone().appendTo('body').addClass(settings.classes.draggedToken);
+                
+                dragging = true;
+                
+            }, 200);
+            
+            $(document).one('mouseup', function() {
+            
+                window.clearTimeout(dragTimeout);
+            
+                if(dragging != true) {
+                    return;
+                }
+                
+                $('li.'+settings.classes.draggedToken).remove();
+            
+                if(selected_token) {
+                    deselect_token($(selected_token), POSITION.END);
+                }
+                
+                dragging = false;
+                
+                if(dragDestination) {
+                    move_token(token, dragDestination);
+                    reindex_results();
+                }
+            });
+            
+            return false;
+        })
+        .bind('mouseover', function() {
+            
+            if(!dragging) return;
+            
+            dragDestination = $(this);
+            
+            if(is_after(dragToken, dragDestination)) {
+                dragDestination.addClass(settings.classes.insertAfter);
+            } else {
+                dragDestination.addClass(settings.classes.insertBefore);
+            }
+        })
+        .bind('mouseout', function() {
+            
+            if(!dragging) return;
+            
+            $(this).removeClass(settings.classes.insertBefore);
+            $(this).removeClass(settings.classes.insertAfter);
+        }).
+        bind('mouseup', function(){
+            $(this).removeClass(settings.classes.insertBefore);
+            $(this).removeClass(settings.classes.insertAfter);
         });
-        return false;
-      })
-      .bind('mouseover',function(){
-        if(!dragging) return;
-        dragDestination = $(this);        
-        if(is_after(dragToken, dragDestination)) {
-          dragDestination.addClass(settings.classes.insertAfter);
-        } else {
-          dragDestination.addClass(settings.classes.insertBefore);
-        };
-      }).bind('mouseout', function(){
-        if(!dragging) return;
-        $(this).removeClass(settings.classes.insertBefore);
-        $(this).removeClass(settings.classes.insertAfter);
-      }).bind('mouseup', function(){
-        $(this).removeClass(settings.classes.insertBefore);
-        $(this).removeClass(settings.classes.insertAfter);
-      });
+        
+        $('body').mousemove(function(e) {
+            if(!dragging) return;
+            
+            $('li.'+settings.classes.draggedToken).css({'top': e.pageY, 'left': e.pageX});
+        });
     }
     
     
     function move_token(token, destinationToken) {
-      if(token.get(0) == destinationToken.get(0)) return;
+        if(!destinationToken || token.get(0) == destinationToken.get(0)) return;
 
-      if(is_after(token, destinationToken)) {
-        token.insertAfter(destinationToken);
-      } else {
-        token.insertBefore(destinationToken);
-      }
-       
-      
+        if(is_after(token, destinationToken)) {
+            token.insertAfter(destinationToken);
+        } else {
+            token.insertBefore(destinationToken);
+        }
     }
     
     function is_after(first, last) {
-      index_tokens();
-      first = $.data(first.get(0), "tokeninput")
-      last = $.data(last.get(0), "tokeninput")
-      return last.index > first.index 
+        index_tokens();
+        first = $.data(first.get(0), "tokeninput");
+        last = $.data(last.get(0), "tokeninput");
+        return last.index > first.index 
     }
     
     
     function index_tokens() {
-      var i = 0;
-      token_list.find('li').each(function(){
-        var data = $.data(this, "tokeninput");
-        if(data){ data.index = i; }
-        i++;
-      });
+        var i = 0;
+        token_list.find('li').each(function() {
+            var data = $.data(this, "tokeninput");
+            if(data) {
+                data.index = i;
+            }
+            i++;
+        });
     }
     
     function reindex_results() {
-      var ids = [], tokens = [];
-      token_list.find('li').each(function(){
-        var data = $.data(this, "tokeninput");
-        if(data){  
-           ids.push(data.id); 
-           tokens.push(data);
-        };
-      });
-      saved_tokens = tokens;
-      update_hidden_input();
+        var ids = [], tokens = [];
+        token_list.find('li').each(function() {
+            var data = $.data(this, "tokeninput");
+            if(data) {  
+                ids.push(data.id); 
+                tokens.push(data);
+            };
+        });
+        saved_tokens = tokens;
+        update_hidden_input();
     }
     
     
