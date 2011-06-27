@@ -30,7 +30,8 @@ var DEFAULT_SETTINGS = {
     onResult: null,
     onAdd: null,
     onDelete: null,
-    idPrefix: "token-input-"
+    idPrefix: "token-input-",
+    backspaceDeleteItem: true
 };
 
 // Default classes to use when theming
@@ -219,8 +220,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 case KEY.BACKSPACE:
                     previous_token = input_token.prev();
-
-                    if(!$(this).val().length) {
+                    if(!$(this).val().length && settings.backspaceDeleteItem) {
                         if(selected_token) {
                             delete_token($(selected_token));
                         } else if(previous_token.length) {
