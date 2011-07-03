@@ -20,7 +20,7 @@ Original jquery-tokeniput used a simple regex expression to highlight the typed 
 
 [1] Based on this great article http://www.alistapart.com/articles/accent-folding-for-auto-complete/
 
-=== Custom objects as data source ===
+### Custom objects as data source
 
 Originally jquery-tokeninput would only accept objects with 'id' and 'name' parameters, and would even ignore any other element in the object. With several hooks on this, I made token accept any kind of object, with options to choose which columns to use when searching and what 
 
@@ -33,13 +33,13 @@ Originally jquery-tokeninput would only accept objects with 'id' and 'name' para
 ]
 </code></pre>
 
-=== Custom Entries ===
+### Custom Entries
 
 Besides choosing predefined items from a list 
 
 TODO
 
-=== Refactored way for storing elements and send them to the server ===
+### Refactored way for storing elements and send them to the server
 
 Original jquery-tokeninput had some misterious bug that kept deleted elements when form was submited. Besides this, it had a hard-to-maintain way to handle actions to add and remove tokens.
 
