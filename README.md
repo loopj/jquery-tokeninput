@@ -22,16 +22,14 @@ Original jquery-tokeniput used a simple regex expression to highlight the typed 
 
 ### Custom objects as data source
 
-Originally jquery-tokeninput would only accept objects with 'id' and 'name' parameters, and would even ignore any other element in the object. With several hooks on this, I made token accept any kind of object, with options to choose which columns to use when searching and what 
+Originally jquery-tokeninput would only accept objects with 'id' and 'name' parameters, and would even ignore any other element in the object. With several hooks on this, I made token accept any kind of object, with options to choose which columns to use when searching and what TODO 
 
-<pre><code>
-[
+<pre><code>[
     {id: 1, city: 'Vitória', state: 'ES'},
     {id: 5, name: 'São Paulo', state: 'SP'},
     {id: 2, city: 'Palo Alto', state: 'CA'},
     {id: 3, city: 'San Francisco', state: 'CA'},
-]
-</code></pre>
+]</code></pre>
 
 ### Custom Entries
 
