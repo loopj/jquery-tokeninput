@@ -1,0 +1,53 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="src/jquery.tokeninput.js"></script>
+
+    <link rel="stylesheet" href="styles/token-input.css" type="text/css" />
+    <link rel="stylesheet" href="styles/token-input-facebook.css" type="text/css" />
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $("input[type=button]").click(function () {
+            alert("Would submit: " + $(this).siblings("input[type=text]").val());
+        });
+    });
+    </script>
+</head>
+
+<body>
+    <h1>jQuery Tokeninput Demos</h1>
+
+    <h2>Tab index demo</h2>
+    <div>
+        <input type="text" tabindex="1" value="index 1"/>
+        <input type="text" tabindex="2" value="index 2" />
+        <input type="text" id="demo-input1" name="blah" tabindex="3" />
+        <input type="text" tabindex="4" value="index 4" />
+        <input type="button" value="Submit" tabindex="5" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input1").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
+        });
+        </script>
+    </div>
+
+    <h2>Tab index demo in a form</h2>
+    <div>
+        <form>
+            <input type="text" tabindex="6" value="index 6"/>
+            <input type="text" tabindex="7" value="index 7" />
+            <input type="text" id="demo-input2" name="blah" tabindex="8" />
+            <input type="text" tabindex="9" value="index 9" />
+            <input type="button" value="Submit" tabindex="10" />
+        </form>
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input2").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
+        });
+        </script>
+    </div>
+</body>
+</html>
