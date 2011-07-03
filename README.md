@@ -10,11 +10,11 @@ Changes from original jquery-tokeninput
 
 This is a forked version of jquery-tokeninput with a couple of different things. I grouped a small list of changes between original loopj's version from mine.
 
-=== Support for server-side diacritical marks and original case ===
+### Support for server-side diacritical marks and original case
 
 In [author]'s version, only a parsed text of what the user types goes to the server-side destination, without accents and all in lowercase. This version will send to server-side the intact version without parsing any character. This particularly allows to the server-side to know how to handle new custom entries and special items.
 
-=== Highlight terms ===
+### Highlight terms
 
 Original jquery-tokeniput used a simple regex expression to highlight the typed characters in the dropdown list. This caused to be a huge problem with accents and other special chars. After doing a major clean-up[1] on this, this updated version of tokeninput will properly highlight terms like “são paulo” when “sao paulo” is provided.
 
