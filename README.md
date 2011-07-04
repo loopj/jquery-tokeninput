@@ -12,7 +12,7 @@ This is a forked version of jquery-tokeninput with a couple of different things.
 
 ### Support for server-side diacritical marks and original case
 
-In [author]'s version, only a parsed text of what the user types goes to the server-side destination, without accents and all in lowercase. This version will send to server-side the intact version without parsing any character. This particularly allows to the server-side to know how to handle new custom entries and special items.
+In loopj's version, only a parsed text of what the user types goes to the server-side destination, without accents and all in lowercase. This version will send to server-side the intact version without parsing any character. This particularly allows to the server-side to know how to handle new custom entries and special items.
 
 ### Highlight terms
 
@@ -22,14 +22,20 @@ Original jquery-tokeniput used a simple regex expression to highlight the typed 
 
 ### Custom objects as data source
 
-Originally jquery-tokeninput would only accept objects with 'id' and 'name' parameters, and would even ignore any other element in the object. With several hooks on this, I made token accept any kind of object, with options to choose which columns to use when searching and what TODO 
+Originally jquery-tokeninput would only accept objects with 'id' and 'name' parameters, and would even ignore any other element in the object. With several hooks on this, I made token accept any kind of object, with options to choose which columns to use when searching (by using `searchColumns`) and what to display as the name of the item (with `parseName` param).
 
-<pre><code>[
+<pre><code>$("#demo").tokenInput([
     {id: 1, city: 'Vitória', state: 'ES'},
     {id: 5, name: 'São Paulo', state: 'SP'},
     {id: 2, city: 'Palo Alto', state: 'CA'},
     {id: 3, city: 'San Francisco', state: 'CA'},
-]</code></pre>
+],
+{
+    parseName: function(element) {
+        return element.city + ', '+ element.state;
+    },
+    searchColumns: ['city', 'state']
+});</code></pre>
 
 ### Custom Entries
 
