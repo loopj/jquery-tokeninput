@@ -329,10 +329,12 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
         unique_counter++;
         return 'u' + unique_counter;
     }
-
+    
+    // hides original input box
+    input.type = 'hidden';
+    
     // Keep a reference to the original input box
     var hidden_input = $(input)
-                           .hide()
                            .val("")
                            .focus(function () {
                                input_box.focus();
