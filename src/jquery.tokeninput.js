@@ -86,7 +86,6 @@ var KEY = {
     COMMA: 188
 };
 
-
 // Expose the .tokenInput function to jQuery as a plugin
 $.fn.tokenInput = function (url_or_data_or_function, options) {
     var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
@@ -297,7 +296,7 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
                     
                     if(event.keyCode == KEY.TAB && !$(input_box).val().length) {
                         hide_dropdown();
-                        $(this).blur();
+                        // let the browser handle the tab key properly if user is trying to tab through or out
                         return true;
                     }
                 
@@ -341,6 +340,9 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
                            .blur(function () {
                                input_box.blur();
                            });
+
+    // Carry over the tab index if it's set
+    input_box.attr({ tabindex: hidden_input.attr('tabindex') });
 
     // Keep a reference to the selected token and dropdown item
     var selected_token = null;
