@@ -9,36 +9,53 @@
  */
 
 (function ($) {
+
 // Default settings
 var DEFAULT_SETTINGS = {
+    
+    // Strings
+    
     hintText: "Type in a search term",
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
+    
+    // Field exibition and behavior
+    
+    tokenLimit: null,
+    allowCustomEntry: false,
+    preventDuplicates: false,
+    searchColumns: ['name'],
+    parseName: null,
+    escapeHTML: true,   
     searchDelay: 300,
     minChars: 1,
-    tokenLimit: null,
-    jsonContainer: null,
-    allowCustomEntry: false,
+    makeSortable: false,
+    animateDropdown: true,
+    
+    // Get local & external data
+    
     method: "GET",
     contentType: "json",
     queryParam: "q",
+    jsonContainer: null,
+    prePopulate: null,
+    processPrePopulate: false,
+    
+    // Submit input value
+    
     tokenDelimiter: ",",
     tokenQuote: "'",
     tokenQuoteEscaped: "\\'",
-    preventDuplicates: false,
-    prePopulate: null,
-    processPrePopulate: false,
-    parseName: null,
-    searchColumns: ['name'],
-    makeSortable: false,
-    escapeHTML: true,
-    animateDropdown: true,
+    tokensFormatter: null,
+    
+    // Callbacks
+        
     onResult: null,
     onAdd: null,
-    onDelete: null,
-    tokensFormatter: null
+    onDelete: null
 };
+
 
 // Default classes to use when theming
 var DEFAULT_CLASSES = {
