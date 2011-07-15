@@ -103,13 +103,37 @@ var KEY = {
     COMMA: 188
 };
 
-// Expose the .tokenInput function to jQuery as a plugin
-$.fn.tokenInput = function (url_or_data_or_function, options) {
-    var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
+// Additional public (exposed) methods
+var methods = {
+    init: function(url_or_data_or_function, options) {
+        var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
 
-    return this.each(function () {
-        new $.TokenList(this, url_or_data_or_function, settings);
-    });
+        return this.each(function () {
+            $(this).data("tokenInputObject", new $.TokenList(this, url_or_data_or_function, settings));
+        });
+    },
+    clear: function() {
+        this.data("tokenInputObject").clear();
+        return this;
+    },
+    add: function(item) {
+        this.data("tokenInputObject").add(item);
+        return this;
+    },
+    remove: function(item) {
+        this.data("tokenInputObject").remove(item);
+        return this;
+    }
+}
+
+// Expose the .tokenInput function to jQuery as a plugin
+$.fn.tokenInput = function (method) {
+    // Method calling and initialization logic
+    if(methods[method]) {
+        return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+        return methods.init.apply(this, arguments);
+    }
 };
 
 
@@ -459,6 +483,39 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
             hide_dropdown();
         }
     }
+    
+    
+    //
+    // Public functions
+    //
+
+    this.clear = function() {
+        token_list.children("li").each(function() {
+            if ($(this).children("input").length === 0) {
+                delete_token($(this));
+            }
+        });
+    }
+
+    this.add = function(item) {
+        add_token(item);
+    }
+
+    this.remove = function(item) {
+        token_list.children("li[data-uniqueid]").each(function() {
+            var currToken = $(this).data("tokeninput");
+            var match = true;
+            for (var prop in item) {
+                if (item[prop] !== currToken[prop]) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) {
+                delete_token($(this));
+            }
+        });
+    }
 
 
 
@@ -538,11 +595,14 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
 
     // Add a token to the token list based on user input
     function add_token (item) {
+    
         
         if(typeof(item) === "string") {
             var li_data = {name: item};
-        } else {
+        } else if(item[0]) {
             var li_data = $.data(item.get(0), "tokeninput");
+        } else {
+            var li_data = item;
         }
         
         if(!li_data) {
