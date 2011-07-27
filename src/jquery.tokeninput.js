@@ -93,7 +93,10 @@ var methods = {
     remove: function(item) {
         this.data("tokenInputObject").remove(item);
         return this;
-    }
+    },
+    get: function() {
+    	return this.data("tokenInputObject").getTokens();
+   	}
 }
 
 // Expose the .tokenInput function to jQuery as a plugin
@@ -380,6 +383,10 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         });
     }
+    
+    this.getTokens = function() {
+   		return saved_tokens;
+   	}
 
     //
     // Private functions
