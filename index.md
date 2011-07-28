@@ -45,7 +45,7 @@ Features
 - Crossdomain support via JSONP
 - Callbacks when items are added or removed from the list
 - Preprocess results from the server with the onResult callback
-- Programatically add, remove and clear tokens
+- Programatically add, remove, clear and get tokens
 
 
 Screenshots
@@ -145,6 +145,11 @@ tokenLimit
     `null` to allow unlimited selections. *default: null*
     [(demo)](demo.html#custom-limits).
 
+tokenValue
+:   The value of the token input when the input is submitted. Set it to `id`
+    in order to get a concatenation of token IDs, or to `name` in order to
+    get a concatenation of names. *default: id*
+
 prePopulate
 :   Prepopulate the tokeninput with existing data. Set to an array of JSON
     objects, eg: `[{id: 3, name: "test", id: 5, name: "awesome"}]`
@@ -198,6 +203,9 @@ Methods
 
 `selector.tokenInput("clear");`
 :   Clear all tokens from the tokeninput.
+
+`selector.tokenInput("get");`
+:   Gets the array of selected tokens from the tokeninput (each item being an object of the kind `{id: x, name: y}`).
 
 
 Reporting Bugs or Feature Requests
