@@ -11,6 +11,7 @@
 (function ($) {
 // Default settings
 var DEFAULT_SETTINGS = {
+    propertyToSearch: "first_name",
     hintText: "Type in a search term",
     noResultsText: "No results",
     searchingText: "Searching...",
@@ -413,7 +414,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Inner function to a token to the list
     function insert_token(item) {
-        var this_token = $("<li><p>"+ item.name +"</p></li>")
+        var this_token = $("<li><p>"+ item[settings.propertyToSearch] +"</p></li>")
           .addClass(settings.classes.token)
           .insertBefore(input_token);
 
@@ -427,7 +428,7 @@ $.TokenList = function (input, url_or_data, settings) {
             });
 
         // Store data on the token
-        var token_data = {"id": item.id, "name": item.name};
+        var token_data = {"id": item.id, "name": item[settings.propertyToSearch]};
         $.data(this_token.get(0), "tokeninput", item);
 
         // Save this token for duplicate checking
@@ -627,7 +628,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 .hide();
 
             $.each(results, function(index, value) {
-                var this_li = $("<li>" + highlight_term(value.name, query) + "</li>")
+                var this_li = $("<li>" + highlight_term(value[settings.propertyToSearch], query) + "</li>")
                                   .appendTo(dropdown_ul);
 
                 if(index % 2) {
@@ -749,7 +750,7 @@ $.TokenList = function (input, url_or_data, settings) {
             } else if(settings.local_data) {
                 // Do the search through local data
                 var results = $.grep(settings.local_data, function (row) {
-                    return row.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+                    return row[settings.propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
                 });
 
                 if($.isFunction(settings.onResult)) {
