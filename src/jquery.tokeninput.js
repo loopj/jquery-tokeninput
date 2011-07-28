@@ -11,7 +11,7 @@
 (function ($) {
 // Default settings
 var DEFAULT_SETTINGS = {
-    propertyToSearch: "first_name",
+    propertyToSearch: "name",
     hintText: "Type in a search term",
     noResultsText: "No results",
     searchingText: "Searching...",
