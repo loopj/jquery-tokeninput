@@ -230,6 +230,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     if(!$(this).val().length) {
                         if(selected_token) {
                             delete_token($(selected_token));
+                            hidden_input.change();
                         } else if(previous_token.length) {
                             select_token($(previous_token.get(0)));
                         }
@@ -249,6 +250,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.COMMA:
                   if(selected_dropdown_item) {
                     add_token($(selected_dropdown_item).data("tokeninput"));
+                    hidden_input.change();
                     return false;
                   }
                   break;
@@ -434,6 +436,7 @@ $.TokenList = function (input, url_or_data, settings) {
             .appendTo(this_token)
             .click(function () {
                 delete_token($(this).parent());
+                hidden_input.change();
                 return false;
             });
 
@@ -636,6 +639,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 })
                 .mousedown(function (event) {
                     add_token($(event.target).closest("li").data("tokeninput"));
+                    hidden_input.change();
                     return false;
                 })
                 .hide();
