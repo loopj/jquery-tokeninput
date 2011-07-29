@@ -369,7 +369,7 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     this.add = function(item) {
-        add_token(item);
+        insert_token(item);
     }
 
     this.remove = function(item) {
