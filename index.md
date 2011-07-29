@@ -5,17 +5,18 @@ tagline: A jQuery Tokenizing Autocomplete Text Entry
 version: 1.5.0
 github_url: https://github.com/loopj/jquery-tokeninput
 download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.5.0
----
-
-<script type="text/javascript" src="https://github.com/loopj/jquery-tokeninput/raw/master/src/jquery.tokeninput.js"></script>
-<link rel="stylesheet" href="https://github.com/loopj/jquery-tokeninput/raw/master/styles/token-input-facebook.css" type="text/css" />
-<script type="text/javascript"> 
-$(document).ready(function() {
-    $("#tokeninput-demo").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-        theme: "facebook"
+extra_head: |
+    <script type="text/javascript" src="https://github.com/loopj/jquery-tokeninput/raw/master/src/jquery.tokeninput.js"></script>
+    <link rel="stylesheet" href="token-input-facebook.css" type="text/css" />
+    <script type="text/javascript"> 
+    $(document).ready(function() {
+        $("#tokeninput-demo").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+            theme: "facebook"
+        });
     });
-});
-</script>
+    </script>
+
+---
 
 
 Instant Demo
