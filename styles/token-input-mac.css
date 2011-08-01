@@ -202,3 +202,7 @@ div.token-input-dropdown-mac ul li.token-input-selected-dropdown-item-mac span.t
 div.token-input-dropdown-mac ul li.token-input-selected-dropdown-item-mac.odd span.token-input-dropdown-item-description-mac {
     color: #fff;
 }
+.token-input-blur-text-mac {
+  font-style: italic;
+  color: #AAA;
+}

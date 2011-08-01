@@ -112,3 +112,7 @@ div.token-input-dropdown-facet ul li.token-input-selected-dropdown-item-facet {
     background-color: #d0efa0;
 }
 
+.token-input-blur-text-facet {
+  font-style: italic;
+  color: #AAA;
+}

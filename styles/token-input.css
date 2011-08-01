@@ -110,4 +110,7 @@ div.token-input-dropdown ul li em {
 div.token-input-dropdown ul li.token-input-selected-dropdown-item {
     background-color: #d0efa0;
 }
-
+.token-input-blur-text {
+  font-style: italic;
+  color: #AAA;
+}
