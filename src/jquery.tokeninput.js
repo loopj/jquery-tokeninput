@@ -27,6 +27,7 @@ var DEFAULT_SETTINGS = {
     preventDuplicates: false,
     prePopulate: null,
     animateDropdown: true,
+    dontAdd: false,
     onResult: null,
     onAdd: null,
     onDelete: null
@@ -403,6 +404,9 @@ $.TokenList = function (input, url_or_data, options) {
 
     // Add a token to the token list based on user input
     function add_token (item) {
+        if (settings.dontAdd)
+            return;
+
         var li_data = $.data(item.get(0), "tokeninput");
         var callback = settings.onAdd;
 
