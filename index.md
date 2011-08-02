@@ -190,6 +190,9 @@ onDelete
 :   A function to call whenever the user removes a token from their selections.
     *default: null* [(demo)](demo.html#onadd-ondelete).
 
+onReady
+:   A function to call after initialization is done and the tokeninput is ready
+    to use. *default: null*
 
 Methods
 -------
