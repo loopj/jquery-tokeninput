@@ -34,6 +34,7 @@ var DEFAULT_SETTINGS = {
     onResult: null,
     onAdd: null,
     onDelete: null,
+    onReady: null,
     idPrefix: "token-input-"
 };
 
@@ -358,6 +359,10 @@ $.TokenList = function (input, url_or_data, settings) {
         });
     }
 
+    // Initialization is done
+    if($.isFunction(settings.onReady)) {
+        settings.onReady.call(this);
+    }
 
     //
     // Public functions
