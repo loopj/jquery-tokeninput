@@ -153,7 +153,7 @@ tokenValue
 
 prePopulate
 :   Prepopulate the tokeninput with existing data. Set to an array of JSON
-    objects, eg: `[{id: 3, name: "test", id: 5, name: "awesome"}]`
+    objects, eg: `[{id: 3, name: "test"}, {id: 5, name: "awesome"}]`
     to pre-fill the input. *default: null* [(demo)](demo.html#pre-populated).
 
 preventDuplicates
