@@ -406,8 +406,6 @@ $.TokenList = function (input, url_or_data, settings) {
             input_box.hide();
             hide_dropdown();
             return;
-        } else {
-            input_box.focus();
         }
     }
 
