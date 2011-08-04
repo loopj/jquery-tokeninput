@@ -11,31 +11,46 @@
 (function ($) {
 // Default settings
 var DEFAULT_SETTINGS = {
+	// Search settings
     propertyToSearch: "name",
+    method: "GET",
+    contentType: "json",
+    queryParam: "q",
+    searchDelay: 300,
+    minChars: 1,
+    jsonContainer: null,
+
+	// Display settings
     hintText: "Type in a search term",
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
-    searchDelay: 300,
-    minChars: 1,
+    animateDropdown: true,
+
+	// Tokenization settings
     tokenLimit: null,
-    jsonContainer: null,
-    method: "GET",
-    contentType: "json",
-    queryParam: "q",
     tokenDelimiter: ",",
-    tokenValue: "id",
     preventDuplicates: false,
+
+	// Output settings
+    tokenValue: "id",
+
+	// Prepopulation settings
     prePopulate: null,
     processPrePopulate: false,
-    animateDropdown: true,
+
+	// Manipulation settings
+    idPrefix: "token-input-",
+
+	// Formatters
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
+
+	// Callbacks
     onResult: null,
     onAdd: null,
     onDelete: null,
-    onReady: null,
-    idPrefix: "token-input-"
+    onReady: null
 };
 
 // Default classes to use when theming
