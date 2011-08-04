@@ -161,6 +161,25 @@
     </div>
 
 
+    <h2 id="pre-populated-with-tokenlimit">Pre-populated &amp; Token Limit</h2>
+    <div>
+        <input type="text" id="demo-input-pre-populated-with-tokenlimit" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-pre-populated-with-tokenlimit").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                prePopulate: [
+                    {id: 123, name: "Slurms MacKenzie"},
+                    {id: 555, name: "Bob Hoskins"},
+                    {id: 9000, name: "Kriss Akabusi"}
+                ],
+                tokenLimit: 3
+            });
+        });
+        </script>
+    </div>
+
+
     <h2 id="disable-animation">Disable Animation on Dropdown</h2>
     <div>
         <input type="text" id="demo-input-disable-animation" name="blah" />

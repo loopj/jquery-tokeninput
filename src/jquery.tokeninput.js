@@ -34,6 +34,7 @@ var DEFAULT_SETTINGS = {
     onResult: null,
     onAdd: null,
     onDelete: null,
+    onReady: null,
     idPrefix: "token-input-"
 };
 
@@ -358,6 +359,10 @@ $.TokenList = function (input, url_or_data, settings) {
         });
     }
 
+    // Initialization is done
+    if($.isFunction(settings.onReady)) {
+        settings.onReady.call();
+    }
 
     //
     // Public functions
@@ -455,6 +460,12 @@ $.TokenList = function (input, url_or_data, settings) {
         update_hidden_input(saved_tokens, hidden_input);
 
         token_count += 1;
+
+        // Check the token limit
+        if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
+            input_box.hide();
+            hide_dropdown();
+        }
 
         return this_token;
     }
