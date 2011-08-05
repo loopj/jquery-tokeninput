@@ -107,6 +107,12 @@ allows you to customize the appearance and behaviour of the script, as well as
 add your own callbacks to intercept certain events. The following options are
 available:
 
+propertyToSearch
+:   The javascript/json object attribute to search. If you are using the 
+    resultsFormatter option, the query string will only highlight the query 
+    string when it appears in the propertyToSearch field in the results. 
+    *default: "name"* [(demo)](demo.html#demo-input-local-custom-formatters).
+
 hintText
 :   The text to show in the dropdown label which appears when you first click 
     in the search field. *default: "Type in a search term"*
@@ -132,6 +138,23 @@ theme
 animateDropdown
 :   Set this to `false` to disable animation of the dropdown *default: true*
     [(demo)](demo.html#disable-animation).
+
+resultsFormatter
+:   A function that returns an interpolated HTML string for each result. Use 
+    this function with a templating system of your choice, such as jresig
+    microtemplates or mustache.js. Use this when you want to include images or
+    multiline formatted results 
+    *default: function(item){ return "<li>" + item.propertyToSearch + "</li>" }* 
+    [(demo)](demo.html#demo-input-local-custom-formatters).
+
+tokenFormatter
+:   A function that returns an interpolated HTML string for each token. Use 
+    this function with a templating system of your choice, such as jresig
+    microtemplates or mustache.js. Use this when you want to include images or
+    multiline formatted tokens. Quora's people invite token field that returns 
+    avatar tokens is a good example of what can be done this option. 
+    *default: function(item){ return "<li><p>" + item.propertyToSearch + "</p></li>" }* 
+    [(demo)](demo.html#demo-input-local-custom-formatters).
 
 searchDelay
 :   The delay, in milliseconds, between the user finishing typing and the
