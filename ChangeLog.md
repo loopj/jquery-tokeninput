@@ -1,7 +1,7 @@
 jQuery Tokeninput ChangeLog
 ===========================
 
-Version 1.5.0 (2011-08-07)
+Version 1.6.0 (2011-08-07)
 --------------------------
 - Now possible to pass a function as the URL to search, allowing dynamic endpoints
 - Customize which JSON property to send to the server with the `tokenValue` setting
