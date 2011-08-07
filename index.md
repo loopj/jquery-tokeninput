@@ -2,9 +2,9 @@
 layout: project
 title: jQuery Tokeninput
 tagline: A jQuery Tokenizing Autocomplete Text Entry
-version: 1.5.0
+version: 1.6.0
 github_url: https://github.com/loopj/jquery-tokeninput
-download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.5.0
+download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.6.0
 extra_head: |
     <script type="text/javascript" src="https://github.com/loopj/jquery-tokeninput/raw/master/src/jquery.tokeninput.js"></script>
     <link rel="stylesheet" href="styles/token-input-facebook.css" type="text/css" />
@@ -47,6 +47,7 @@ Features
 - Callbacks when items are added or removed from the list
 - Preprocess results from the server with the onResult callback
 - Programatically add, remove, clear and get tokens
+- Customize the output format of the results and tokens
 
 
 Screenshots
@@ -107,11 +108,49 @@ allows you to customize the appearance and behaviour of the script, as well as
 add your own callbacks to intercept certain events. The following options are
 available:
 
+### Search Settings ###
+
+method
+:   The HTTP method (eg. GET, POST) to use for the server request. *default:
+    "GET"*.
+
+queryParam
+:   The name of the query param which you expect to contain the search term
+    on the server-side. *default: "q"*.
+
+searchDelay
+:   The delay, in milliseconds, between the user finishing typing and the
+    search being performed. *default: 300* [(demo)](demo.html#custom-limits).
+
+minChars
+:   The minimum number of characters the user must enter before a search is
+    performed. *default: 1* [(demo)](demo.html#custom-limits).
+
 propertyToSearch
 :   The javascript/json object attribute to search. If you are using the 
     resultsFormatter option, the query string will only highlight the query 
     string when it appears in the propertyToSearch field in the results. 
     *default: "name"* [(demo)](demo.html#demo-input-local-custom-formatters).
+
+jsonContainer
+:   The name of the json object in the response which contains the search
+    results. This is typically used when your endpoint returns other data in 
+	addition to your search results.
+	Use `null` to use the top level response object. *default: null*.
+
+crossDomain
+:   Force JSONP cross-domain communication to the server instead of a normal
+    ajax request. Note: JSONP is automatically enabled if we detect the search
+	request is a cross-domain request. *default: false*.
+
+### Pre-population Settings ###
+
+prePopulate
+:   Prepopulate the tokeninput with existing data. Set to an array of JSON
+    objects, eg: `[{id: 3, name: "test"}, {id: 5, name: "awesome"}]`
+    to pre-fill the input. *default: null* [(demo)](demo.html#pre-populated).
+
+### Display Settings ###
 
 hintText
 :   The text to show in the dropdown label which appears when you first click 
@@ -131,13 +170,13 @@ deleteText
 :   The text to show on each token which deletes the token when clicked.
     *default: &times;* [(demo)](demo.html#custom-delete).
 
-theme
-:   Set this to a string, eg "facebook" when including theme css files to set
-    the css class suffix [(demo)](demo.html#theme).
-
 animateDropdown
 :   Set this to `false` to disable animation of the dropdown *default: true*
     [(demo)](demo.html#disable-animation).
+
+theme
+:   Set this to a string, eg "facebook" when including theme css files to set
+    the css class suffix [(demo)](demo.html#theme).
 
 resultsFormatter
 :   A function that returns an interpolated HTML string for each result. Use 
@@ -156,48 +195,27 @@ tokenFormatter
     *default: function(item){ return "<li><p>" + item.propertyToSearch + "</p></li>" }* 
     [(demo)](demo.html#demo-input-local-custom-formatters).
 
-searchDelay
-:   The delay, in milliseconds, between the user finishing typing and the
-    search being performed. *default: 300* [(demo)](demo.html#custom-limits).
-
-minChars
-:   The minimum number of characters the user must enter before a search is
-    performed. *default: 1* [(demo)](demo.html#custom-limits).
+### Tokenization Settings ###
 
 tokenLimit
 :   The maximum number of results allowed to be selected by the user. Use 
     `null` to allow unlimited selections. *default: null*
     [(demo)](demo.html#custom-limits).
 
-tokenValue
-:   The value of the token input when the input is submitted. Set it to `id`
-    in order to get a concatenation of token IDs, or to `name` in order to
-    get a concatenation of names. *default: id*
-
-prePopulate
-:   Prepopulate the tokeninput with existing data. Set to an array of JSON
-    objects, eg: `[{id: 3, name: "test"}, {id: 5, name: "awesome"}]`
-    to pre-fill the input. *default: null* [(demo)](demo.html#pre-populated).
+tokenDelimiter
+: 	The separator to use when sending the results back to the server.
+	*default: ","*.
 
 preventDuplicates
 :   Prevent user from selecting duplicate values by setting this to `true`.
     *default: false* [(demo)](demo.html#prevent-duplicates).
 
-jsonContainer
-:   The name of the json object in the response which contains the search
-    results. Use `null` to use the top level response object. *default: null*.
+tokenValue
+:   The value of the token input when the input is submitted. Set it to `id`
+    in order to get a concatenation of token IDs, or to `name` in order to
+    get a concatenation of names. *default: id*
 
-method
-:   The HTTP method (eg. GET, POST) to use for the server request. *default:
-    "GET"*.
-
-queryParam
-:   The name of the query param which you expect to contain the search term
-    on the server-side. *default: "q"*.
-
-crossDomain
-:   Use JSONP cross-domain communication to the server instead of a normal
-    ajax request. *default: false*.
+### Callbacks ###
 
 onResult
 :   A function to call whenever we receive results back from the server. You 
@@ -216,6 +234,7 @@ onDelete
 onReady
 :   A function to call after initialization is done and the tokeninput is ready
     to use. *default: null*
+
 
 Methods
 -------
