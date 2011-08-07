@@ -127,10 +127,8 @@ minChars
     performed. *default: 1* [(demo)](demo.html#custom-limits).
 
 propertyToSearch
-:   The javascript/json object attribute to search. If you are using the 
-    resultsFormatter option, the query string will only highlight the query 
-    string when it appears in the propertyToSearch field in the results. 
-    *default: "name"* [(demo)](demo.html#demo-input-local-custom-formatters).
+:   The javascript/json object attribute to search.
+    *default: "name"* [(demo)](demo.html#formatting).
 
 jsonContainer
 :   The name of the json object in the response which contains the search
@@ -187,7 +185,7 @@ resultsFormatter
     microtemplates or mustache.js. Use this when you want to include images or
     multiline formatted results 
     *default: function(item){ return "<li>" + item.propertyToSearch + "</li>" }* 
-    [(demo)](demo.html#demo-input-local-custom-formatters).
+    [(demo)](demo.html#formatting).
 
 tokenFormatter
 :   A function that returns an interpolated HTML string for each token. Use 
@@ -196,7 +194,7 @@ tokenFormatter
     multiline formatted tokens. Quora's people invite token field that returns 
     avatar tokens is a good example of what can be done this option. 
     *default: function(item){ return "<li><p>" + item.propertyToSearch + "</p></li>" }* 
-    [(demo)](demo.html#demo-input-local-custom-formatters).
+    [(demo)](demo.html#formatting).
 
 ### Tokenization Settings ###
 

@@ -160,94 +160,7 @@
         </script>
     </div>
 
-
-    <h2 id="disable-animation">Disable Animation on Dropdown</h2>
-    <div>
-        <input type="text" id="demo-input-disable-animation" name="blah" />
-        <input type="button" value="Submit" />
-        <script type="text/javascript">
-        $(document).ready(function() {
-            $("#demo-input-disable-animation").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-                animateDropdown: false
-            });
-        });
-        </script>
-    </div>
-
-
-    <h2 id="onresult">Modify Response with onResult Callback</h2>
-    <div>
-        <input type="text" id="demo-input-onresult" name="blah" />
-        <input type="button" value="Submit" />
-        <script type="text/javascript">
-        $(document).ready(function() {
-            $("#demo-input-onresult").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-                onResult: function (results) {
-                    $.each(results, function (index, value) {
-                        value.name = "OMG: " + value.name;
-                    });
-
-                    return results;
-                }
-            });
-        });
-        </script>
-    </div>
-
-
-    <h2 id="onadd-ondelete">Using onAdd and onDelete Callbacks</h2>
-    <div>
-        <input type="text" id="demo-input-onadd-ondelete" name="blah" />
-        <input type="button" value="Submit" />
-        <script type="text/javascript">
-        $(document).ready(function() {
-            $("#demo-input-onadd-ondelete").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-                onAdd: function (item) {
-                    alert("Added " + item.name);
-                },
-                onDelete: function (item) {
-                    alert("Deleted " + item.name);
-                }
-            });
-        });
-        </script>
-    </div>
-
-
-    <h2 id="plugin-methods">Using the add, remove and clear Methods</h2>
-    <div>
-        <a href="#" id="plugin-methods-add">Add Token</a> | 
-        <a href="#" id="plugin-methods-remove">Remove Token</a> | 
-        <a href="#" id="plugin-methods-clear">Clear Tokens</a><br />
-
-        <input type="text" id="demo-input-plugin-methods" name="blah" />
-        <input type="button" value="Submit" />
-        <script type="text/javascript">
-        $(document).ready(function() {
-            $("#demo-input-plugin-methods").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
-
-            // Add a token programatically
-            $("#plugin-methods-add").click(function () {
-                $("#demo-input-plugin-methods").tokenInput("add", {id: 999, name: "James was here"});
-                return false;
-            });
-
-            // Remove a token programatically
-            $("#plugin-methods-remove").click(function () {
-                $("#demo-input-plugin-methods").tokenInput("remove", {name: "James was here"});
-                return false;
-            });
-
-            // Clear all tokens
-            $("#plugin-methods-clear").click(function () {
-                $("#demo-input-plugin-methods").tokenInput("clear");
-                return false;
-            });
-        });
-        </script>
-    </div>
-
-    <h2>Local Data Search with custom propertyToSearch, resultsFormatter and tokenFormatter</h2>
+    <h2 id="formatting">Token and Results Formatting</h2>
     <div>
         <input type="text" id="demo-input-local-custom-formatters" name="blah" />
         <input type="button" value="Submit" />
@@ -426,6 +339,92 @@
               resultsFormatter: function(item){ return "<li>" + "<img src='" + item.url + "' title='" + item.first_name + " " + item.last_name + "' height='25px' width='25px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='full_name'>" + item.first_name + " " + item.last_name + "</div><div class='email'>" + item.email + "</div></div></li>" },
               tokenFormatter: function(item) { return "<li><p>" + item.first_name + " " + item.last_name + "</p></li>" },
           });
+        });
+        </script>
+    </div>
+
+    <h2 id="disable-animation">Disable Animation on Dropdown</h2>
+    <div>
+        <input type="text" id="demo-input-disable-animation" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-disable-animation").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                animateDropdown: false
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="onresult">Modify Response with onResult Callback</h2>
+    <div>
+        <input type="text" id="demo-input-onresult" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-onresult").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                onResult: function (results) {
+                    $.each(results, function (index, value) {
+                        value.name = "OMG: " + value.name;
+                    });
+
+                    return results;
+                }
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="onadd-ondelete">Using onAdd and onDelete Callbacks</h2>
+    <div>
+        <input type="text" id="demo-input-onadd-ondelete" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-onadd-ondelete").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                onAdd: function (item) {
+                    alert("Added " + item.name);
+                },
+                onDelete: function (item) {
+                    alert("Deleted " + item.name);
+                }
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2 id="plugin-methods">Using the add, remove and clear Methods</h2>
+    <div>
+        <a href="#" id="plugin-methods-add">Add Token</a> | 
+        <a href="#" id="plugin-methods-remove">Remove Token</a> | 
+        <a href="#" id="plugin-methods-clear">Clear Tokens</a><br />
+
+        <input type="text" id="demo-input-plugin-methods" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-plugin-methods").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
+
+            // Add a token programatically
+            $("#plugin-methods-add").click(function () {
+                $("#demo-input-plugin-methods").tokenInput("add", {id: 999, name: "James was here"});
+                return false;
+            });
+
+            // Remove a token programatically
+            $("#plugin-methods-remove").click(function () {
+                $("#demo-input-plugin-methods").tokenInput("remove", {name: "James was here"});
+                return false;
+            });
+
+            // Clear all tokens
+            $("#plugin-methods-clear").click(function () {
+                $("#demo-input-plugin-methods").tokenInput("clear");
+                return false;
+            });
         });
         </script>
     </div>
