@@ -1,6 +1,6 @@
 /*
  * jQuery Plugin: Tokenizing Autocomplete Text Entry
- * Version 1.5.0
+ * Version 1.6.0
  *
  * Copyright (c) 2009 James Smith (http://loopj.com)
  * Licensed jointly under the GPL and MIT licenses,
@@ -12,12 +12,12 @@
 // Default settings
 var DEFAULT_SETTINGS = {
 	// Search settings
-    propertyToSearch: "name",
     method: "GET",
     contentType: "json",
     queryParam: "q",
     searchDelay: 300,
     minChars: 1,
+    propertyToSearch: "name",
     jsonContainer: null,
 
 	// Display settings
