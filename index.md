@@ -167,7 +167,10 @@ searchingText
     progress. *default: "Searching..."* [(demo)](demo.html#custom-labels).
 
 deleteText
-:   The text to show on each token which deletes the token when clicked.
+:   The text to show on each token which deletes the token when clicked. If 
+	you wish to hide the delete link, provide an empty string here. 
+	Alternatively you can provide a html string here if you would like to 
+	show an image for deleting tokens.
     *default: &times;* [(demo)](demo.html#custom-delete).
 
 animateDropdown
