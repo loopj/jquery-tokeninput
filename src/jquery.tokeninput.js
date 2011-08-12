@@ -33,6 +33,7 @@ var DEFAULT_SETTINGS = {
     theme: null,
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
+		placeholder: "",
 
     // Tokenization settings
     tokenLimit: null,
@@ -182,7 +183,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var input_val;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
+    var input_box = $("<input type=\"text\"  autocomplete=\"off\" placeholder=\""+settings["placeholder"]+"\">")
         .css({
             outline: "none"
         })
@@ -658,6 +659,10 @@ $.TokenList = function (input, url_or_data, settings) {
         return template.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + value + ")(?![^<>]*>)(?![^&;]+;)", "g"), highlight_term(value, term));
     }
 
+		function term_in_template (template, term) {
+			return template.match(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"))
+		}
+
     // Populate the results dropdown with some results
     function populate_dropdown (query, results) {
         if(results && results.length) {
@@ -676,7 +681,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
             $.each(results, function(index, value) {
                 var this_li = settings.resultsFormatter(value);
-
+								
+								if(!term_in_template(this_li, query))
+									return true;
+								
                 this_li = find_value_and_highlight_term(this_li ,value[settings.propertyToSearch], query);
 
                 this_li = $(this_li).appendTo(dropdown_ul);
