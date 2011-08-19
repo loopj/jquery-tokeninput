@@ -428,5 +428,36 @@
         });
         </script>
     </div>
+
+    <h2 id="allow-new-tokens">Allow new tokens</h2>
+    <div>
+        <input type="text" id="demo-input-allow-new-tokens" name="" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-allow-new-tokens").tokenInput({}, {
+                allowNewTokens: true,
+                tokenValue: 'name'
+            });
+        });
+        </script>
+    </div>
+
+    <h2 id="validation">Using tokenValidator to allow only alphanumeric characters.</h2>
+    <div>
+        <input type="text" id="demo-input-validation" name="" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-validation").tokenInput({}, {
+                allowNewTokens: true,
+                tokenValue: 'name',
+                tokenValidator: function(token) {
+                    return /^[a-z0-9]+$/i.test(token);
+                }
+            });
+        });
+        </script>
+    </div>
 </body>
 </html>

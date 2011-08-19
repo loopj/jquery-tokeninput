@@ -196,6 +196,14 @@ tokenFormatter
     *default: function(item){ return "<li><p>" + item.propertyToSearch + "</p></li>" }* 
     [(demo)](demo.html#formatting).
 
+### Token Validation ###
+
+tokenValidator
+:   A function that validates the given token. It returns TRUE if the token is
+    valid otherwise it returns FALSE.
+    *default: function(token) { return true; }*
+    [(demo)](demo.html#validation).
+
 ### Tokenization Settings ###
 
 tokenLimit
@@ -216,7 +224,11 @@ tokenValue
     in order to get a concatenation of token IDs, or to `name` in order to
     get a concatenation of names. *default: id*
 
-### Callbacks ###
+allowNewTokens
+:   Define whether you want to allow adding new tokens to the list.
+    *default: false* [(demo)](demo.html#allow-new-tokens)
+
+### Event callbacks ###
 
 onResult
 :   A function to call whenever we receive results back from the server. You 
@@ -236,6 +248,12 @@ onReady
 :   A function to call after initialization is done and the tokeninput is ready
     to use. *default: null*
 
+### Callbacks ###
+
+tokenEquals
+:   A function to compare two token items with each other. By default it uses
+    their id values. If there is no id value (new tokens have no id) for one of
+    them it will use the key defined by `propertyToSearch` for comparison.
 
 Methods
 -------
