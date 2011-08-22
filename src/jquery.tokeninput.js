@@ -62,7 +62,10 @@ var DEFAULT_SETTINGS = {
     },
 
     // Other settings
-    idPrefix: "token-input-"
+    idPrefix: "token-input-",
+
+    // Workarounds
+    initialResize: true
 };
 
 // Default classes to use when theming
@@ -857,6 +860,11 @@ $.TokenList = function (input, url_or_data, settings) {
             url = settings.url.call();
         }
         return url;
+    }
+
+    // Resize input to workaround a ui bug
+    if (settings.initialResize) {
+        resize_input();
     }
 
     // Initialization is done
