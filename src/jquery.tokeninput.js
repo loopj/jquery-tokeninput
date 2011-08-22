@@ -397,11 +397,6 @@ $.TokenList = function (input, url_or_data, settings) {
         });
     }
 
-    // Initialization is done
-    if($.isFunction(settings.onReady)) {
-        settings.onReady.call();
-    }
-
     //
     // Public functions
     //
@@ -862,6 +857,11 @@ $.TokenList = function (input, url_or_data, settings) {
             url = settings.url.call();
         }
         return url;
+    }
+
+    // Initialization is done
+    if($.isFunction(settings.onReady)) {
+        settings.onReady.call();
     }
 };
 
