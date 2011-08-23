@@ -778,10 +778,13 @@ $.TokenList = function (input, url_or_data, settings) {
                 deselect_token($(selected_token), POSITION.AFTER);
             }
             if(query.length >= settings.minChars && settings.tokenValidator(query)) {
-                show_dropdown_searching();
-                clearTimeout(timeout);
-                timeout = setTimeout(function(){
-                    run_search(query);
+                setTimeout(function() {
+                    var check = input_box.val().toLowerCase();
+                    if (check && check.length && (check == query)) {
+                        show_dropdown_searching();
+                        clearTimeout(timeout);
+                        run_search(query);
+                    }
                 }, settings.searchDelay);
             } else {
                 hide_dropdown();
