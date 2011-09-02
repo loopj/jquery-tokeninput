@@ -651,12 +651,15 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
+        term = term.replace(new RegExp("([\[|\\|\^|\$|\.|\||\?|\*|\+|\(|\)|\{|\}])", "g"), "\\$1");
         return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
     }
 
     function find_value_and_highlight_term(template, value, term) {
+        value = value.replace(new RegExp("([\[|\\|\^|\$|\.|\||\?|\*|\+|\(|\)|\{|\}])", "g"), "\\\\$1");
         return template.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + value + ")(?![^<>]*>)(?![^&;]+;)", "g"), highlight_term(value, term));
     }
+
 
     // Populate the results dropdown with some results
     function populate_dropdown (query, results) {
