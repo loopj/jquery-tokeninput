@@ -20,7 +20,7 @@ var DEFAULT_SETTINGS = {
     jsonContainer: null,
     contentType: "json",
 
-	// Prepopulation settings
+    // Prepopulation settings
     prePopulate: null,
     processPrePopulate: false,
 
@@ -35,6 +35,7 @@ var DEFAULT_SETTINGS = {
     resultsFormatter: function(item) { return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
     tokenValidator: function(token) { return true },
+    addOnBlur: false,
 
     // Tokenization settings
     tokenLimit: null,
@@ -211,6 +212,9 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         })
         .blur(function () {
+            if (settings.allowNewTokens && settings.addOnBlur) {
+                add_new_token($(this).val());
+            }
             hide_dropdown();
             $(this).val("");
         })
