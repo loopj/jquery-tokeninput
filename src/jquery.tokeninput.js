@@ -214,7 +214,10 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .blur(function () {
             if (settings.allowNewTokens && settings.addOnBlur) {
-                add_new_token($(this).val());
+                var token_label = $(this).val();
+                if (token_label.length) {
+                    add_new_token(token_label);
+                }
             }
             hide_dropdown();
             if (settings.clearOnBlur) {
