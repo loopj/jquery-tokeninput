@@ -528,9 +528,15 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Add a token to the token list based on user input
     function add_token (item) {
-        var callback = settings.onAdd;
-
         var token_label = item[settings.propertyToSearch];
+        if (token_label.indexOf(settings.tokenDelimiter) != -1) {
+            $.each(token_label.split(settings.tokenDelimiter), function(i, v) {
+                add_new_token(v);
+            });
+            return;
+        }
+
+        var callback = settings.onAdd;
         if (!settings.tokenValidator(token_label)) {
             return;
         }
