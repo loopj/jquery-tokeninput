@@ -36,6 +36,7 @@ var DEFAULT_SETTINGS = {
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
     tokenValidator: function(token) { return true },
     addOnBlur: false,
+    clearOnBlur: true,
 
     // Tokenization settings
     tokenLimit: null,
@@ -216,7 +217,9 @@ $.TokenList = function (input, url_or_data, settings) {
                 add_new_token($(this).val());
             }
             hide_dropdown();
-            $(this).val("");
+            if (settings.clearOnBlur) {
+                $(this).val("");
+            }
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
