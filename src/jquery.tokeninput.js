@@ -90,6 +90,11 @@ var KEY = {
     COMMA: 188
 };
 
+// Ensure compatibility with older Browsers (JavaScript < 1.8.1)
+String.prototype.trim = function() {
+    return this.replace(/^\s+/g, "").replace(/\s+$/g, "");
+};
+
 // Escape special characters which are used in regular expressions
 RegExp.escape = function(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -735,7 +740,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // Do a search and show the "searching" dropdown if the input is longer
     // than settings.minChars
     function do_search() {
-        var query = input_box.val().toLowerCase();
+        var query = input_box.val().toLowerCase().trim();
 
         if(query && query.length) {
             if(selected_token) {
@@ -797,7 +802,7 @@ $.TokenList = function (input, url_or_data, settings) {
                   cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
                   // only populate the dropdown if the results are associated with the active search query
-                  if(input_box.val().toLowerCase() === query) {
+                  if(input_box.val().toLowerCase().trim() === query) {
                       populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
                   }
                 };
