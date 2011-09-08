@@ -281,6 +281,16 @@ $.TokenList = function (input, url_or_data, settings) {
                   }
                   break;
 
+                case KEY.SPACE:
+                    var token = $(selected_dropdown_item).data("tokeninput");
+                    if(token) {
+                        if ($(this).val().toLowerCase().trim() == token['name'].toLowerCase()) {
+                            add_token(token);
+                            return false;
+                        }
+                    }
+                    break;
+
                 case KEY.ESCAPE:
                   hide_dropdown();
                   return true;
@@ -766,6 +776,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var cached_results = cache.get(cache_key);
         if(cached_results) {
             populate_dropdown(query, cached_results);
+            add_matching_token(query, cached_results);
         } else {
             // Are we doing an ajax search or local data search?
             if(settings.url) {
@@ -805,6 +816,7 @@ $.TokenList = function (input, url_or_data, settings) {
                   if(input_box.val().toLowerCase().trim() === query) {
                       populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
                   }
+                  add_matching_token(query, results);
                 };
 
                 // Make the request
@@ -820,6 +832,16 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
                 cache.add(cache_key, results);
                 populate_dropdown(query, results);
+                add_matching_token(query, results);
+            }
+        }
+    }
+
+    // Add token automatically if there's a matching result
+    function add_matching_token(query, results) {
+        if (input_box.val().match(/ $/)) {
+            if (results[0]['name'].toLowerCase().trim() == query.trim()) {
+                add_token(results[0]);
             }
         }
     }
