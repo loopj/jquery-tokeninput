@@ -87,7 +87,8 @@ var KEY = {
     RIGHT: 39,
     DOWN: 40,
     NUMPAD_ENTER: 108,
-    COMMA: 188
+    COMMA: 188,
+    MAC_COMMAND: 91
 };
 
 // Additional public (exposed) methods
@@ -180,6 +181,9 @@ $.TokenList = function (input, url_or_data, settings) {
     // Keep track of the timeout, old vals
     var timeout;
     var input_val;
+
+    // Keep track of the state of the CTRL key
+    var ctrlPressed = false;
 
     // Create a new text input an attach keyup events
     var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
@@ -276,13 +280,23 @@ $.TokenList = function (input, url_or_data, settings) {
                   return true;
 
                 default:
-                    if(String.fromCharCode(event.which)) {
-                        // set a timeout just long enough to let this function finish.
-                        setTimeout(function(){do_search();}, 5);
+                    if (event.ctrlKey || event.which === KEY.MAC_COMMAND) {
+                      ctrlPressed = true;
+                    } else {
+                      if(String.fromCharCode(event.which)) {
+                          // set a timeout just long enough to let this function finish.
+                          setTimeout(function(){do_search();}, 5);
+                      }
                     }
                     break;
             }
-        });
+        })
+        .keyup(function (event) {
+            if (event.ctrlKey || event.which === KEY.MAC_COMMAND) {
+              ctrlPressed = false;
+            }
+        }
+        );
 
     // Keep a reference to the original input box
     var hidden_input = $(input)
@@ -512,11 +526,22 @@ $.TokenList = function (input, url_or_data, settings) {
             checkTokenLimit();
         }
 
-        // Clear input box
-        input_box.val("");
+        console.log(ctrlPressed);
+        // Only clear search if CTRL key is not pressed
+        if (ctrlPressed) {
+            dropdown.css({
+                position: "absolute",
+                top: $(token_list).offset().top + $(token_list).outerHeight(),
+                left: $(token_list).offset().left,
+                'z-index': 999
+            });
+        } else {
+          // Clear input box
+          input_box.val("");
 
-        // Don't show the help dropdown, they've got the idea
-        hide_dropdown();
+          // Don't show the help dropdown, they've got the idea
+          hide_dropdown();
+        }
 
         // Execute the onAdd callback if defined
         if($.isFunction(callback)) {
