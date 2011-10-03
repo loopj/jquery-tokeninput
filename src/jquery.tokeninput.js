@@ -526,7 +526,6 @@ $.TokenList = function (input, url_or_data, settings) {
             checkTokenLimit();
         }
 
-        console.log(ctrlPressed);
         // Only clear search if CTRL key is not pressed
         if (ctrlPressed) {
             dropdown.css({
@@ -652,10 +651,8 @@ $.TokenList = function (input, url_or_data, settings) {
     function show_dropdown() {
         dropdown
             .css({
-                position: "absolute",
                 top: $(token_list).offset().top + $(token_list).outerHeight(),
                 left: $(token_list).offset().left,
-                'z-index': 999
             })
             .show();
     }
