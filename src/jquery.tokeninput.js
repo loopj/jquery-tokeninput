@@ -328,7 +328,8 @@ $.TokenList = function (input, url_or_data, options) {
     }
 
     // Hint for permanentDropdown
-    show_dropdown_hint();
+    if (settings.permanentDropdown || settings.showAllResults)
+      show_dropdown_hint();
 
     // Magic element to help us resize the text input
     var input_resizer = $("<tester/>")
