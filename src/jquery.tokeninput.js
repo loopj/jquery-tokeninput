@@ -47,7 +47,8 @@ var DEFAULT_SETTINGS = {
     onReady: null,
 
     // Other settings
-    idPrefix: "token-input-"
+    idPrefix: "token-input-",
+    appendTo: "body"
 };
 
 // Default classes to use when theming
@@ -340,7 +341,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // The list to store the dropdown items in
     var dropdown = $("<div>")
         .addClass(settings.classes.dropdown)
-        .appendTo("body")
+        .appendTo(settings.appendTo)
         .hide();
 
     // Magic element to help us resize the text input
@@ -628,8 +629,8 @@ $.TokenList = function (input, url_or_data, settings) {
         dropdown
             .css({
                 position: "absolute",
-                top: $(token_list).offset().top + $(token_list).outerHeight(),
-                left: $(token_list).offset().left,
+                top: $(token_list).offset().top + $(token_list).outerHeight() - $(settings.appendTo).offset().top,
+                left: $(token_list).offset().left - $(settings.appendTo).offset().left,
                 'z-index': 999
             })
             .show();
