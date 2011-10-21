@@ -9,6 +9,21 @@
  */
 
 (function ($) {
+// Default classes to use when theming
+var DEFAULT_CLASSES = {
+    tokenList: "token-input-list",
+    token: "token-input-token",
+    tokenDelete: "token-input-delete-token",
+    selectedToken: "token-input-selected-token",
+    highlightedToken: "token-input-highlighted-token",
+    dropdown: "token-input-dropdown",
+    dropdownItem: "token-input-dropdown-item",
+    dropdownItem2: "token-input-dropdown-item2",
+    selectedDropdownItem: "token-input-selected-dropdown-item",
+    inputToken: "token-input-input-token",
+	addToken: "token-input-add-token"
+};
+
 // Default settings
 var DEFAULT_SETTINGS = {
     // Search settings
@@ -19,6 +34,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+	allowAddToken: false,
 
 	// Prepopulation settings
     prePopulate: null,
@@ -26,7 +42,7 @@ var DEFAULT_SETTINGS = {
 
     // Display settings
     hintText: "Type in a search term",
-    noResultsText: "No results",
+    noResultsText: 'No results. <a href="#" class="'+DEFAULT_CLASSES.addToken+'">Add it?</a>',
     searchingText: "Searching...",
     deleteText: "&times;",
     animateDropdown: true,
@@ -48,20 +64,6 @@ var DEFAULT_SETTINGS = {
 
     // Other settings
     idPrefix: "token-input-"
-};
-
-// Default classes to use when theming
-var DEFAULT_CLASSES = {
-    tokenList: "token-input-list",
-    token: "token-input-token",
-    tokenDelete: "token-input-delete-token",
-    selectedToken: "token-input-selected-token",
-    highlightedToken: "token-input-highlighted-token",
-    dropdown: "token-input-dropdown",
-    dropdownItem: "token-input-dropdown-item",
-    dropdownItem2: "token-input-dropdown-item2",
-    selectedDropdownItem: "token-input-selected-dropdown-item",
-    inputToken: "token-input-input-token"
 };
 
 // Input box position "enum"
@@ -193,7 +195,8 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         })
         .blur(function () {
-            hide_dropdown();
+			//hide_dropdown(); 
+            $(this).data('tag', $(this).val());
             $(this).val("");
         })
         .bind("keyup keydown blur update", resize_input)
@@ -332,7 +335,7 @@ $.TokenList = function (input, url_or_data, settings) {
         .insertBefore(hidden_input);
 
     // The token holding the input box
-    var input_token = $("<li />")
+    input_token = $("<li />")
         .addClass(settings.classes.inputToken)
         .appendTo(token_list)
         .append(input_box);
@@ -357,6 +360,31 @@ $.TokenList = function (input, url_or_data, settings) {
             letterSpacing: input_box.css("letterSpacing"),
             whiteSpace: "nowrap"
         });
+
+	// Bind .add-tags <a> link to add a tag to the system
+	if (settings.allowAddToken) {
+		var add_token_link = $('.'+settings.classes.addToken)
+			.die('click')
+			.live('click', function(e) {
+				e.preventDefault();
+				var tagName = input_token.find('input:first').data('tag');
+				var addURL = settings.url.split('?'+settings.queryParameter+'=').join('');
+
+				$.ajax({
+					url: addURL,
+					type: 'POST',
+					data: { q: tagName },
+					dataType: 'json',
+					success: function(newTag) {
+						if (newTag) {
+							dropdown.find('p').text('Added!');
+							add_token(newTag);
+							setTimeout(function() { hide_dropdown(); }, 2000);
+						}
+					}
+				})
+			});
+	}
 
     // Pre-populate list if items exist
     hidden_input.val("");
@@ -676,7 +704,6 @@ $.TokenList = function (input, url_or_data, settings) {
 
             $.each(results, function(index, value) {
                 var this_li = settings.resultsFormatter(value);
-
                 this_li = find_value_and_highlight_term(this_li ,value[settings.propertyToSearch], query);
 
                 this_li = $(this_li).appendTo(dropdown_ul);
