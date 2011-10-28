@@ -84,6 +84,20 @@
         </script>
     </div>
 
+    <h2 id="hint-as-watermark">Hint Text as Input Box Watermark</h2>
+    <div>
+        <input type="text" id="demo-input-hint-as-watermark" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-hint-as-watermark").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                hintText: "Type in a search term...",
+                showHintAsWatermark: true
+            });
+        });
+        </script>
+    </div>
+
 
     <h2 id="custom-delete">Custom Delete Icon</h2>
     <div>
