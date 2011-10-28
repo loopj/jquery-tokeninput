@@ -6,6 +6,8 @@
  * Licensed jointly under the GPL and MIT licenses,
  * choose which one suits your project best!
  *
+ * This plugin was forked on 10/21/2011 to allow adding tokens
+ * from within the plugin itself.
  */
 
 (function ($) {
@@ -34,7 +36,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
-	allowAddToken: false,
+	allowAddToken: true,
 
 	// Prepopulation settings
     prePopulate: null,
@@ -195,7 +197,7 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         })
         .blur(function () {
-			//hide_dropdown(); 
+			setTimeout(function() { hide_dropdown(); }, 400);
             $(this).data('tag', $(this).val());
             $(this).val("");
         })
@@ -369,6 +371,7 @@ $.TokenList = function (input, url_or_data, settings) {
 				e.preventDefault();
 				var tagName = input_token.find('input:first').data('tag');
 				var addURL = settings.url.split('?'+settings.queryParameter+'=').join('');
+				var contentType = (settings.crossDomain) ? 'jsonp' : settings.contentType;
 
 				$.ajax({
 					url: addURL,
@@ -823,6 +826,18 @@ $.TokenList = function (input, url_or_data, settings) {
                       populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
                   }
                 };
+
+				// Attach the failure callback, which returns an error if forbidden
+				ajax_params.error = function(error) {
+					switch(error.status) {
+						case 403:
+							alert("403: You are unauthorized to view the token endpoint.");
+							break;
+						case 404:
+							alert("404: Token endpoint does not exist.")
+							break;
+					}
+				};
 
                 // Make the request
                 $.ajax(ajax_params);
