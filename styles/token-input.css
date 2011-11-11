@@ -7,7 +7,7 @@ ul.token-input-list {
     border: 1px solid #999;
     cursor: text;
     font-size: 12px;
-    font-family: Verdana;
+    font-family: Verdana, sans-serif;
     z-index: 999;
     margin: 0;
     padding: 0;
@@ -72,7 +72,7 @@ div.token-input-dropdown {
     border-bottom: 1px solid #ccc;
     cursor: default;
     font-size: 12px;
-    font-family: Verdana;
+    font-family: Verdana, sans-serif;
     z-index: 1;
 }
 
