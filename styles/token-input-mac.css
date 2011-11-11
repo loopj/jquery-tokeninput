@@ -26,7 +26,7 @@ ul.token-input-list-mac {
     height: 1%;
     cursor: text;
     font-size: 12px;
-    font-family: Verdana;
+    font-family: Verdana, sans-serif;
     min-height: 1px;
     z-index: 999;
     margin: 0;
@@ -58,7 +58,7 @@ li.token-input-token-mac span {
 /* TOKENS */
 
 li.token-input-token-mac {
-    font-family: "Lucida Grande", Arial, serif;
+    font-family: "Lucida Grande", Arial, sans-serif;
     font-size: 9pt;
     line-height: 12pt;
     overflow: hidden; 
@@ -122,7 +122,7 @@ div.token-input-dropdown-mac {
     overflow: hidden;
     cursor: default;
     font-size: 10pt;
-    font-family: "Lucida Grande", Arial, serif;
+    font-family: "Lucida Grande", Arial, sans-serif;
     padding: 5px;
     border-radius: 0 0 10px 10px;
     -moz-border-radius: 0 0 10px 10px;
@@ -142,7 +142,7 @@ div.token-input-dropdown-mac p {
 }
 
 div.token-input-dropdown-mac h3.token-input-dropdown-category-mac {
-  font-family: "Lucida Grande", Arial, serif;
+  font-family: "Lucida Grande", Arial, sans-serif;
   font-size: 10pt;
   font-weight: bold;
   border: none;
