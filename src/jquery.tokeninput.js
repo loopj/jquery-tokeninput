@@ -20,7 +20,7 @@ var DEFAULT_SETTINGS = {
     jsonContainer: null,
     contentType: "json",
 
-	// Prepopulation settings
+    // Prepopulation settings
     prePopulate: null,
     processPrePopulate: false,
 
@@ -89,6 +89,16 @@ var KEY = {
     NUMPAD_ENTER: 108,
     COMMA: 188
 };
+
+// Ensure compatibility with older Browsers (JavaScript < 1.8.1)
+String.prototype.trim = function() {
+    return this.replace(/^\s+/g, "").replace(/\s+$/g, "");
+};
+
+// Escape special characters which are used in regular expressions
+RegExp.escape = function(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 // Additional public (exposed) methods
 var methods = {
@@ -270,6 +280,16 @@ $.TokenList = function (input, url_or_data, settings) {
                     return false;
                   }
                   break;
+
+                case KEY.SPACE:
+                    var token = $(selected_dropdown_item).data("tokeninput");
+                    if(token) {
+                        if ($(this).val().toLowerCase().trim() == token['name'].toLowerCase()) {
+                            add_token(token);
+                            return false;
+                        }
+                    }
+                    break;
 
                 case KEY.ESCAPE:
                   hide_dropdown();
@@ -653,11 +673,11 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
-        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
+        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + RegExp.escape(term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
     }
 
     function find_value_and_highlight_term(template, value, term) {
-        return template.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + value + ")(?![^<>]*>)(?![^&;]+;)", "g"), highlight_term(value, term));
+        return template.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + RegExp.escape(value) + ")(?![^<>]*>)(?![^&;]+;)", "g"), highlight_term(value, term));
     }
 
     // Populate the results dropdown with some results
@@ -732,7 +752,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // Do a search and show the "searching" dropdown if the input is longer
     // than settings.minChars
     function do_search() {
-        var query = input_box.val().toLowerCase();
+        var query = input_box.val().toLowerCase().trim();
 
         if(query && query.length) {
             if(selected_token) {
@@ -758,6 +778,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var cached_results = cache.get(cache_key);
         if(cached_results) {
             populate_dropdown(query, cached_results);
+            add_matching_token(query, cached_results);
         } else {
             // Are we doing an ajax search or local data search?
             if(settings.url) {
@@ -794,9 +815,10 @@ $.TokenList = function (input, url_or_data, settings) {
                   cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
                   // only populate the dropdown if the results are associated with the active search query
-                  if(input_box.val().toLowerCase() === query) {
+                  if(input_box.val().toLowerCase().trim() === query) {
                       populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
                   }
+                  add_matching_token(query, results);
                 };
 
                 // Make the request
@@ -812,6 +834,16 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
                 cache.add(cache_key, results);
                 populate_dropdown(query, results);
+                add_matching_token(query, results);
+            }
+        }
+    }
+
+    // Add token automatically if there's a matching result
+    function add_matching_token(query, results) {
+        if (input_box.val().match(/ $/)) {
+            if (results[0]['name'].toLowerCase().trim() == query.trim()) {
+                add_token(results[0]);
             }
         }
     }
