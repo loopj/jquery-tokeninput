@@ -20,7 +20,7 @@ var DEFAULT_SETTINGS = {
     jsonContainer: null,
     contentType: "json",
 
-	// Prepopulation settings
+    // Prepopulation settings
     prePopulate: null,
     processPrePopulate: false,
 
@@ -31,23 +31,43 @@ var DEFAULT_SETTINGS = {
     deleteText: "&times;",
     animateDropdown: true,
     theme: null,
-    resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
+    classes: null,
+    resultsFormatter: function(item) { return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
+    tokenValidator: function(token) { return true },
+    addOnBlur: false,
+    clearOnBlur: true,
 
     // Tokenization settings
     tokenLimit: null,
     tokenDelimiter: ",",
     preventDuplicates: false,
     tokenValue: "id",
+    allowNewTokens: false,
 
-    // Callbacks
+    // Event callbacks
     onResult: null,
     onAdd: null,
     onDelete: null,
     onReady: null,
 
+    // Token comparison
+    tokenEquals: function(existentToken, newToken) {
+        if(this.allowNewTokens && (!newToken.id || !existentToken.id)) {
+            if(existentToken[this.propertyToSearch] === newToken[this.propertyToSearch]) {
+                return true;
+            }
+        } else if(existentToken.id === newToken.id) {
+            return true;
+        }
+        return false;
+    },
+
     // Other settings
-    idPrefix: "token-input-"
+    idPrefix: "token-input-",
+
+    // Workarounds
+    initialResize: true
 };
 
 // Default classes to use when theming
@@ -94,7 +114,6 @@ var KEY = {
 var methods = {
     init: function(url_or_data_or_function, options) {
         var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
-
         return this.each(function () {
             $(this).data("tokenInputObject", new $.TokenList(this, url_or_data_or_function, settings));
         });
@@ -167,6 +186,7 @@ $.TokenList = function (input, url_or_data, settings) {
         settings.classes = DEFAULT_CLASSES;
     }
 
+    validateSettings(settings);
 
     // Save the tokens
     var saved_tokens = [];
@@ -182,7 +202,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var input_val;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
+    var input_box = $("<input type=\"text\" autocomplete=\"off\">")
         .css({
             outline: "none"
         })
@@ -193,8 +213,16 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         })
         .blur(function () {
+            if (settings.allowNewTokens && settings.addOnBlur) {
+                var token_label = $(this).val();
+                if (token_label.length) {
+                    add_new_token(token_label);
+                }
+            }
             hide_dropdown();
-            $(this).val("");
+            if (settings.clearOnBlur) {
+                $(this).val("");
+            }
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
@@ -209,7 +237,6 @@ $.TokenList = function (input, url_or_data, settings) {
                     if(!$(this).val()) {
                         previous_token = input_token.prev();
                         next_token = input_token.next();
-
                         if((previous_token.length && previous_token.get(0) === selected_token) || (next_token.length && next_token.get(0) === selected_token)) {
                             // Check if there is a previous/next token and it is selected
                             if(event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) {
@@ -226,15 +253,19 @@ $.TokenList = function (input, url_or_data, settings) {
                         }
                     } else {
                         var dropdown_item = null;
-
-                        if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
-                            dropdown_item = $(selected_dropdown_item).next();
-                        } else {
-                            dropdown_item = $(selected_dropdown_item).prev();
+                        if(selected_dropdown_item) {
+                            if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
+                                dropdown_item = $(selected_dropdown_item).next();
+                            } else {
+                                dropdown_item = $(selected_dropdown_item).prev();
+                            }
+                        } else if(event.keyCode == KEY.DOWN) {
+                            dropdown_item = $("li:first-child", dropdown);
                         }
-
-                        if(dropdown_item.length) {
+                        if(dropdown_item && dropdown_item.length) {
                             select_dropdown_item(dropdown_item);
+                        } else if(selected_dropdown_item && (event.keyCode == KEY.UP)) {
+                            deselect_dropdown_item($(selected_dropdown_item));
                         }
                         return false;
                     }
@@ -242,7 +273,6 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 case KEY.BACKSPACE:
                     previous_token = input_token.prev();
-
                     if(!$(this).val().length) {
                         if(selected_token) {
                             delete_token($(selected_token));
@@ -250,13 +280,12 @@ $.TokenList = function (input, url_or_data, settings) {
                         } else if(previous_token.length) {
                             select_token($(previous_token.get(0)));
                         }
-
                         return false;
                     } else if($(this).val().length === 1) {
                         hide_dropdown();
                     } else {
                         // set a timeout just long enough to let this function finish.
-                        setTimeout(function(){do_search();}, 5);
+                        setTimeout(function() { do_search(); }, 5);
                     }
                     break;
 
@@ -264,21 +293,31 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
                 case KEY.COMMA:
-                  if(selected_dropdown_item) {
-                    add_token($(selected_dropdown_item).data("tokeninput"));
-                    hidden_input.change();
-                    return false;
-                  }
-                  break;
+                    if(selected_dropdown_item) {
+                        add_token($(selected_dropdown_item).data("tokeninput"));
+                        hidden_input.change();
+                        return false;
+                    } else if(settings.allowNewTokens) {
+                        var newTokenText = $(event.target).val();
+                        if(newTokenText) {
+                            add_new_token(newTokenText);
+                            hidden_input.change();
+                            return false;
+                        }
+                    }
+                    break;
 
                 case KEY.ESCAPE:
-                  hide_dropdown();
-                  return true;
+                    hide_dropdown();
+                    return true;
 
                 default:
                     if(String.fromCharCode(event.which)) {
-                        // set a timeout just long enough to let this function finish.
-                        setTimeout(function(){do_search();}, 5);
+                        if((settings.tokenLimit === null) ||
+                           (settings.tokenLimit !== token_count)) {
+                            // set a timeout just long enough to let this function finish.
+                            setTimeout(function() { do_search(); }, 5);
+                        }
                     }
                     break;
             }
@@ -371,11 +410,6 @@ $.TokenList = function (input, url_or_data, settings) {
         });
     }
 
-    // Initialization is done
-    if($.isFunction(settings.onReady)) {
-        settings.onReady.call();
-    }
-
     //
     // Public functions
     //
@@ -417,6 +451,13 @@ $.TokenList = function (input, url_or_data, settings) {
     //
     // Private functions
     //
+
+    function validateSettings() {
+        // TODO add validation for all other settings
+        if(settings.allowNewTokens && (settings.tokenValue == "id")) {
+            throw Error("Value of setting 'tokenValue' cannot be 'id' because new tokens have no id.");
+        }
+    }
 
     function checkTokenLimit() {
         if(settings.tokenLimit !== null && token_count >= settings.tokenLimit) {
@@ -481,9 +522,26 @@ $.TokenList = function (input, url_or_data, settings) {
         return this_token;
     }
 
+    function add_new_token(text) {
+        var token_data = {"id": null};
+        token_data[settings.propertyToSearch] = text;
+        add_token(token_data);
+    }
+
     // Add a token to the token list based on user input
     function add_token (item) {
+        var token_label = item[settings.propertyToSearch];
+        if (token_label.indexOf(settings.tokenDelimiter) != -1) {
+            $.each(token_label.split(settings.tokenDelimiter), function(i, v) {
+                add_new_token(v);
+            });
+            return;
+        }
+
         var callback = settings.onAdd;
+        if (!settings.tokenValidator(token_label)) {
+            return;
+        }
 
         // See if the token already exists and select it if we don't want duplicates
         if(token_count > 0 && settings.preventDuplicates) {
@@ -491,7 +549,7 @@ $.TokenList = function (input, url_or_data, settings) {
             token_list.children().each(function () {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
-                if(existing_data && existing_data.id === item.id) {
+                if(existing_data && settings.tokenEquals(existing_data, item)) {
                     found_existing_token = existing_token;
                     return false;
                 }
@@ -689,7 +747,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     this_li.addClass(settings.classes.dropdownItem2);
                 }
 
-                if(index === 0) {
+                if(!settings.allowNewTokens && (index === 0)) {
                     select_dropdown_item(this_li);
                 }
 
@@ -733,18 +791,18 @@ $.TokenList = function (input, url_or_data, settings) {
     // than settings.minChars
     function do_search() {
         var query = input_box.val().toLowerCase();
-
         if(query && query.length) {
             if(selected_token) {
                 deselect_token($(selected_token), POSITION.AFTER);
             }
-
-            if(query.length >= settings.minChars) {
-                show_dropdown_searching();
-                clearTimeout(timeout);
-
-                timeout = setTimeout(function(){
-                    run_search(query);
+            if(query.length >= settings.minChars && settings.tokenValidator(query)) {
+                setTimeout(function() {
+                    var check = input_box.val().toLowerCase();
+                    if (check && check.length && (check == query)) {
+                        show_dropdown_searching();
+                        clearTimeout(timeout);
+                        run_search(query);
+                    }
                 }, settings.searchDelay);
             } else {
                 hide_dropdown();
@@ -823,6 +881,16 @@ $.TokenList = function (input, url_or_data, settings) {
             url = settings.url.call();
         }
         return url;
+    }
+
+    // Resize input to workaround a ui bug
+    if (settings.initialResize) {
+        resize_input();
+    }
+
+    // Initialization is done
+    if($.isFunction(settings.onReady)) {
+        settings.onReady.call();
     }
 };
 
