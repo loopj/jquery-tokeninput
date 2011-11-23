@@ -44,7 +44,6 @@ var DEFAULT_SETTINGS = {
 
     // Callbacks
     onResult: null,
-    onCreate: null,
     onAdd: null,
     onDelete: null,
     onReady: null,
@@ -494,7 +493,7 @@ $.TokenList = function (input, url_or_data, settings) {
             token_list.children().each(function () {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
-                if(existing_data && existing_data.id === item.id) {
+                if(existing_data && (existing_data.id === item.id || item.wasCreated && existing_data.name === item.name)) {
                     found_existing_token = existing_token;
                     return false;
                 }
