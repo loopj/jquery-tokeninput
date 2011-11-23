@@ -19,8 +19,9 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+    allowCreation: false,
 
-	// Prepopulation settings
+    // Prepopulation settings
     prePopulate: null,
     processPrePopulate: false,
 
@@ -29,6 +30,7 @@ var DEFAULT_SETTINGS = {
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
+    createTokenText: "(Create new token)",
     animateDropdown: true,
     theme: null,
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
@@ -42,6 +44,7 @@ var DEFAULT_SETTINGS = {
 
     // Callbacks
     onResult: null,
+    onCreate: null,
     onAdd: null,
     onDelete: null,
     onReady: null,
@@ -677,6 +680,10 @@ $.TokenList = function (input, url_or_data, settings) {
                 .hide();
 
             $.each(results, function(index, value) {
+                if(settings.allowCreation && value.wasCreated) {
+                    value.name = value.id; // restore the name without the token creation text
+                }
+                
                 var this_li = settings.resultsFormatter(value);
 
                 this_li = find_value_and_highlight_term(this_li ,value[settings.propertyToSearch], query);
@@ -791,6 +798,9 @@ $.TokenList = function (input, url_or_data, settings) {
                   if($.isFunction(settings.onResult)) {
                       results = settings.onResult.call(hidden_input, results);
                   }
+                  if(settings.allowCreation) {
+                      handleCreation(results);
+                  }
                   cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
                   // only populate the dropdown if the results are associated with the active search query
@@ -810,9 +820,27 @@ $.TokenList = function (input, url_or_data, settings) {
                 if($.isFunction(settings.onResult)) {
                     results = settings.onResult.call(hidden_input, results);
                 }
+                if(settings.allowCreation) {
+                    handleCreation(results);
+                }
                 cache.add(cache_key, results);
                 populate_dropdown(query, results);
             }
+        }
+    }
+
+    function handleCreation(results) {
+        var displayedItem = {};
+        displayedItem['name'] = input_box.val() + ' ' + settings.createTokenText;
+        displayedItem[settings.tokenValue] = input_box.val();
+        displayedItem['wasCreated'] = true;
+        results.push(displayedItem);
+
+        if($.isFunction(settings.onCreate)) {
+            var item = {};
+            item['name'] = input_box.val();
+            item[settings.tokenValue] = input_box.val();
+            settings.onCreate.call(hidden_input, item);
         }
     }
 
