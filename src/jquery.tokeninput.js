@@ -127,15 +127,15 @@ $.fn.tokenInput = function (method) {
 };
 
 // TokenList class for each input
-$.TokenList = function (input, url_or_data, settings) {
+$.TokenList = function (input, url_or_data_or_function, settings) {
     //
     // Initialization
     //
 
     // Configure the data source
-    if($.type(url_or_data) === "string" || $.type(url_or_data) === "function") {
+    if($.type(url_or_data_or_function) === "string") {
         // Set the url to query against
-        settings.url = url_or_data;
+        settings.url = url_or_data_or_function;
 
         // If the URL is a function, evaluate it here to do our initalization work
         var url = computeURL();
@@ -148,9 +148,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 settings.crossDomain = (location.href.split(/\/+/g)[1] !== url.split(/\/+/g)[1]);
             }
         }
-    } else if(typeof(url_or_data) === "object") {
+    } else if(typeof(url_or_data_or_function) === "function") {
+        settings.sourceFunction = url_or_data_or_function;
+    } else if(typeof(url_or_data_or_function) === "object") {
         // Set the local data to search through
-        settings.local_data = url_or_data;
+        settings.local_data = url_or_data_or_function;
     }
 
     // Build class names
@@ -789,30 +791,20 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 // Attach the success callback
                 ajax_params.success = function(results) {
-                  if($.isFunction(settings.onResult)) {
-                      results = settings.onResult.call(hidden_input, results);
-                  }
-                  cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
-
-                  // only populate the dropdown if the results are associated with the active search query
-                  if(input_box.val().toLowerCase() === query) {
-                      populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
-                  }
+                    handle_results(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
                 };
 
                 // Make the request
                 $.ajax(ajax_params);
+            } else if(settings.sourceFunction) {
+                settings.sourceFunction(query, handle_results);
             } else if(settings.local_data) {
                 // Do the search through local data
                 var results = $.grep(settings.local_data, function (row) {
                     return row[settings.propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
                 });
 
-                if($.isFunction(settings.onResult)) {
-                    results = settings.onResult.call(hidden_input, results);
-                }
-                cache.add(cache_key, results);
-                populate_dropdown(query, results);
+                handle_results(query, results);
             }
         }
     }
@@ -824,6 +816,17 @@ $.TokenList = function (input, url_or_data, settings) {
             url = settings.url.call();
         }
         return url;
+    }
+ 
+     function handle_results(query, results) {
+        if($.isFunction(settings.onResult)) {
+            results = settings.onResult.call(hidden_input, results);
+        }
+        cache.add(query, results);
+        // only populate the dropdown if the results are associated with the active search query
+        if(input_box.val().toLowerCase() === query) {
+            populate_dropdown(query, results);
+        }
     }
 };
 
