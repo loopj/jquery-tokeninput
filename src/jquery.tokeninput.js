@@ -13,6 +13,7 @@
 var DEFAULT_SETTINGS = {
     // Search settings
     method: "GET",
+    ajaxParams: {},
     queryParam: "q",
     searchDelay: 300,
     minChars: 1,
@@ -53,6 +54,7 @@ var DEFAULT_SETTINGS = {
 // Default classes to use when theming
 var DEFAULT_CLASSES = {
     tokenList: "token-input-list",
+    tokenListFocused: "token-input-list-focused",
     token: "token-input-token",
     tokenDelete: "token-input-delete-token",
     selectedToken: "token-input-selected-token",
@@ -188,6 +190,8 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .attr("id", settings.idPrefix + input.id)
         .focus(function () {
+        	highlight_input();
+        	
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
                 show_dropdown_hint();
             }
@@ -268,6 +272,8 @@ $.TokenList = function (input, url_or_data, settings) {
                     add_token($(selected_dropdown_item).data("tokeninput"));
                     hidden_input.change();
                     return false;
+                  } else {
+                	  dehighlight_input();
                   }
                   break;
 
@@ -525,6 +531,8 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Select a token in the token list
     function select_token (token) {
+    	highlight_input();
+    	
         token.addClass(settings.classes.selectedToken);
         selected_token = token.get(0);
 
@@ -764,7 +772,7 @@ $.TokenList = function (input, url_or_data, settings) {
             if(settings.url) {
                 var url = computeURL();
                 // Extract exisiting get params
-                var ajax_params = {};
+                var ajax_params = settings.ajaxParams;
                 ajax_params.data = {};
                 if(url.indexOf("?") > -1) {
                     var parts = url.split("?");
@@ -825,6 +833,20 @@ $.TokenList = function (input, url_or_data, settings) {
         }
         return url;
     }
+    
+    function highlight_input() {
+        $(token_list).addClass(settings.classes.tokenListFocused);
+    }
+
+    function dehighlight_input() {
+    	$(token_list).removeClass(settings.classes.tokenListFocused);
+    }
+    
+    $(document).click(function(eventObject) {
+    	if ($(eventObject.target).closest('.' + settings.classes.tokenList).length === 0) {
+    		dehighlight_input();
+    	}
+    });
 };
 
 // Really basic cache for the results

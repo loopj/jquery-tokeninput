@@ -17,6 +17,12 @@ ul.token-input-list-facebook {
     clear: left;
 }
 
+ul.token-input-list-focused-facebook {
+    -webkit-appearance: textfield;
+	outline: auto 5px -webkit-focus-ring-color;
+	outline-offset: -2px
+}
+
 ul.token-input-list-facebook li input {
     border: 0;
     width: 100px;
