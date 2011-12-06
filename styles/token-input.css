@@ -28,6 +28,10 @@ ul.token-input-list li input {
     -webkit-appearance: caret;
 }
 
+ul.token-input-list li input.token-input-watermark-applied {
+  color: #acacac;
+}
+
 li.token-input-token {
     overflow: hidden; 
     height: auto !important; 
