@@ -47,7 +47,12 @@ var DEFAULT_SETTINGS = {
     onReady: null,
 
     // Other settings
-    idPrefix: "token-input-"
+    idPrefix: "token-input-",
+
+	// Allow New Value
+	allowNewItems : true ,
+	allowNewItemsPrefix : 'custom-',
+
 };
 
 // Default classes to use when theming
@@ -194,7 +199,7 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .blur(function () {
             hide_dropdown();
-            $(this).val("");
+            // $(this).val("");
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
@@ -269,6 +274,15 @@ $.TokenList = function (input, url_or_data, settings) {
                     hidden_input.change();
                     return false;
                   }
+				  else if( settings.allowNewItems && $(this).val())
+				{
+					var item = {};
+					item[settings.tokenValue] = settings.allowNewItemsPrefix+$(this).val();
+					item[settings.propertyToSearch] = $(this).val();
+
+					add_token(item);
+					return false;
+				  }
                   break;
 
                 case KEY.ESCAPE:
@@ -613,7 +627,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var token_values = $.map(saved_tokens, function (el) {
             if(typeof settings.tokenValue == 'function')
               return settings.tokenValue.call(this, el);
-            
+
             return el[settings.tokenValue];
         });
         hidden_input.val(token_values.join(settings.tokenDelimiter));
@@ -648,6 +662,13 @@ $.TokenList = function (input, url_or_data, settings) {
     function show_dropdown_hint () {
         if(settings.hintText) {
             dropdown.html("<p>"+settings.hintText+"</p>");
+            show_dropdown();
+        }
+    }
+
+    function show_dropdown_warn (v) {
+        if(v) {
+            dropdown.html("<p>"+v+"</p>");
             show_dropdown();
         }
     }
@@ -733,7 +754,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // Do a search and show the "searching" dropdown if the input is longer
     // than settings.minChars
     function do_search() {
-        var query = input_box.val();
+        var query = input_box.val().toLowerCase();
 
         if(query && query.length) {
             if(selected_token) {
