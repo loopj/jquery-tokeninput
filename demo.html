@@ -445,5 +445,40 @@
         });
         </script>
     </div>
+	
+	 <h2>No caching Data Search</h2>
+    <div>
+        <input type="text" id="demo-input-nocache" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-nocache").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+				caching:false
+			});
+        });
+        </script>
+    </div>
+	
+	 <h2>No duplicate suggestion Data Search</h2>
+    <div>
+        <input type="text" id="demo-input-nodupsug" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-nodupsug").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                onResult: function (results) {
+					var exists={};
+					$($(this).val().split(",")).each(function(i,val){
+						exists[val]=true;
+					});        
+					
+					return $.grep(results,function(val){
+						return !(exists[val.id]);
+					});
+                }
+            });
+        });
+        </script>
+    </div>
 </body>
 </html>

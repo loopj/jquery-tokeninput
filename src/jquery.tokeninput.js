@@ -19,6 +19,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+	caching: true,
 
 	// Prepopulation settings
     prePopulate: null,
@@ -755,11 +756,20 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Do the actual search
     function run_search(query) {
-        var cache_key = query + computeURL();
-        var cached_results = cache.get(cache_key);
-        if(cached_results) {
-            populate_dropdown(query, cached_results);
-        } else {
+        
+        var found=false;
+        if(settings.caching) {
+			var cache_key = query + computeURL();
+			var cached_results = cache.get(cache_key);
+			if (cached_results) {
+				if($.isFunction(settings.onResult)) {
+                      cached_results = settings.onResult.call(hidden_input, $.extend(true,[],cached_results));
+                }
+				populate_dropdown(query, cached_results);
+				found=true;
+			}
+		}
+		if (!found) {
             // Are we doing an ajax search or local data search?
             if(settings.url) {
                 var url = computeURL();
@@ -789,10 +799,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 // Attach the success callback
                 ajax_params.success = function(results) {
+				  settings.caching && cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
                   if($.isFunction(settings.onResult)) {
-                      results = settings.onResult.call(hidden_input, results);
+                      results = settings.onResult.call(hidden_input, $.extend(true,[],results));
                   }
-                  cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
                   // only populate the dropdown if the results are associated with the active search query
                   if(input_box.val() === query) {
@@ -803,15 +813,16 @@ $.TokenList = function (input, url_or_data, settings) {
                 // Make the request
                 $.ajax(ajax_params);
             } else if(settings.local_data) {
+				settings.caching && cache.add(cache_key, results);
                 // Do the search through local data
                 var results = $.grep(settings.local_data, function (row) {
                     return row[settings.propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
                 });
 
                 if($.isFunction(settings.onResult)) {
-                    results = settings.onResult.call(hidden_input, results);
+                    results = settings.onResult.call(hidden_input, $.extend(true,[],results));
                 }
-                cache.add(cache_key, results);
+                
                 populate_dropdown(query, results);
             }
         }
