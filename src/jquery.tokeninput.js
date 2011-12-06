@@ -1,7 +1,7 @@
 /*
  * jQuery Plugin: Tokenizing Autocomplete Text Entry
  * Version 1.6.0
- *
+ * 
  * Copyright (c) 2009 James Smith (http://loopj.com)
  * Licensed jointly under the GPL and MIT licenses,
  * choose which one suits your project best!
@@ -33,6 +33,7 @@ var DEFAULT_SETTINGS = {
     theme: null,
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
+    emptyText: "Search",
 
     // Tokenization settings
     tokenLimit: null,
@@ -187,7 +188,11 @@ $.TokenList = function (input, url_or_data, settings) {
             outline: "none"
         })
         .attr("id", settings.idPrefix + input.id)
+        .attr("value", settings.emptyText)
         .focus(function () {
+            if (settings.emptyText == $(this).val() ) { 
+                $(this).val("");
+            }
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
                 show_dropdown_hint();
             }
