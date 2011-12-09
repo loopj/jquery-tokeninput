@@ -862,7 +862,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function computeURL() {
         var url = settings.url;
         if(typeof settings.url == 'function') {
-            url = settings.url.call();
+            url = settings.url.call(settings);
         }
         return url;
     }
