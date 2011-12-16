@@ -507,6 +507,11 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         }
 
+        // For newly created tokens, restore the original name without the text saying it is a new token
+        if(settings.allowCreation && item.wasCreated) {
+            item.name = item.id; // restore the name without the token creation text
+        }
+
         // Insert the new tokens
         if(settings.tokenLimit == null || token_count < settings.tokenLimit) {
             insert_token(item);
@@ -655,7 +660,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
-        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
+        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
     }
 
     function find_value_and_highlight_term(template, value, term) {
@@ -679,10 +684,6 @@ $.TokenList = function (input, url_or_data, settings) {
                 .hide();
 
             $.each(results, function(index, value) {
-                if(settings.allowCreation && value.wasCreated) {
-                    value.name = value.id; // restore the name without the token creation text
-                }
-                
                 var this_li = settings.resultsFormatter(value);
 
                 this_li = find_value_and_highlight_term(this_li ,value[settings.propertyToSearch], query);
@@ -763,6 +764,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var cache_key = query + computeURL();
         var cached_results = cache.get(cache_key);
         if(cached_results) {
+            console.log(cached_results)
             populate_dropdown(query, cached_results);
         } else {
             // Are we doing an ajax search or local data search?
@@ -799,11 +801,12 @@ $.TokenList = function (input, url_or_data, settings) {
                   }
                   if(settings.allowCreation) {
                       handleCreation(results);
+                  } else {
+                      cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
                   }
-                  cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
                   // only populate the dropdown if the results are associated with the active search query
-                  if(input_box.val().toLowerCase() === query) {
+                  if(input_box.val().toLowerCase() === query.toLowerCase()) {
                       populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
                   }
                 };
@@ -821,8 +824,9 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
                 if(settings.allowCreation) {
                     handleCreation(results);
+                } else {
+                    cache.add(cache_key, results);
                 }
-                cache.add(cache_key, results);
                 populate_dropdown(query, results);
             }
         }
