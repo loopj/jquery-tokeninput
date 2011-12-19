@@ -38,8 +38,9 @@ var DEFAULT_SETTINGS = {
     contentType: "json",
 
 	// Add token settings
-	allowAddToken: true,
-	methodForAdd: "POST",
+	addTokenAllow: true,
+	addTokenMethod: "POST",
+	addTokenURL: '',
 
 	// Prepopulation settings
     prePopulate: null,
@@ -367,18 +368,18 @@ $.TokenList = function (input, url_or_data, settings) {
         });
 
 	// Bind .add-tags <a> link to add a tag to the system
-	if (settings.allowAddToken) {
+	if (settings.addTokenAllow) {
 		var add_token_link = $('.'+settings.classes.addToken)
 			.die('click')
 			.live('click', function(e) {
 				e.preventDefault();
 				var tagName = input_token.find('input:first').data('tag');
-				var addURL = settings.url.split('?'+settings.queryParameter+'=').join('');
+				var addURL = (settings.addTokenURL) ? settings.addTokenURL : settings.url.split('?'+settings.queryParameter+'=').join('');
 				var contentType = (settings.crossDomain) ? 'jsonp' : settings.contentType;
 
 				$.ajax({
 					url: addURL,
-					type: settings.methodForAdd,
+					type: settings.addTokenMethod,
 					data: { q: tagName },
 					dataType: 'json',
 					success: function(newTag) {
