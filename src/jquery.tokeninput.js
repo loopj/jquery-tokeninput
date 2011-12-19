@@ -10,6 +10,7 @@
  * from within the plugin itself.
  */
 
+
 (function ($) {
 // Default classes to use when theming
 var DEFAULT_CLASSES = {
