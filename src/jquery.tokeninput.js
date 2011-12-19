@@ -36,7 +36,10 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+
+	// Add token settings
 	allowAddToken: true,
+	methodForAdd: "POST",
 
 	// Prepopulation settings
     prePopulate: null,
@@ -375,7 +378,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
 				$.ajax({
 					url: addURL,
-					type: 'POST',
+					type: settings.methodForAdd,
 					data: { q: tagName },
 					dataType: 'json',
 					success: function(newTag) {
@@ -810,7 +813,8 @@ $.TokenList = function (input, url_or_data, settings) {
                 ajax_params.data[settings.queryParam] = query;
                 ajax_params.type = settings.method;
                 ajax_params.dataType = settings.contentType;
-                if(settings.crossDomain) {
+                
+				if (settings.crossDomain) {
                     ajax_params.dataType = "jsonp";
                 }
 
