@@ -107,8 +107,13 @@ The tokeninput takes an optional second parameter on intitialization which allow
     Prevent user from selecting duplicate values by setting this to `true`. default: ``false`` (demo).
 #### tokenValue
     The value of the token input when the input is submitted. Set it to id in order to get a concatenation of token IDs, or to name in order to get a concatenation of names. default: `id`
-#### allowAddToken
+#### addTokenAllow
 	Allows the user to add tokens to the database from the tokenInput. You must have defined a POST action in the same script you're referencing with `url:` default: `false`
+#### addTokenMethod
+	Specify which HTTP method is used to query the add token endpoint. default: `POST`
+#### addTokenURL
+	Specify which URL endpoint to hit when a new token is submitted. When left blank, the add token action just uses `settings.url`. 
+	default: `""`.  
 
 ### Callbacks
 

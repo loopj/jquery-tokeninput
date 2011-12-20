@@ -12,20 +12,6 @@
 
 
 (function ($) {
-// Default classes to use when theming
-var DEFAULT_CLASSES = {
-    tokenList: "token-input-list",
-    token: "token-input-token",
-    tokenDelete: "token-input-delete-token",
-    selectedToken: "token-input-selected-token",
-    highlightedToken: "token-input-highlighted-token",
-    dropdown: "token-input-dropdown",
-    dropdownItem: "token-input-dropdown-item",
-    dropdownItem2: "token-input-dropdown-item2",
-    selectedDropdownItem: "token-input-selected-dropdown-item",
-    inputToken: "token-input-input-token",
-	addToken: "token-input-add-token"
-};
 
 // Default settings
 var DEFAULT_SETTINGS = {
@@ -71,6 +57,21 @@ var DEFAULT_SETTINGS = {
 
     // Other settings
     idPrefix: "token-input-"
+};
+
+// Default classes to use when theming
+var DEFAULT_CLASSES = {
+    tokenList: "token-input-list",
+    token: "token-input-token",
+    tokenDelete: "token-input-delete-token",
+    selectedToken: "token-input-selected-token",
+    highlightedToken: "token-input-highlighted-token",
+    dropdown: "token-input-dropdown",
+    dropdownItem: "token-input-dropdown-item",
+    dropdownItem2: "token-input-dropdown-item2",
+    selectedDropdownItem: "token-input-selected-dropdown-item",
+    inputToken: "token-input-input-token",
+	addToken: "token-input-add-token"
 };
 
 // Input box position "enum"
@@ -342,7 +343,7 @@ $.TokenList = function (input, url_or_data, settings) {
         .insertBefore(hidden_input);
 
     // The token holding the input box
-    input_token = $("<li />")
+    var input_token = $("<li />")
         .addClass(settings.classes.inputToken)
         .appendTo(token_list)
         .append(input_box);
