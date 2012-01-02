@@ -44,6 +44,7 @@ var DEFAULT_SETTINGS = {
 
     // Callbacks
     onResult: null,
+    onCreate: null,
     onAdd: null,
     onDelete: null,
     onReady: null,
@@ -509,7 +510,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // For newly created tokens, restore the original name without the text saying it is a new token
         if(settings.allowCreation && item.wasCreated) {
-            item.name = item.id; // restore the name without the token creation text
+            (settings.tokenValue == "id") ? item.name = item.id : item.name = item[settings.tokenValue]; // restore the name without the token creation text
         }
 
         // Insert the new tokens
@@ -764,7 +765,6 @@ $.TokenList = function (input, url_or_data, settings) {
         var cache_key = query + computeURL();
         var cached_results = cache.get(cache_key);
         if(cached_results) {
-            console.log(cached_results)
             populate_dropdown(query, cached_results);
         } else {
             // Are we doing an ajax search or local data search?
