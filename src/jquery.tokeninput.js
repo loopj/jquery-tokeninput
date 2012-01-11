@@ -150,7 +150,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var url = computeURL();
 
         // Make a smart guess about cross-domain if it wasn't explicitly specified
-        if(settings.crossDomain === undefined) {
+        if(settings.crossDomain === undefined && typeof url === "string") {
             if(url.indexOf("://") === -1) {
                 settings.crossDomain = false;
             } else {
