@@ -31,6 +31,7 @@ var DEFAULT_SETTINGS = {
     defaultText: "Search",
     deleteText: "&times;",
     animateDropdown: true,
+    autoResizeInput: true,
     theme: null,
     zindex: 999,
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
@@ -475,11 +476,13 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function resize_input() {
         if(input_val === (input_val = input_box.val())) {return;}
-
-        // Enter new content into resizer and resize input accordingly
-        var escaped = input_val.replace(/&/g, '&amp;').replace(/\s/g,' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        input_resizer.html(escaped);
-        input_box.width(input_resizer.width() + 30);
+        
+        if(setting.autoResizeInput) {
+	        // Enter new content into resizer and resize input accordingly
+	        var escaped = input_val.replace(/&/g, '&amp;').replace(/\s/g,' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	        input_resizer.html(escaped);
+	        input_box.width(input_resizer.width() + 30);
+        }
     }
 
     function is_printable_character(keycode) {
