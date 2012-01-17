@@ -215,8 +215,7 @@ $.TokenList = function (input, url_or_data, settings) {
         	if($(this).val() == ""){
         		$(this).val(settings.defaultText);
         	}        	
-            //hide_dropdown();
-            //$(this).val("");
+            hide_dropdown();
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
