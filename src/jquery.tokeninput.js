@@ -28,6 +28,7 @@ var DEFAULT_SETTINGS = {
     hintText: "Type in a search term",
     noResultsText: "No results",
     searchingText: "Searching...",
+    defaultText: "Search",
     deleteText: "&times;",
     animateDropdown: true,
     theme: null,
@@ -196,17 +197,26 @@ $.TokenList = function (input, url_or_data, settings) {
             outline: "none"
         })
         .attr("id", settings.idPrefix + input.id)
+        .attr("value", settings.defaultText)
         .focus(function () {
             if (settings.disabled) {
                 return false;
-            } else
-            if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
-                show_dropdown_hint();
+            } else{
+            	if($(this).val() == settings.defaultText){
+            		$(this).val('');
+            	}
+            	
+	            if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
+	                show_dropdown_hint();
+	            }
             }
         })
         .blur(function () {
-            hide_dropdown();
-            $(this).val("");
+        	if($(this).val() == ""){
+        		$(this).val(settings.defaultText);
+        	}        	
+            //hide_dropdown();
+            //$(this).val("");
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
