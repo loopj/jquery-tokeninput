@@ -17,6 +17,7 @@ var DEFAULT_SETTINGS = {
     deleteText: "&times;",
     searchDelay: 300,
     minChars: 1,
+    permanentDropdown: false,
     tokenLimit: null,
     jsonContainer: null,
     method: "GET",
@@ -202,7 +203,7 @@ $.TokenList = function (input, url_or_data, settings) {
                         }
 
                         return false;
-                    } else if($(this).val().length === 1) {
+                    } else if(!settings.permanentDropdown && $(this).val().length === 1) {
                         hide_dropdown();
                     } else {
                         // set a timeout just long enough to let this function finish.
@@ -289,8 +290,14 @@ $.TokenList = function (input, url_or_data, settings) {
     // The list to store the dropdown items in
     var dropdown = $("<div>")
         .addClass(settings.classes.dropdown)
-        .appendTo("body")
         .hide();
+    dropdown.appendTo("body");
+    if (!settings.permanentDropdown)
+        dropdown.appendTo("body");
+    else {
+        $(input).after(dropdown.show());
+        do_search();
+    }
 
     // Magic element to help us resize the text input
     var input_resizer = $("<tester/>")
@@ -511,19 +518,28 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Hide and clear the results dropdown
     function hide_dropdown () {
-        dropdown.hide().empty();
-        selected_dropdown_item = null;
+        if (!settings.permanentDropdown) {
+            dropdown.hide().empty();
+            selected_dropdown_item = null;
+        } 
     }
 
     function show_dropdown() {
-        dropdown
-            .css({
-                position: "absolute",
-                top: $(token_list).offset().top + $(token_list).outerHeight(),
-                left: $(token_list).offset().left,
-                zindex: 999
-            })
-            .show();
+        if (!settings.permanentDropdown)
+            dropdown
+                .css({
+                    position: "absolute",
+                    top: $(token_list).offset().top + $(token_list).outerHeight(),
+                    left: $(token_list).offset().left,
+                    zindex: 999
+                })
+                .show();
+        else
+            dropdown
+                .css({
+                    position: "relative",
+                })
+                .show();
     }
 
     function show_dropdown_searching () {
@@ -534,7 +550,7 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     function show_dropdown_hint () {
-        if(settings.hintText) {
+        if(!settings.permanentDropdown && settings.hintText) {
             dropdown.html("<p>"+settings.hintText+"</p>");
             show_dropdown();
         }
@@ -630,7 +646,8 @@ $.TokenList = function (input, url_or_data, settings) {
             } else {
                 hide_dropdown();
             }
-        }
+        } else if (settings.permanentDropdown)
+            run_search('');
     }
 
     // Do the actual search
