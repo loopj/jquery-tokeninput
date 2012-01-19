@@ -625,6 +625,16 @@ $.TokenList = function (input, url_or_data, options) {
 
             item.addClass(settings.classes.selectedDropdownItem);
             selected_dropdown_item = item.get(0);
+
+            isBefore = item[0].offsetTop <= (dropdown[0].scrollTop + dropdown[0].scrollWidth); 
+            isAfter = item[0].offsetTop >= dropdown[0].scrollTop;
+            visible = isBefore && isAfter;
+            if (!visible) {
+                if (isBefore)
+                    dropdown[0].scrollTop = item[0].offsetTop;
+                else //isAfter
+                    dropdown[0].scrollTop = item[0].offsetTop - dropdown[0].scrollWidth;
+            }
         }
     }
 
