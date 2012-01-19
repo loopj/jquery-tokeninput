@@ -179,7 +179,11 @@ $.TokenList = function (input, url_or_data, options) {
                     } else {
                         var dropdown_item = null;
 
-                        if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
+                        if (event.keyCode == KEY.LEFT && (this.selectionStart > 0 || this.selectionStart != this.selectionEnd))
+                            return true;
+                        else if (event.keyCode == KEY.RIGHT && (this.selectionEnd < $(this).val().length || this.selectionStart != this.selectionEnd))
+                            return true;
+                        else if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
                             dropdown_item = $(selected_dropdown_item).next();
                         } else {
                             dropdown_item = $(selected_dropdown_item).prev();
