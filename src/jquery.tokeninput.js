@@ -76,19 +76,18 @@ var KEY = {
 
 // Expose the .tokenInput function to jQuery as a plugin
 $.fn.tokenInput = function (url_or_data, options) {
-    var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
-
     return this.each(function () {
-        new $.TokenList(this, url_or_data, settings);
+        new $.TokenList(this, url_or_data, options);
     });
 };
 
 
 // TokenList class for each input
-$.TokenList = function (input, url_or_data, settings) {
+$.TokenList = function (input, url_or_data, options) {
     //
     // Initialization
     //
+    var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
 
     // Configure the data source
     if(typeof(url_or_data) === "string") {
