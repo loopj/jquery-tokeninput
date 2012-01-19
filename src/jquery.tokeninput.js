@@ -56,6 +56,7 @@ var POSITION = {
 // Keys "enum"
 var KEY = {
     BACKSPACE: 8,
+    DELETE: 46,
     TAB: 9,
     ENTER: 13,
     ESCAPE: 27,
@@ -193,12 +194,16 @@ $.TokenList = function (input, url_or_data, settings) {
                     break;
 
                 case KEY.BACKSPACE:
+                case KEY.DELETE:
                     previous_token = input_token.prev();
+                    next_token = input_token.next();
 
                     if(!$(this).val().length) {
                         if(selected_token) {
                             delete_token($(selected_token));
-                        } else if(previous_token.length) {
+                        } else if(KEY.DELETE && next_token.length) {
+                            select_token($(next_token.get(0)));
+                        } else if(KEY.BACKSPACE && previous_token.length) {
                             select_token($(previous_token.get(0)));
                         }
 
