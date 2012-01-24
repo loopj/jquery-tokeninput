@@ -301,7 +301,7 @@ $.TokenList = function (input, url_or_data, settings) {
                            .hide()
                            .val("")
                            .focus(function () {
-                               input_box.focus();
+                               focus_with_timeout(input_box);
                            })
                            .blur(function () {
                                input_box.blur();
@@ -326,7 +326,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
 
                 // Focus input box
-                input_box.focus();
+                focus_with_timeout(input_box);
             }
         })
         .mouseover(function (event) {
@@ -540,7 +540,7 @@ $.TokenList = function (input, url_or_data, settings) {
             if(found_existing_token) {
                 select_token(found_existing_token);
                 input_token.insertAfter(found_existing_token);
-                input_box.focus();
+                focus_with_timeout(input_box);
                 return;
             }
         }
@@ -594,7 +594,7 @@ $.TokenList = function (input, url_or_data, settings) {
         }
 
         // Show the input box and give it focus again
-        input_box.focus();
+        focus_with_timeout(input_box);
     }
 
     // Toggle selection of a token in the token list
@@ -626,7 +626,7 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_token = null;
 
         // Show the input box and give it focus again
-        input_box.focus();
+        focus_with_timeout(input_box);
 
         // Remove this token from the saved list
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
@@ -640,8 +640,8 @@ $.TokenList = function (input, url_or_data, settings) {
         if(settings.tokenLimit !== null) {
             input_box
                 .show()
-                .val("")
-                .focus();
+                .val("");
+            focus_with_timeout(input_box);
         }
 
         // Execute the onDelete callback if defined
@@ -867,6 +867,16 @@ $.TokenList = function (input, url_or_data, settings) {
         }
         return url;
     }
+
+    // Bring browser focus to the specified object.
+    // Use of setTimeout is to get around an IE bug.
+    // (See, e.g., http://stackoverflow.com/questions/2600186/focus-doesnt-work-in-ie)
+    // 
+    // obj: a jQuery object to focus()
+    function focus_with_timeout(obj) {
+        setTimeout(function() { obj.focus(); }, 50);
+    }
+
 };
 
 // Really basic cache for the results
