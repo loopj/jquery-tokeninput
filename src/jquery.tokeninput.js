@@ -248,8 +248,8 @@ $.TokenList = function (input, url_or_data, settings) {
                         if(dropdown_item.length) {
                             select_dropdown_item(dropdown_item);
                         }
-                        return false;
                     }
+                    return false;
                     break;
 
                 case KEY.BACKSPACE:
