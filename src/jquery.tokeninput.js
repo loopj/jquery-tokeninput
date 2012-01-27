@@ -28,8 +28,10 @@ var DEFAULT_SETTINGS = {
     hintText: "Type in a search term",
     noResultsText: "No results",
     searchingText: "Searching...",
+    defaultText: "Search",
     deleteText: "&times;",
     animateDropdown: true,
+    autoResizeInput: true,
     theme: null,
     zindex: 999,
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
@@ -196,17 +198,25 @@ $.TokenList = function (input, url_or_data, settings) {
             outline: "none"
         })
         .attr("id", settings.idPrefix + input.id)
+        .attr("value", settings.defaultText)
         .focus(function () {
             if (settings.disabled) {
                 return false;
-            } else
-            if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
-                show_dropdown_hint();
+            } else{
+            	if($(this).val() == settings.defaultText){
+            		$(this).val('');
+            	}
+            	
+	            if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
+	                show_dropdown_hint();
+	            }
             }
         })
         .blur(function () {
+        	if($(this).val() == ""){
+        		$(this).val(settings.defaultText);
+        	}        	
             hide_dropdown();
-            $(this).val("");
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
@@ -466,11 +476,13 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function resize_input() {
         if(input_val === (input_val = input_box.val())) {return;}
-
-        // Enter new content into resizer and resize input accordingly
-        var escaped = input_val.replace(/&/g, '&amp;').replace(/\s/g,' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        input_resizer.html(escaped);
-        input_box.width(input_resizer.width() + 30);
+        
+        if(setting.autoResizeInput) {
+	        // Enter new content into resizer and resize input accordingly
+	        var escaped = input_val.replace(/&/g, '&amp;').replace(/\s/g,' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	        input_resizer.html(escaped);
+	        input_box.width(input_resizer.width() + 30);
+        }
     }
 
     function is_printable_character(keycode) {
