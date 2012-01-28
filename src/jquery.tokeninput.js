@@ -119,9 +119,10 @@ var methods = {
    	},
    	destroy: function() {
    	  $(this).removeData('tokenInputObject');
-   	  $(this).siblings('.token-input-list').remove()
-   	  $(this).show()
-   	  $(this.id + '_dropdown').remove()
+   	  $(this).siblings('.token-input-list').remove(); 
+   	  $(this).show();
+   	  console.log(this[0].id); 
+   	  $('#' + this[0].id + '_dropdown').remove();
    	  return this;    	  
    	}
 }
