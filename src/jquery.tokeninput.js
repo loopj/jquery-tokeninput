@@ -117,12 +117,15 @@ var methods = {
         return this;
     },
     get: function() {
-        return this.data("tokenInputObject").getTokens();
-    },
-    toggleDisabled: function(disable) {
-        this.data("tokenInputObject").toggleDisabled(disable);
-        return this;
-    }
+    	return this.data("tokenInputObject").getTokens();
+   	},
+   	destroy: function() {
+   	  $(this).removeData('tokenInputObject');
+   	  $(this).siblings('.token-input-list').remove()
+   	  $(this).show()
+   	  $(this.id + '_dropdown').remove()
+   	  return this;    	  
+   	}
 }
 
 // Expose the .tokenInput function to jQuery as a plugin
@@ -352,6 +355,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // The list to store the dropdown items in
     var dropdown = $("<div>")
         .addClass(settings.classes.dropdown)
+        .attr('id', hidden_input.attr('id') + '_dropdown')
         .appendTo("body")
         .hide();
 
