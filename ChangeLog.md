@@ -1,6 +1,12 @@
 jQuery Tokeninput ChangeLog
 ===========================
 
+Version 1.6.1 ?
+--------------------------
+- Added the ability to disable deletes on certain items. Json must include a disableDelete boolean property. The actual property name can be set through the disableDeleteProperty setting.
+- Added support for webservices. Set isWebService to true if you want to retrieve your json from a web service.
+- Added a dropDownWidthAdjustment setting, since the dropdown may be off by a few pixels in some layouts.
+
 Version 1.6.0 (2011-08-07)
 --------------------------
 - Now possible to pass a function as the URL to search, allowing dynamic endpoints
