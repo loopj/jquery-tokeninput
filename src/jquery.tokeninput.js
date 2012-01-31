@@ -26,6 +26,7 @@ var DEFAULT_SETTINGS = {
 
     // Display settings
     hintText: "Type in a search term",
+    defaultText: "",
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
@@ -202,11 +203,12 @@ $.TokenList = function (input, url_or_data, settings) {
             } else
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
                 show_dropdown_hint();
+                hide_default_text();
             }
         })
         .blur(function () {
             hide_dropdown();
-            $(this).val("");
+            show_default_text();
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
@@ -295,6 +297,10 @@ $.TokenList = function (input, url_or_data, settings) {
                     break;
             }
         });
+    
+    if(settings.defaultText) {
+      input_box.val(settings.defaultText);
+    }
 
     // Keep a reference to the original input box
     var hidden_input = $(input)
@@ -692,6 +698,16 @@ $.TokenList = function (input, url_or_data, settings) {
             dropdown.html("<p>"+settings.hintText+"</p>");
             show_dropdown();
         }
+    }
+    
+    function show_default_text() {
+      if(token_count == 0) {
+        input_box.val(settings.defaultText);
+      }
+    }
+    
+    function hide_default_text() {
+      input_box.val("");
     }
 
     // Highlight the query part of the search term
