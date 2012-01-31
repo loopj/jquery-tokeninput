@@ -22,6 +22,7 @@ ul.token-input-list-facebook li input {
     width: 100px;
     padding: 3px 8px;
     background-color: white;
+    color: #999;
     margin: 2px 0;
     -webkit-appearance: caret;
 }
