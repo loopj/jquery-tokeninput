@@ -19,7 +19,6 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
-    isWebService: false,
 
 	// Prepopulation settings
     prePopulate: null,
@@ -33,7 +32,6 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     theme: null,
     zindex: 999,
-	dropDownWidthAdjustment: 0,
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
 
@@ -42,7 +40,6 @@ var DEFAULT_SETTINGS = {
     tokenDelimiter: ",",
     preventDuplicates: false,
     tokenValue: "id",
-	disableDeleteProperty: "disableDelete",
 
     // Callbacks
     onResult: null,
@@ -491,19 +488,16 @@ $.TokenList = function (input, url_or_data, settings) {
           .insertBefore(input_token);
 
         // The 'delete token' button
-        var disableDelete = /^true$/i.test(item[settings.disableDeleteProperty]);
-		if (!disableDelete) {
-			$("<span>" + settings.deleteText + "</span>")
-			.addClass(settings.classes.tokenDelete)
-			.appendTo(this_token)
-			.click(function () {
-				if (!settings.disabled) {
-					delete_token($(this).parent());
-					hidden_input.change();
-					return false;
-				}
-			});
-		}
+        $("<span>" + settings.deleteText + "</span>")
+            .addClass(settings.classes.tokenDelete)
+            .appendTo(this_token)
+            .click(function () {
+                if (!settings.disabled) {
+                    delete_token($(this).parent());
+                    hidden_input.change();
+                    return false;
+                }
+            });
 
         // Store data on the token
         var token_data = item;
@@ -622,12 +616,6 @@ $.TokenList = function (input, url_or_data, settings) {
     function delete_token (token) {
         // Remove the id from the saved list
         var token_data = $.data(token.get(0), "tokeninput");
-		
-		var disableDelete = /^true$/i.test(token_data[settings.disableDeleteProperty]);
-		if (disableDelete) {
-			return;
-		}
-			
         var callback = settings.onDelete;
 
         var index = token.prevAll().length;
@@ -686,7 +674,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 position: "absolute",
                 top: $(token_list).offset().top + $(token_list).outerHeight(),
                 left: $(token_list).offset().left,
-                width: $(token_list).outerWidth() + settings.dropDownWidthAdjustment,
+                width: $(token_list).outerWidth(),
                 'z-index': settings.zindex
             })
             .show();
@@ -834,14 +822,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
 
                 // Prepare the request
-                if (settings.isWebService) {
-					ajax_params.data = '{"' + settings.queryParam + '":"' + query + '"}';
-					ajax_params.contentType = "application/json; charset=utf-8";
-				}
-				else {
-					ajax_params.data[settings.queryParam] = query;
-				}
-				
+                ajax_params.data[settings.queryParam] = query;
                 ajax_params.type = settings.method;
                 ajax_params.dataType = settings.contentType;
                 if(settings.crossDomain) {
