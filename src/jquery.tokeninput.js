@@ -794,6 +794,19 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         }
     }
+	
+	function deserialize(q) { 
+		// http://stackoverflow.com/a/2880929
+	    var urlParams = {}, e, 
+	        a = /\+/g,  // Regex for replacing addition symbol with a space 
+	        r = /([^&=]+)=?([^&]*)/g, 
+	        d = function (s) { return decodeURIComponent(s.replace(a, " ")); }; 
+	 
+	    while (e = r.exec(q)) 
+	       urlParams[d(e[1])] = d(e[2]); 
+		   
+		return urlParams;
+	};
 
     // Do the actual search
     function run_search(query) {
@@ -811,12 +824,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 if(url.indexOf("?") > -1) {
                     var parts = url.split("?");
                     ajax_params.url = parts[0];
-
-                    var param_array = parts[1].split("&");
-                    $.each(param_array, function (index, value) {
-                        var kv = value.split("=");
-                        ajax_params.data[kv[0]] = kv[1];
-                    });
+					$.extend(ajax_params.data, deserialize(parts[1]));
                 } else {
                     ajax_params.url = url;
                 }
