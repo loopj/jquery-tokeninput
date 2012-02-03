@@ -400,7 +400,7 @@ $.TokenList = function (input, url_or_data, settings) {
     this.clear = function() {
         token_list.children("li").each(function() {
             if ($(this).children("input").length === 0) {
-                delete_token($(this));
+                delete_token($(this), false);
             }
         });
     }
@@ -613,7 +613,10 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Delete a token from the token list
-    function delete_token (token) {
+    function delete_token (token, setFocus) {
+		// Default to YES, set focus
+		if (setFocus != false) setFocus = true;
+		
         // Remove the id from the saved list
         var token_data = $.data(token.get(0), "tokeninput");
         var callback = settings.onDelete;
@@ -626,7 +629,7 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_token = null;
 
         // Show the input box and give it focus again
-        focus_with_timeout(input_box);
+        if (setFocus) focus_with_timeout(input_box);
 
         // Remove this token from the saved list
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
@@ -641,7 +644,7 @@ $.TokenList = function (input, url_or_data, settings) {
             input_box
                 .show()
                 .val("");
-            focus_with_timeout(input_box);
+            if (setFocus) focus_with_timeout(input_box);
         }
 
         // Execute the onDelete callback if defined
