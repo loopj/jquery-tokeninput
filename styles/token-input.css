@@ -56,10 +56,15 @@ li.token-input-token {
     display: block;
 }
 
+* html li.token-input-token {
+	height: auto;
+}
+
 li.token-input-token p {
     float: left;
     padding: 0;
     margin: 0;
+	background-color: #d0efa0;
 }
 
 li.token-input-token span {
