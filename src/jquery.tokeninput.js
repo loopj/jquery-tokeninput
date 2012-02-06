@@ -104,6 +104,10 @@ var methods = {
             $(this).data("tokenInputObject", new $.TokenList(this, url_or_data_or_function, settings));
         });
     },
+	updateUrl: function(newURL) {
+        this.data("tokenInputObject").updateUrl(newURL);
+        return this;
+	},
     clear: function() {
         this.data("tokenInputObject").clear();
         return this;
@@ -434,6 +438,10 @@ $.TokenList = function (input, url_or_data, settings) {
     this.toggleDisabled = function(disable) {
         toggleDisabled(disable);
     }
+	
+	this.updateUrl = function(newUrl) {
+		return settings.url = newUrl;
+	}
 
     //
     // Private functions
