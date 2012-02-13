@@ -46,6 +46,9 @@ var DEFAULT_SETTINGS = {
     onAdd: null,
     onDelete: null,
     onReady: null,
+    
+    //Dynamic Source
+    dynamicSource : false,
 
     // Other settings
     idPrefix: "token-input-",
@@ -122,6 +125,10 @@ var methods = {
     toggleDisabled: function(disable) {
         this.data("tokenInputObject").toggleDisabled(disable);
         return this;
+    },
+    display:function(results,query){
+	this.data("tokenInputObject").display(results,query);
+	return this;
     }
 }
 
@@ -147,7 +154,7 @@ $.TokenList = function (input, url_or_data, settings) {
         settings.url = url_or_data;
 
         // If the URL is a function, evaluate it here to do our initalization work
-        var url = computeURL();
+        if(!settings.dynamicSource) var url = computeURL();
 
         // Make a smart guess about cross-domain if it wasn't explicitly specified
         if(settings.crossDomain === undefined && typeof url === "string") {
@@ -434,6 +441,19 @@ $.TokenList = function (input, url_or_data, settings) {
     this.toggleDisabled = function(disable) {
         toggleDisabled(disable);
     }
+  // Display the drop-down From Dynamic Source
+    this.display = function(results,query){
+	 cache_key = query + "MIGHT BE UNIQUE";
+	 if($.isFunction(settings.onResult)) {
+         results = settings.onResult.call(hidden_input, results);
+         }
+        cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
+
+      // only populate the dropdown if the results are associated with the active search query
+        if(input_box.val() === query) {
+        populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+        }
+	}
 
     //
     // Private functions
@@ -797,13 +817,14 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Do the actual search
     function run_search(query) {
-        var cache_key = query + computeURL();
+        if(!settings.dynamicSource) var cache_key = query + computeURL();
+	else cache_key = query + "MIGHT BE UNIQUE";
         var cached_results = cache.get(cache_key);
         if(cached_results) {
             populate_dropdown(query, cached_results);
         } else {
             // Are we doing an ajax search or local data search?
-            if(settings.url) {
+            if(settings.url && !settings.dynamicSource ) {
                 var url = computeURL();
                 // Extract exisiting get params
                 var ajax_params = {};
@@ -856,6 +877,12 @@ $.TokenList = function (input, url_or_data, settings) {
                 cache.add(cache_key, results);
                 populate_dropdown(query, results);
             }
+            else if(settings.dynamicSource) {
+			 
+			    //Fetch Data From Dynamic Source
+			     var results = dynamicSource(query);
+			 
+            }
         }
     }
 
@@ -867,6 +894,12 @@ $.TokenList = function (input, url_or_data, settings) {
         }
         return url;
     }
+    
+    // Fetch Data From Dynamic Source
+    function dynamicSource(query){ 
+    var dynamicData = settings.url.call("oops",query);
+     return true;
+	}
 
     // Bring browser focus to the specified object.
     // Use of setTimeout is to get around an IE bug.
