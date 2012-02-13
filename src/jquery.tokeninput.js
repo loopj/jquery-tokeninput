@@ -460,6 +460,11 @@ $.TokenList = function (input, url_or_data, settings) {
             deselect_token($(selected_token), POSITION.END);
         }
         hidden_input.prop('disabled', settings.disabled);
+
+        if (disable)
+          token_list.find("span").hide()
+        else
+          token_list.find("span").show()
     }
 
     function checkTokenLimit() {
@@ -494,7 +499,7 @@ $.TokenList = function (input, url_or_data, settings) {
           .insertBefore(input_token);
 
         // The 'delete token' button
-        $("<span>" + settings.deleteText + "</span>")
+        deleteToken = $("<span>" + settings.deleteText + "</span>")
             .addClass(settings.classes.tokenDelete)
             .appendTo(this_token)
             .click(function () {
