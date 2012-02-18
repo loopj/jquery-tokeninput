@@ -694,10 +694,10 @@ $.TokenList = function (input, url_or_data, settings) {
         }
     }
 
-	//Find all regular expression special characters and escape them
-	function escape_regex_chars(str){
-		return str.replace(/[-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-	}
+    //Find all regular expression special characters and escape them
+    function escape_regex_chars(str){
+        return str.replace(/[-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    }
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
