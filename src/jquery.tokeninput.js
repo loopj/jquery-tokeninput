@@ -19,6 +19,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+    additionalParams: function () { return {} },
 
 	// Prepopulation settings
     prePopulate: null,
@@ -807,7 +808,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 var url = computeURL();
                 // Extract exisiting get params
                 var ajax_params = {};
-                ajax_params.data = {};
+                ajax_params.data = settings.additionalParams();
                 if(url.indexOf("?") > -1) {
                     var parts = url.split("?");
                     ajax_params.url = parts[0];
