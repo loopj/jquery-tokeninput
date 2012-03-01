@@ -46,6 +46,8 @@ var DEFAULT_SETTINGS = {
     onAdd: null,
     onDelete: null,
     onReady: null,
+	onTokenSelect: null,
+	onTokenDeselect: null,
 
     // Other settings
     idPrefix: "token-input-",
@@ -566,6 +568,9 @@ $.TokenList = function (input, url_or_data, settings) {
     // Select a token in the token list
     function select_token (token) {
         if (!settings.disabled) {
+
+	        var callback = settings.onTokenSelect;
+
             token.addClass(settings.classes.selectedToken);
             selected_token = token.get(0);
 
@@ -574,11 +579,19 @@ $.TokenList = function (input, url_or_data, settings) {
 
             // Hide dropdown if it is visible (eg if we clicked to select token)
             hide_dropdown();
-        }
+
+			// Execute the onTokenSelect callback if defined
+			if($.isFunction(callback)) {
+				callback.call(hidden_input,token);
+			}
+		}
     }
 
     // Deselect a token in the token list
     function deselect_token (token, position) {
+
+        var callback = settings.onTokenDeselect;
+
         token.removeClass(settings.classes.selectedToken);
         selected_token = null;
 
@@ -595,6 +608,12 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Show the input box and give it focus again
         focus_with_timeout(input_box);
+
+		// Execute the onTokenSelect callback if defined
+		if($.isFunction(callback)) {
+			callback.call(hidden_input,token);
+		}
+
     }
 
     // Toggle selection of a token in the token list
