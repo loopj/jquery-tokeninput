@@ -45,6 +45,7 @@ var DEFAULT_SETTINGS = {
     onResult: null,
     onAdd: null,
     onDelete: null,
+	onReplace: null,
     onReady: null,
 	onTokenSelect: null,
 	onTokenDeselect: null,
@@ -118,6 +119,10 @@ var methods = {
         this.data("tokenInputObject").remove(item);
         return this;
     },
+	replace: function(item, newitem) {
+		this.data("tokenInputObject").replace(item, newitem);
+		return this;
+	},
     get: function() {
         return this.data("tokenInputObject").getTokens();
     },
@@ -429,6 +434,10 @@ $.TokenList = function (input, url_or_data, settings) {
         });
     }
 
+	this.replace = function(item, newitem) {
+		replace_token(item, newitem);
+	}
+
     this.getTokens = function() {
         return saved_tokens;
     }
@@ -564,6 +573,46 @@ $.TokenList = function (input, url_or_data, settings) {
             callback.call(hidden_input,item,newToken);
         }
     }
+
+
+    // Replace a token in the token list, adding a new one in the same position
+    function replace_token (item, newitem) {
+        var callback = settings.onReplace;
+
+        // Search for the token(s) to be replaced. If none found, return false
+		// TODO: meh... too similar to add_token code! Can be refactored into a
+		// .find() method?
+		var found_existing_tokens = [];
+		token_list.children().each(function () {
+			var existing_token = $(this);
+			var existing_data = $.data(existing_token.get(0), "tokeninput");
+			if(existing_data && existing_data.id === item.id) {
+				found_existing_tokens.push(existing_token);
+				return false;
+			}
+		});
+
+		// No token to replace, no replacing performed! Use add instead.
+		if(1 > found_existing_tokens.length) return false;
+
+        // Insert the new tokens (no check for token limit since we are just replacing what's already there!)
+        $(found_existing_tokens).each(function() {
+			newToken = insert_token(newitem);
+			newToken.insertAfter(this);
+			delete_token(this);
+		});
+
+		focus_with_timeout(input_box);
+
+        // Hide the help dropdown if visibile (should not be...)
+        hide_dropdown();
+
+        // Execute the onAdd callback if defined
+        if($.isFunction(callback)) {
+            callback.call(hidden_input, item, newitem, newToken);
+        }
+    }
+
 
     // Select a token in the token list
     function select_token (token) {
