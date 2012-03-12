@@ -32,8 +32,8 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     theme: null,
     zindex: 999,
-    resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
-    tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
+    resultsFormatter: function(item){return "<li>" + item[this.propertyToSearch]+ "</li>"},
+    tokenFormatter: function(item) {return "<li><p>" + item[this.propertyToSearch] + "</p></li>"},
 
     // Tokenization settings
     tokenLimit: null,
@@ -278,16 +278,18 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.TAB:
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
-                case KEY.COMMA:
                   if(selected_dropdown_item) {
-                    add_token($(selected_dropdown_item).data("tokeninput"));
-                    hidden_input.change();
-                    return false;
+                    return addSelectedToken();
                   } else if (settings.allowCustomEntry)  {
-                    var currentTokenInputItem = {"name": $("#token-input-post_tags_labels").val()};
-                    add_token(currentTokenInputItem);
-                    hidden_input.change();
-                    return false;
+                    return addCurrentTokenInputValue();
+                  }
+                  break;
+                  
+                case KEY.COMMA:
+                  if (settings.allowCustomEntry)  {
+                    return addCurrentTokenInputValue();
+                  } else if(selected_dropdown_item) {
+                    return addSelectedToken();
                   }
                   break;
 
@@ -303,6 +305,19 @@ $.TokenList = function (input, url_or_data, settings) {
                     break;
             }
         });
+
+    function addSelectedToken() {
+      add_token($(selected_dropdown_item).data("tokeninput"));
+      hidden_input.change();
+      return false;
+    };
+    
+    function addCurrentTokenInputValue() {
+      var currentTokenInputItem = {"name": $("#token-input-post_tags_labels").val()};
+      add_token(currentTokenInputItem);
+      hidden_input.change();
+      return false;
+    };
 
     // Keep a reference to the original input box
     var hidden_input = $(input)
@@ -883,7 +898,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // 
     // obj: a jQuery object to focus()
     function focus_with_timeout(obj) {
-        setTimeout(function() { obj.focus(); }, 50);
+        setTimeout(function() {obj.focus();}, 50);
     }
 
 };
