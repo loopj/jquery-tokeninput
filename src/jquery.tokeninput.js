@@ -313,7 +313,7 @@ $.TokenList = function (input, url_or_data, settings) {
     };
     
     function addCurrentTokenInputValue() {
-      var currentTokenInputItem = {"name": $("#token-input-post_tags_labels").val()};
+      var currentTokenInputItem = {"name": $("#" + settings.idPrefix + input.id).val()};
       add_token(currentTokenInputItem);
       hidden_input.change();
       return false;
