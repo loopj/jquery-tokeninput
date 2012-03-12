@@ -51,7 +51,10 @@ var DEFAULT_SETTINGS = {
     idPrefix: "token-input-",
 
     // Keep track if the input is currently in disabled mode
-    disabled: false
+    disabled: false,
+    
+    // Allowed add token which is not in suggest list
+    allowCustomEntry: false
 };
 
 // Default classes to use when theming
@@ -278,6 +281,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.COMMA:
                   if(selected_dropdown_item) {
                     add_token($(selected_dropdown_item).data("tokeninput"));
+                    hidden_input.change();
+                    return false;
+                  } else if (settings.allowCustomEntry)  {
+                    var currentTokenInputItem = {"name": $("#token-input-post_tags_labels").val()};
+                    add_token(currentTokenInputItem);
                     hidden_input.change();
                     return false;
                   }
@@ -749,6 +757,7 @@ $.TokenList = function (input, url_or_data, settings) {
         } else {
             if(settings.noResultsText) {
                 dropdown.html("<p>"+settings.noResultsText+"</p>");
+                selected_dropdown_item = null;
                 show_dropdown();
             }
         }
