@@ -821,6 +821,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Do the actual search
     function run_search(query) {
+        var self = this;
         var cache_key = query + computeURL();
         var cached_results = cache.get(cache_key);
         if(cached_results) {
@@ -866,8 +867,12 @@ $.TokenList = function (input, url_or_data, settings) {
                   }
                 };
 
+                if(typeof self.currentSearchRequest !== "undefined") {
+                   self.currentSearchRequest.abort();
+                }
+
                 // Make the request
-                $.ajax(ajax_params);
+                self.currentSearchRequest = $.ajax(ajax_params);
             } else if(settings.local_data) {
                 // Do the search through local data
                 var results = $.grep(settings.local_data, function (row) {
