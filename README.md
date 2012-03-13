@@ -12,6 +12,7 @@ Features added by TomsLabs
     * when allowCustomEntry setting is true, type comma allows to add a token that isn't suggested in token list
     * when allowCustomEntry setting is true and no token is selected, type enter or tab adds current token
 
+  - Avoid parallel search request in order to optimize performance 
 
 Init example
 ------------
