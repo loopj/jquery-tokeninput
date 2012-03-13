@@ -12,6 +12,17 @@ Features added by TomsLabs
     * when allowCustomEntry setting is true, type comma allows to add a token that isn't suggested in token list
     * when allowCustomEntry setting is true and no token is selected, type enter or tab adds current token
 
+
+Init example
+------------
+    $('#inputTokenId').tokenInput('/my/url/', {'allowCustomEntry' : true});
+
+
+Demo
+-----
+http://www.tomsguide.fr/solutions/nouveau_sujet.htm (on tag input)
+
+
 Documentation, Features and Demos
 ---------------------------------
 Full details and documentation can be found on the project page here:
