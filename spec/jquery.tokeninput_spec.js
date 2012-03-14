@@ -230,6 +230,40 @@ describe("jquery.tokeninput", function() {
         });
       });
     });
+    
+    describe("addTokenAllow:true ", function() {
+      var onAdd = sinon.stub();
+      
+      beforeEach(function() {
+        setupTokenInput({ "addTokenAllow": true, "addTokenURL": '/tags' });
+        setupFakeServer("abc", '[]');
+        typePartialToken("abc");
+      });
+
+      it("should render 'Add it?' message", function() {
+        waits(500); 
+        runs(function() {
+          server.respond();
+          expect($('.token-input-dropdown')).toContain('a.token-input-add-token');
+          expect($('a.token-input-add-token')).toHaveText("Add it\?");
+        });
+      });
+      
+      it("should create the new Token on clicking 'Add it'", function() {
+        waits(500); 
+        runs(function() {
+          server.respond();
+          server.respondWith(
+            "POST",
+            "/tags",
+            [200, { "Content-Type": "application/json" }, '{"id": 345, "name": "abc"}']
+          );
+          $('a.token-input-add-token').trigger('click');
+          server.respond();
+          expect($('#target').val()).toEqual("345"); // should be the id of the created token
+        });
+      });
+    });
   });
 });
 
