@@ -20,7 +20,7 @@ var DEFAULT_SETTINGS = {
     jsonContainer: null,
     contentType: "json",
 
-	// Prepopulation settings
+  	// Prepopulation settings
     prePopulate: null,
     processPrePopulate: false,
 
