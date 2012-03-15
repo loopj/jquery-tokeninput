@@ -13,10 +13,12 @@ Features added by TomsLabs
     * when allowCustomEntry setting is true and no token is selected, type enter or tab adds current token
 
   - Avoid parallel search request in order to optimize performance 
+  
+  - Make highlight duplicate switchable (with highlightDuplicates, default to true)
 
 Init example
 ------------
-    $('#inputTokenId').tokenInput('/my/url/', {'allowCustomEntry' : true});
+    $('#inputTokenId').tokenInput('/my/url/', {'allowCustomEntry' : true, 'highlightDuplicates' : false});
 
 
 Demo
