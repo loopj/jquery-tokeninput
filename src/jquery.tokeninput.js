@@ -39,6 +39,7 @@ var DEFAULT_SETTINGS = {
     tokenLimit: null,
     tokenDelimiter: ",",
     preventDuplicates: false,
+    highlightDuplicates: true,
     tokenValue: "id",
 
     // Callbacks
@@ -554,16 +555,19 @@ $.TokenList = function (input, url_or_data, settings) {
             token_list.children().each(function () {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
-                if(existing_data && existing_data[settings['tokenValue']] === item[settings['tokenValue']]) {
+
+                if(existing_data && existing_data[settings.tokenValue] === item[settings.tokenValue]) {
                     found_existing_token = existing_token;
                     return false;
                 }
             });
 
             if(found_existing_token) {
-                select_token(found_existing_token);
-                input_token.insertAfter(found_existing_token);
-                focus_with_timeout(input_box);
+                if(settings.highlightDuplicates) {
+                    select_token(found_existing_token);
+                    input_token.insertAfter(found_existing_token);
+                    focus_with_timeout(input_box);
+                }
                 return;
             }
         }
