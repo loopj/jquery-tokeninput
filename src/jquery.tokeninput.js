@@ -521,6 +521,14 @@ $.TokenList = function (input, url_or_data, settings) {
         return this_token;
     }
 
+	//Returns the token value based on settings.tokenValue
+	function get_token_value(item) {
+		if(typeof settings.tokenValue == 'function')
+		  return settings.tokenValue.call(this, item);
+		
+		return item[settings.tokenValue];
+	}
+	
     // Add a token to the token list based on user input
     function add_token (item) {
         var callback = settings.onAdd;
@@ -531,7 +539,7 @@ $.TokenList = function (input, url_or_data, settings) {
             token_list.children().each(function () {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
-                if(existing_data && existing_data.id === item.id) {
+                if(existing_data && get_token_value(existing_data) === get_token_value(item)) {
                     found_existing_token = existing_token;
                     return false;
                 }
@@ -652,14 +660,8 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Update the hidden input box value
     function update_hidden_input(saved_tokens, hidden_input) {
-        var token_values = $.map(saved_tokens, function (el) {
-            if(typeof settings.tokenValue == 'function')
-              return settings.tokenValue.call(this, el);
-            
-            return el[settings.tokenValue];
-        });
+        var token_values = $.map(saved_tokens, get_token_value);
         hidden_input.val(token_values.join(settings.tokenDelimiter));
-
     }
 
     // Hide and clear the results dropdown
