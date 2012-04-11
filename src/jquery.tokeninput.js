@@ -851,7 +851,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 });
 
                 if($.isFunction(settings.onResult)) {
-                    results = settings.onResult.call(hidden_input, results);
+                    results = settings.onResult.call(hidden_input, results, query);
                 }
                 cache.add(cache_key, results);
                 populate_dropdown(query, results);
