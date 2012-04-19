@@ -68,6 +68,20 @@
         </script>
     </div>
 
+    
+    <h2>Placeholder</h2>
+    <div>
+        <input type="text" id="demo-input-placeholder" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-placeholder").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                placeholder: "Type to search"
+            });
+        });
+        </script>
+    </div>
+
 
     <h2 id="custom-labels">Custom Labels</h2>
     <div>
