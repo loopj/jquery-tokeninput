@@ -29,6 +29,7 @@ var DEFAULT_SETTINGS = {
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
+    placeholder: null,
     animateDropdown: true,
     theme: null,
     zindex: 999,
@@ -195,7 +196,10 @@ $.TokenList = function (input, url_or_data, settings) {
         .css({
             outline: "none"
         })
-        .attr("id", settings.idPrefix + input.id)
+        .attr({
+          placeholder: settings.placeholder,
+          id: settings.idPrefix + input.id
+        })
         .focus(function () {
             if (settings.disabled) {
                 return false;
@@ -470,7 +474,8 @@ $.TokenList = function (input, url_or_data, settings) {
         // Enter new content into resizer and resize input accordingly
         var escaped = input_val.replace(/&/g, '&amp;').replace(/\s/g,' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         input_resizer.html(escaped);
-        input_box.width(input_resizer.width() + 30);
+        var width = input_box.width();
+        input_box.width(Math.max(width, input_resizer.width() + 30));
     }
 
     function is_printable_character(keycode) {
