@@ -50,6 +50,9 @@ var DEFAULT_SETTINGS = {
     // Other settings
     idPrefix: "token-input-",
 
+    // Backwards compatibility settings
+    maintainHiddenInputValue: true, // slower but backwards compatible
+
     // Keep track if the input is currently in disabled mode
     disabled: false
 };
@@ -118,6 +121,9 @@ var methods = {
     },
     get: function() {
         return this.data("tokenInputObject").getTokens();
+    },
+    val : function() {
+       return this.data("tokenInputObject").val();
     },
     toggleDisabled: function(disable) {
         this.data("tokenInputObject").toggleDisabled(disable);
@@ -367,7 +373,9 @@ $.TokenList = function (input, url_or_data, settings) {
         });
 
     // Pre-populate list if items exist
-    hidden_input.val("");
+    if(settings.maintainHiddenInputValue) {
+        hidden_input.val("");
+    }
     var li_data = settings.prePopulate || hidden_input.data("pre");
     if(settings.processPrePopulate && $.isFunction(settings.onResult)) {
         li_data = settings.onResult.call(hidden_input, li_data);
@@ -425,6 +433,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
     this.getTokens = function() {
         return get_tokens();
+    }
+
+    this.val = function() {
+        return get_token_value_string();
     }
 
     this.toggleDisabled = function(disable) {
@@ -644,16 +656,21 @@ $.TokenList = function (input, url_or_data, settings) {
         }).get();
     }
 
-    // Update the hidden input box value
-    function update_hidden_input(hidden_input) {
+    function get_token_value_string() {
         var token_values = $.map(get_tokens(), function (el) {
             if(typeof settings.tokenValue == 'function')
               return settings.tokenValue.call(this, el);
             
             return el[settings.tokenValue];
         });
-        hidden_input.val(token_values.join(settings.tokenDelimiter));
+        return token_values.join(settings.tokenDelimiter);
+    }
 
+    // Update the hidden input box value
+    function update_hidden_input(hidden_input) {
+        if(settings.maintainHiddenInputValue) {
+            hidden_input.val(get_token_value_string());
+        }
     }
 
     // Hide and clear the results dropdown
