@@ -632,7 +632,7 @@ $.TokenList = function (input, url_or_data, settings) {
         focus_with_timeout(input_box);
 
         // Remove this token from the saved list
-        saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
+        saved_tokens = saved_tokens.slice(0,index-1).concat(saved_tokens.slice(index));
         if(index < selected_token_index) selected_token_index--;
 
         // Update the hidden input
