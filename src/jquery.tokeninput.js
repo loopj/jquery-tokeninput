@@ -143,7 +143,7 @@ $.TokenList = function (input, url_or_data, settings) {
     //
 
     // Configure the data source
-    if($.type(url_or_data) === "string" || $.type(url_or_data) === "function") {
+    if(typeof(url_or_data) === "string" || typeof(url_or_data) === "function") {
         // Set the url to query against
         settings.url = url_or_data;
 
