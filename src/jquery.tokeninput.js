@@ -105,6 +105,10 @@ var methods = {
             $(this).data("tokenInputObject", new $.TokenList(this, url_or_data_or_function, settings));
         });
     },
+	updateUrl: function(newURL) {
+        this.data("tokenInputObject").updateUrl(newURL);
+        return this;
+	},
     clear: function() {
         this.data("tokenInputObject").clear();
         return this;
@@ -403,7 +407,7 @@ $.TokenList = function (input, url_or_data, settings) {
     this.clear = function() {
         token_list.children("li").each(function() {
             if ($(this).children("input").length === 0) {
-                delete_token($(this));
+                delete_token($(this), false);
             }
         });
     }
@@ -437,6 +441,10 @@ $.TokenList = function (input, url_or_data, settings) {
     this.toggleDisabled = function(disable) {
         toggleDisabled(disable);
     }
+	
+	this.updateUrl = function(newUrl) {
+		return settings.url = newUrl;
+	}
 
     //
     // Private functions
@@ -616,7 +624,10 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Delete a token from the token list
-    function delete_token (token) {
+    function delete_token (token, setFocus) {
+		// Default to YES, set focus
+		if (setFocus != false) setFocus = true;
+		
         // Remove the id from the saved list
         var token_data = $.data(token.get(0), "tokeninput");
         var callback = settings.onDelete;
@@ -629,7 +640,7 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_token = null;
 
         // Show the input box and give it focus again
-        focus_with_timeout(input_box);
+        if (setFocus) focus_with_timeout(input_box);
 
         // Remove this token from the saved list
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
@@ -644,7 +655,7 @@ $.TokenList = function (input, url_or_data, settings) {
             input_box
                 .show()
                 .val("");
-            focus_with_timeout(input_box);
+            if (setFocus) focus_with_timeout(input_box);
         }
 
         // Execute the onDelete callback if defined
@@ -797,6 +808,19 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         }
     }
+	
+	function deserialize(q) { 
+		// http://stackoverflow.com/a/2880929
+	    var urlParams = {}, e, 
+	        a = /\+/g,  // Regex for replacing addition symbol with a space 
+	        r = /([^&=]+)=?([^&]*)/g, 
+	        d = function (s) { return decodeURIComponent(s.replace(a, " ")); }; 
+	 
+	    while (e = r.exec(q)) 
+	       urlParams[d(e[1])] = d(e[2]); 
+		   
+		return urlParams;
+	};
 
     // Do the actual search
     function run_search(query) {
@@ -814,12 +838,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 if(url.indexOf("?") > -1) {
                     var parts = url.split("?");
                     ajax_params.url = parts[0];
-
-                    var param_array = parts[1].split("&");
-                    $.each(param_array, function (index, value) {
-                        var kv = value.split("=");
-                        ajax_params.data[kv[0]] = kv[1];
-                    });
+					$.extend(ajax_params.data, deserialize(parts[1]));
                 } else {
                     ajax_params.url = url;
                 }
