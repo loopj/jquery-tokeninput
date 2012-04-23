@@ -699,7 +699,8 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
-        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
+        var escaped = term.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + escaped + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
     }
 
     function find_value_and_highlight_term(template, value, term) {
