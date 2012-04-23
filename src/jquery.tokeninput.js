@@ -51,7 +51,10 @@ var DEFAULT_SETTINGS = {
     idPrefix: "token-input-",
 
     // Keep track if the input is currently in disabled mode
-    disabled: false
+    disabled: false,
+
+    // Set to true if you need to enter new tokens (not only from backend)
+    allowedNewItems: false
 };
 
 // Default classes to use when theming
@@ -279,10 +282,15 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
                 case KEY.COMMA:
-                  if(selected_dropdown_item) {
+                  if(selected_dropdown_item && $(selected_dropdown_item).data("tokeninput") != undefined) {
                     add_token($(selected_dropdown_item).data("tokeninput"));
                     hidden_input.change();
                     return false;
+                  } else if ($(this).val().length && settings.allowedNewItems) {
+                      token_object = {}
+                      token_object[settings.propertyToSearch] = token_object[settings.tokenValue] = $(this).val()
+                      add_token(token_object);
+                      return false;
                   }
                   break;
 
