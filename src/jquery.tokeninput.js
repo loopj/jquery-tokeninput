@@ -661,8 +661,12 @@ $.TokenList = function (input, url_or_data, settings) {
             
             return el[settings.tokenValue];
         });
-        hidden_input.val(token_values.join(settings.tokenDelimiter));
-
+        if (hidden_input.is('select')) {
+            hidden_input.val(token_values);
+        }
+        else {
+            hidden_input.val(token_values.join(settings.tokenDelimiter));
+        }
     }
 
     // Hide and clear the results dropdown
