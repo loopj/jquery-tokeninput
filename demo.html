@@ -1,6 +1,6 @@
 <html>
 <head>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
     <script type="text/javascript" src="src/jquery.tokeninput.js"></script>
 
     <link rel="stylesheet" href="styles/token-input.css" type="text/css" />
@@ -214,6 +214,26 @@
     </div>
 
 
+    <h2 id="onresult">Use onResult Callback to add new elements to list</h2>
+    <div>
+        <input type="text" id="demo-input-onresult-newelement" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-onresult-newelement").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                onResult: function (results) {
+                    console.log(results);
+                    var time = new Date().getTime();
+                    results.unshift({"name": $("#token-input-demo-input-onresult-newelement").val() ,"id": time});
+                    console.log(results);
+                    return results;
+                }
+            });
+        });
+        </script>
+    </div>
+
+
     <h2 id="onadd-ondelete">Using onAdd and onDelete Callbacks</h2>
     <div>
         <input type="text" id="demo-input-onadd-ondelete" name="blah" />
@@ -221,8 +241,8 @@
         <script type="text/javascript">
         $(document).ready(function() {
             $("#demo-input-onadd-ondelete").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
-                onAdd: function (item) {
-                    alert("Added " + item.name);
+                onAdd: function (item, token) {
+                    alert("Added " + item.name + " (Token HTML: " + $(token).html() + ")");
                 },
                 onDelete: function (item) {
                     alert("Deleted " + item.name);
@@ -233,11 +253,30 @@
     </div>
 
 
+    <h2 id="onadd-ondelete">Using onTokenSelect and onTokenDeselect Callbacks</h2>
+    <div>
+        <input type="text" id="demo-input-ontokenselect-ontokendeselect" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-ontokenselect-ontokendeselect").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                onTokenSelect: function (token) {
+                    alert("Selected " + $(token).html());
+                },
+                onTokenDeselect: function (token) {
+                    alert('Deselected' + $(token).html());
+                }
+            });
+        });
+        </script>
+    </div>
+
+
     <h2 id="plugin-methods">Using the add, remove, clear and toggleDisabled Methods</h2>
     <div>
-      <a href="#" id="plugin-methods-add">Add Token</a> | 
-      <a href="#" id="plugin-methods-remove">Remove Token</a> | 
-      <a href="#" id="plugin-methods-clear">Clear Tokens</a> | 
+      <a href="#" id="plugin-methods-add">Add Token</a> |
+      <a href="#" id="plugin-methods-remove">Remove Token</a> |
+      <a href="#" id="plugin-methods-clear">Clear Tokens</a> |
       <a href="#" id="plugin-methods-toggle-disable">Toggle Disabled</a><br />
         <input type="text" id="demo-input-plugin-methods" name="blah" />
         <input type="button" value="Submit" />
@@ -272,7 +311,7 @@
         });
         </script>
     </div>
-    
+
     <h2>Local Data Search with custom propertyToSearch, resultsFormatter and tokenFormatter</h2>
     <div>
         <input type="text" id="demo-input-local-custom-formatters" name="blah" />

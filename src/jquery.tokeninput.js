@@ -45,7 +45,10 @@ var DEFAULT_SETTINGS = {
     onResult: null,
     onAdd: null,
     onDelete: null,
+	onReplace: null,
     onReady: null,
+	onTokenSelect: null,
+	onTokenDeselect: null,
 
     // Other settings
     idPrefix: "token-input-",
@@ -117,6 +120,10 @@ var methods = {
         this.data("tokenInputObject").remove(item);
         return this;
     },
+	replace: function(item, newitem) {
+		this.data("tokenInputObject").replace(item, newitem);
+		return this;
+	},
     get: function() {
         return this.data("tokenInputObject").getTokens();
     },
@@ -430,6 +437,10 @@ $.TokenList = function (input, url_or_data, settings) {
         });
     }
 
+	this.replace = function(item, newitem) {
+		replace_token(item, newitem);
+	}
+
     this.getTokens = function() {
         return saved_tokens;
     }
@@ -550,7 +561,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Insert the new tokens
         if(settings.tokenLimit == null || token_count < settings.tokenLimit) {
-            insert_token(item);
+            newToken = insert_token(item);
             checkTokenLimit();
         }
 
@@ -562,13 +573,56 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Execute the onAdd callback if defined
         if($.isFunction(callback)) {
-            callback.call(hidden_input,item);
+            callback.call(hidden_input,item,newToken);
         }
     }
+
+
+    // Replace a token in the token list, adding a new one in the same position
+    function replace_token (item, newitem) {
+        var callback = settings.onReplace;
+
+        // Search for the token(s) to be replaced. If none found, return false
+		// TODO: meh... too similar to add_token code! Can be refactored into a
+		// .find() method?
+		var found_existing_tokens = [];
+		token_list.children().each(function () {
+			var existing_token = $(this);
+			var existing_data = $.data(existing_token.get(0), "tokeninput");
+			if(existing_data && existing_data.id === item.id) {
+				found_existing_tokens.push(existing_token);
+				return false;
+			}
+		});
+
+		// No token to replace, no replacing performed! Use add instead.
+		if(1 > found_existing_tokens.length) return false;
+
+        // Insert the new tokens (no check for token limit since we are just replacing what's already there!)
+        $(found_existing_tokens).each(function() {
+			newToken = insert_token(newitem);
+			newToken.insertAfter(this);
+			delete_token(this);
+		});
+
+		focus_with_timeout(input_box);
+
+        // Hide the help dropdown if visibile (should not be...)
+        hide_dropdown();
+
+        // Execute the onAdd callback if defined
+        if($.isFunction(callback)) {
+            callback.call(hidden_input, item, newitem, newToken);
+        }
+    }
+
 
     // Select a token in the token list
     function select_token (token) {
         if (!settings.disabled) {
+
+	        var callback = settings.onTokenSelect;
+
             token.addClass(settings.classes.selectedToken);
             selected_token = token.get(0);
 
@@ -577,11 +631,19 @@ $.TokenList = function (input, url_or_data, settings) {
 
             // Hide dropdown if it is visible (eg if we clicked to select token)
             hide_dropdown();
-        }
+
+			// Execute the onTokenSelect callback if defined
+			if($.isFunction(callback)) {
+				callback.call(hidden_input,token);
+			}
+		}
     }
 
     // Deselect a token in the token list
     function deselect_token (token, position) {
+
+        var callback = settings.onTokenDeselect;
+
         token.removeClass(settings.classes.selectedToken);
         selected_token = null;
 
@@ -598,6 +660,12 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Show the input box and give it focus again
         focus_with_timeout(input_box);
+
+		// Execute the onTokenSelect callback if defined
+		if($.isFunction(callback)) {
+			callback.call(hidden_input,token);
+		}
+
     }
 
     // Toggle selection of a token in the token list
@@ -658,7 +726,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var token_values = $.map(saved_tokens, function (el) {
             if(typeof settings.tokenValue == 'function')
               return settings.tokenValue.call(this, el);
-            
+
             return el[settings.tokenValue];
         });
         hidden_input.val(token_values.join(settings.tokenDelimiter));
@@ -874,7 +942,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // Bring browser focus to the specified object.
     // Use of setTimeout is to get around an IE bug.
     // (See, e.g., http://stackoverflow.com/questions/2600186/focus-doesnt-work-in-ie)
-    // 
+    //
     // obj: a jQuery object to focus()
     function focus_with_timeout(obj) {
         setTimeout(function() { obj.focus(); }, 50);
