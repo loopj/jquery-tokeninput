@@ -202,7 +202,10 @@ $.TokenList = function (input, url_or_data, settings) {
                 return false;
             } else
             if (settings.tokenLimit === null || settings.tokenLimit !== token_count) {
-                show_dropdown_hint();
+                if (settings.minChars == 0)
+                    setTimeout(function(){do_search();}, 5);
+                else
+                    show_dropdown_hint();
             }
             token_list.addClass(settings.classes.focused);
         })
@@ -268,7 +271,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
                         return false;
                     } else if($(this).val().length === 1) {
-                        hide_dropdown();
+                        if (settings.minChars == 0)
+                          setTimeout(function(){do_search();}, 5);
+                        else
+                          hide_dropdown();
                     } else {
                         // set a timeout just long enough to let this function finish.
                         setTimeout(function(){do_search();}, 5);
@@ -457,6 +463,11 @@ $.TokenList = function (input, url_or_data, settings) {
             deselect_token($(selected_token), POSITION.END);
         }
         hidden_input.prop('disabled', settings.disabled);
+
+        if (disable)
+          token_list.find("span").hide()
+        else
+          token_list.find("span").show()
     }
 
     function checkTokenLimit() {
@@ -491,7 +502,7 @@ $.TokenList = function (input, url_or_data, settings) {
           .insertBefore(input_token);
 
         // The 'delete token' button
-        $("<span>" + settings.deleteText + "</span>")
+        deleteToken = $("<span>" + settings.deleteText + "</span>")
             .addClass(settings.classes.tokenDelete)
             .appendTo(this_token)
             .click(function () {
@@ -780,7 +791,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function do_search() {
         var query = input_box.val();
 
-        if(query && query.length) {
+        if(typeof(query) == "string" && query.length >= settings.minChars) {
             if(selected_token) {
                 deselect_token($(selected_token), POSITION.AFTER);
             }
