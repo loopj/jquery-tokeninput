@@ -34,6 +34,7 @@ var DEFAULT_SETTINGS = {
     zindex: 999,
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
+		placeholder: "",
 
     // Tokenization settings
     tokenLimit: null,
@@ -192,7 +193,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var input_val;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
+    var input_box = $("<input type=\"text\"  autocomplete=\"off\" placeholder=\""+settings["placeholder"]+"\">")
         .css({
             outline: "none"
         })
