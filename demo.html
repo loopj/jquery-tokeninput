@@ -5,6 +5,7 @@
 
     <link rel="stylesheet" href="styles/token-input.css" type="text/css" />
     <link rel="stylesheet" href="styles/token-input-facebook.css" type="text/css" />
+    <link rel="stylesheet" href="styles/token-input-categories.css" type="text/css" />
 
     <script type="text/javascript">
     $(document).ready(function() {
@@ -50,6 +51,32 @@
                 {id: 43, name: "C++"},
                 {id: 47, name: "Java"}
             ]);
+        });
+        </script>
+    </div>
+    
+    <h2>Simple Local Data Search (With Categories)</h2>
+    <div>
+        <input type="text" id="demo-input-local-categories" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-local-categories").tokenInput([
+                {category: 'Category One', id: 7, name: "Ruby"},
+                {category: 'Category One', id: 11, name: "Python"},
+                {category: 'Category One', id: 13, name: "JavaScript"},
+                {category: 'Category One', id: 17, name: "ActionScript"},
+                {category: 'Category One', id: 19, name: "Scheme"},
+                {category: 'Category Two', id: 23, name: "Lisp"},
+                {category: 'Category Two', id: 29, name: "C#"},
+                {category: 'Category Two', id: 31, name: "Fortran"},
+                {category: 'Category Two', id: 37, name: "Visual Basic"},
+                {category: 'Category Two', id: 41, name: "C"},
+                {category: 'Category Two', id: 43, name: "C++"},
+                {category: 'Category Two', id: 47, name: "Java"}
+            ], {
+                theme: 'categories'
+            });
         });
         </script>
     </div>

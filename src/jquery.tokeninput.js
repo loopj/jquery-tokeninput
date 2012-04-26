@@ -34,6 +34,7 @@ var DEFAULT_SETTINGS = {
     zindex: 999,
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
+    placeholder: "",
 
     // Tokenization settings
     tokenLimit: null,
@@ -192,7 +193,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var input_val;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
+    var input_box = $("<input type=\"text\"  autocomplete=\"off\" placeholder=\"" + settings.placeholder + "\">")
         .css({
             outline: "none"
         })
@@ -710,6 +711,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function populate_dropdown (query, results) {
         if(results && results.length) {
             dropdown.empty();
+			var currentCategory = "";
             var dropdown_ul = $("<ul>")
                 .appendTo(dropdown)
                 .mouseover(function (event) {
@@ -728,6 +730,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 this_li = find_value_and_highlight_term(this_li ,value[settings.propertyToSearch], query);
 
                 this_li = $(this_li).appendTo(dropdown_ul);
+
+				if ( value.category && value.category != currentCategory ) {
+                    $(this_li).prepend('<div>' + value.category + '</div>');
+					currentCategory = value.category;
+				}
 
                 if(index % 2) {
                     this_li.addClass(settings.classes.dropdownItem);
