@@ -274,13 +274,6 @@ $.TokenList = function (input, url_or_data, settings) {
                     hidden_input.change();
                     return false;
                   }
-<<<<<<< HEAD
-                  else {
-                    newToken = {'id':$(this).val(),'name':$(this).val()};
-                    add_token(newToken);
-                    return false;
-                  }
-=======
 				  else if( settings.allowNewItems && $(this).val())
 				{
 					var item = {};
@@ -290,7 +283,6 @@ $.TokenList = function (input, url_or_data, settings) {
 					add_token(item);
 					return false;
 				  }
->>>>>>> origin/patch-1
                   break;
 
                 case KEY.ESCAPE:
