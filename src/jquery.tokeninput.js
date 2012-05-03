@@ -318,6 +318,7 @@ $.TokenList = function (input, url_or_data_or_function, settings) {
     // The list to store the token items in
     var token_list = $("<ul />")
         .addClass(settings.classes.tokenList)
+		.addClass($(input).attr('class'))
         .click(function (event) {
             var li = $(event.target).closest("li");
             if(li && li.get(0) && $.data(li.get(0), "tokeninput")) {
