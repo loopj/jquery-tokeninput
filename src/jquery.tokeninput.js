@@ -137,30 +137,30 @@ $.fn.tokenInput = function (method) {
 };
 
 // TokenList class for each input
-$.TokenList = function (input, url_or_data, settings) {
+$.TokenList = function (input, url_or_data_or_function, settings) {
     //
     // Initialization
     //
 
     // Configure the data source
-    if($.type(url_or_data) === "string" || $.type(url_or_data) === "function") {
+    if($.type(url_or_data_or_function) === "string") {
         // Set the url to query against
-        settings.url = url_or_data;
-
-        // If the URL is a function, evaluate it here to do our initalization work
-        var url = computeURL();
+        settings.url = url_or_data_or_function;
 
         // Make a smart guess about cross-domain if it wasn't explicitly specified
-        if(settings.crossDomain === undefined && typeof url === "string") {
-            if(url.indexOf("://") === -1) {
+        if(settings.crossDomain === undefined) {
+            if(settings.url.indexOf("://") === -1) {
                 settings.crossDomain = false;
             } else {
-                settings.crossDomain = (location.href.split(/\/+/g)[1] !== url.split(/\/+/g)[1]);
+                settings.crossDomain = (location.href.split(/\/+/g)[1] !== settings.url.split(/\/+/g)[1]);
             }
         }
-    } else if(typeof(url_or_data) === "object") {
+	} else if ($.type(url_or_data_or_function) === "function") {
+		// Set the callback to get data from
+		settings.data_function = url_or_data_or_function;
+    } else if(typeof(url_or_data_or_function) === "object") {
         // Set the local data to search through
-        settings.local_data = url_or_data;
+        settings.local_data = url_or_data_or_function;
     }
 
     // Build class names
@@ -800,14 +800,13 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Do the actual search
     function run_search(query) {
-        var cache_key = query + computeURL();
-        var cached_results = cache.get(cache_key);
+        var cached_results = cache.get(query);
         if(cached_results) {
             populate_dropdown(query, cached_results);
         } else {
             // Are we doing an ajax search or local data search?
             if(settings.url) {
-                var url = computeURL();
+                var url = settings.url;
                 // Extract exisiting get params
                 var ajax_params = {};
                 ajax_params.data = {};
@@ -834,42 +833,36 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 // Attach the success callback
                 ajax_params.success = function(results) {
-                  if($.isFunction(settings.onResult)) {
-                      results = settings.onResult.call(hidden_input, results);
-                  }
-                  cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
-
-                  // only populate the dropdown if the results are associated with the active search query
-                  if(input_box.val() === query) {
-                      populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
-                  }
+					handle_results(query, results);
                 };
 
                 // Make the request
                 $.ajax(ajax_params);
+			} else if(settings.data_function) {
+				// Do the search with a callback
+				settings.data_function(query, handle_results);
             } else if(settings.local_data) {
                 // Do the search through local data
-                var results = $.grep(settings.local_data, function (row) {
-                    return row[settings.propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
-                });
-
-                if($.isFunction(settings.onResult)) {
-                    results = settings.onResult.call(hidden_input, results);
-                }
-                cache.add(cache_key, results);
-                populate_dropdown(query, results);
+				var results = $.grep(settings.local_data, function (row) {
+					return row[settings.propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+				});
+				handle_results(query, results);
             }
         }
     }
 
-    // compute the dynamic URL
-    function computeURL() {
-        var url = settings.url;
-        if(typeof settings.url == 'function') {
-            url = settings.url.call(settings);
-        }
-        return url;
-    }
+	// Handle results data
+	function handle_results(query, results) {
+		if($.isFunction(settings.onResult)) {
+			results = settings.onResult.call(hidden_input, results);
+		}
+		cache.add(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+
+		// only populate the dropdown if the results are associated with the active search query
+		if(input_box.val() === query) {
+			populate_dropdown(query, settings.jsonContainer ? results[settings.jsonContainer] : results);
+		}
+	}
 
     // Bring browser focus to the specified object.
     // Use of setTimeout is to get around an IE bug.
