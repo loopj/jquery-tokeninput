@@ -491,16 +491,18 @@ $.TokenList = function (input, url_or_data, settings) {
           .insertBefore(input_token);
 
         // The 'delete token' button
-        $("<span>" + settings.deleteText + "</span>")
-            .addClass(settings.classes.tokenDelete)
-            .appendTo(this_token)
-            .click(function () {
-                if (!settings.disabled) {
-                    delete_token($(this).parent());
-                    hidden_input.change();
-                    return false;
-                }
-            });
+        if (!item.readOnly) {
+            $("<span>" + settings.deleteText + "</span>")
+                .addClass(settings.classes.tokenDelete)
+                .appendTo(this_token)
+                .click(function () {
+                    if (!settings.disabled) {
+                        delete_token($(this).parent());
+                        hidden_input.change();
+                        return false;
+                    }
+                });
+        }
 
         // Store data on the token
         var token_data = item;
@@ -619,6 +621,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function delete_token (token) {
         // Remove the id from the saved list
         var token_data = $.data(token.get(0), "tokeninput");
+        if (token_data.readOnly) return;
         var callback = settings.onDelete;
 
         var index = token.prevAll().length;
