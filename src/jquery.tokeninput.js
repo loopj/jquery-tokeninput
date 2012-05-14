@@ -197,9 +197,22 @@ $.TokenList = function (input, url_or_data, settings) {
                 show_dropdown_hint();
             }
         })
-        .blur(function () {
-            hide_dropdown();
-            // $(this).val("");
+        .blur(function (){
+           hide_dropdown();
+           /**
+            * When input looses focus, and it contains not yet added tags(for ex no enter/tab was pressed)
+            * it should act the same way as it the enter/tab was pressed.
+            * It prevents from not containing some data entered by the user
+            * when the form with the input is submitted, if he for example moves from input
+            * to input with a mouse not the tab
+            */
+		   if( settings.allowNewItems && $(this).val()){
+				var item = {};
+				item[settings.tokenValue] = settings.allowNewItemsPrefix+$(this).val();
+				item[settings.propertyToSearch] = $(this).val();
+
+				add_token(item);
+        	}
         })
         .bind("keyup keydown blur update", resize_input)
         .keydown(function (event) {
