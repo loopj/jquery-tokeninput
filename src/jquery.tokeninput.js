@@ -35,6 +35,12 @@ var DEFAULT_SETTINGS = {
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
 
+    // Context for the dropdown
+    // context is the element in which the dropdown element will be added, and against which offsets are measured.
+    // Useful for jQuery dialogs, so that the dropdown moves with them
+    // The context element must be position:relative or absolute
+    context: null,
+
     // Tokenization settings
     tokenLimit: null,
     tokenDelimiter: ",",
@@ -355,7 +361,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // The list to store the dropdown items in
     var dropdown = $("<div>")
         .addClass(settings.classes.dropdown)
-        .appendTo("body")
+        .appendTo( settings.context || "body" )
         .hide();
 
     // Magic element to help us resize the text input
@@ -672,11 +678,17 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     function show_dropdown() {
+        var offset = $(token_list).offset();
+        if (settings.context) {
+          var contextOffset = $(settings.context).offset();
+          offset.left -= contextOffset.left; offset.top -= contextOffset.top;
+        }
+
         dropdown
             .css({
                 position: "absolute",
-                top: $(token_list).offset().top + $(token_list).outerHeight(),
-                left: $(token_list).offset().left,
+                top: offset.top + $(token_list).outerHeight(),
+                left: offset.left,
                 width: $(token_list).outerWidth(),
                 'z-index': settings.zindex
             })
