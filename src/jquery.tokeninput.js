@@ -58,6 +58,7 @@ var DEFAULT_SETTINGS = {
 var DEFAULT_CLASSES = {
     tokenList: "token-input-list",
     token: "token-input-token",
+    tokenReadOnly: "token-input-token-readonly",
     tokenDelete: "token-input-delete-token",
     selectedToken: "token-input-selected-token",
     highlightedToken: "token-input-highlighted-token",
@@ -485,26 +486,30 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Inner function to a token to the list
     function insert_token(item) {
-        var this_token = settings.tokenFormatter(item);
-        this_token = $(this_token)
-          .addClass(settings.classes.token)
-          .insertBefore(input_token);
+        var $this_token = $(settings.tokenFormatter(item));
+        var readonly = item.readonly === true ? true : false;
+        
+        if(readonly) $this_token.addClass(settings.classes.tokenReadOnly);
+        
+        $this_token.addClass(settings.classes.token).insertBefore(input_token);
 
         // The 'delete token' button
-        $("<span>" + settings.deleteText + "</span>")
-            .addClass(settings.classes.tokenDelete)
-            .appendTo(this_token)
-            .click(function () {
-                if (!settings.disabled) {
-                    delete_token($(this).parent());
-                    hidden_input.change();
-                    return false;
-                }
-            });
+        if(!readonly) {
+          $("<span>" + settings.deleteText + "</span>")
+              .addClass(settings.classes.tokenDelete)
+              .appendTo($this_token)
+              .click(function () {
+                  if (!settings.disabled) {
+                      delete_token($(this).parent());
+                      hidden_input.change();
+                      return false;
+                  }
+              });
+        }
 
         // Store data on the token
         var token_data = item;
-        $.data(this_token.get(0), "tokeninput", item);
+        $.data($this_token.get(0), "tokeninput", item);
 
         // Save this token for duplicate checking
         saved_tokens = saved_tokens.slice(0,selected_token_index).concat([token_data]).concat(saved_tokens.slice(selected_token_index));
@@ -521,7 +526,7 @@ $.TokenList = function (input, url_or_data, settings) {
             hide_dropdown();
         }
 
-        return this_token;
+        return $this_token;
     }
 
     // Add a token to the token list based on user input
