@@ -20,7 +20,7 @@ var DEFAULT_SETTINGS = {
     jsonContainer: null,
     contentType: "json",
 
-	// Prepopulation settings
+    // Prepopulation settings
     prePopulate: null,
     processPrePopulate: false,
 
@@ -40,6 +40,7 @@ var DEFAULT_SETTINGS = {
     tokenDelimiter: ",",
     preventDuplicates: false,
     tokenValue: "id",
+    createTokens: false,
 
     // Callbacks
     onResult: null,
@@ -282,6 +283,13 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.COMMA:
                   if(selected_dropdown_item) {
                     add_token($(selected_dropdown_item).data("tokeninput"));
+                    hidden_input.change();
+                    return false;
+                  } else if (settings.createTokens && $.trim($(this).val()).length > 0) {
+                    var data = {}
+                    data[settings.tokenValue] = '__created';
+                    data[settings.propertyToSearch] = $.trim($(this).val());
+                    add_token(data);
                     hidden_input.change();
                     return false;
                   }
@@ -539,7 +547,12 @@ $.TokenList = function (input, url_or_data, settings) {
             token_list.children().each(function () {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
-                if(existing_data && existing_data.id === item.id) {
+                if (settings.createTokens && item[settings.tokenValue] == '__created') {
+                    if (existing_data && existing_data[settings.propertyToSearch] == item[settings.propertyToSearch]) {
+                        found_existing_token = existing_token;
+                        return false;
+                    }
+                } else if(existing_data && existing_data[settings.tokenValue] === item[settings.tokenValue]) {
                     found_existing_token = existing_token;
                     return false;
                 }
@@ -664,6 +677,9 @@ $.TokenList = function (input, url_or_data, settings) {
             if(typeof settings.tokenValue == 'function')
               return settings.tokenValue.call(this, el);
             
+            if (settings.createTokens && el[settings.tokenValue] == "__created") {
+                return "__created:" + el[settings.propertyToSearch];
+            }
             return el[settings.tokenValue];
         });
         hidden_input.val(token_values.join(settings.tokenDelimiter));
@@ -690,6 +706,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function show_dropdown_searching () {
         if(settings.searchingText) {
+            selected_dropdown_item = null;
             dropdown.html("<p>"+settings.searchingText+"</p>");
             show_dropdown();
         }
@@ -697,6 +714,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function show_dropdown_hint () {
         if(settings.hintText) {
+            selected_dropdown_item = null;
             dropdown.html("<p>"+settings.hintText+"</p>");
             show_dropdown();
         }
