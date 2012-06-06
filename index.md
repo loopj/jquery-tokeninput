@@ -82,6 +82,20 @@ Your script should output JSON search results in the following format:
 ]
 {% endhighlight %}
 
+You may optionally specify an attribute of "readonly" and set it to true if you
+would like some of the tokens to be non-removable:
+
+{% highlight javascript %}
+[
+    {"id":"856","name":"House","readonly":true},
+    {"id":"1035","name":"Desperate Housewives"},
+    ...
+]
+{% endhighlight %}
+
+Note that you may omit "readonly" on entities where it is not necessary. This
+attribute is acceptable wherever JSON entities are passed, e.g. .tokenInput("add")
+(see Methods section below).
 
 ### Include and initialize the plugin ###
 
