@@ -193,6 +193,10 @@ theme
 :   Set this to a string, eg "facebook" when including theme css files to set
     the css class suffix [(demo)](demo.html#theme).
 
+resultsLimit
+:   The maximum number of results shown in the drop down. Use `null` to show
+    all the matching results. *default: null*
+
 resultsFormatter
 :   A function that returns an interpolated HTML string for each result. Use 
     this function with a templating system of your choice, such as jresig
