@@ -733,7 +733,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 })
                 .hide();
 
-            if (results.length > settings.resultsLimit) {
+            if (settings.resultsLimit && results.length > settings.resultsLimit) {
                 results = results.slice(0, settings.resultsLimit);
             }
 
