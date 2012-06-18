@@ -19,6 +19,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+    localDataMatcher: function(property, query) { return property.toLowerCase().indexOf(query.toLowerCase()) > -1; },
 
     // Prepopulation settings
     prePopulate: null,
@@ -865,7 +866,7 @@ $.TokenList = function (input, url_or_data, settings) {
             } else if(settings.local_data) {
                 // Do the search through local data
                 var results = $.grep(settings.local_data, function (row) {
-                    return row[settings.propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+                    return settings.localDataMatcher(row[settings.propertyToSearch], query);
                 });
 
                 if($.isFunction(settings.onResult)) {
