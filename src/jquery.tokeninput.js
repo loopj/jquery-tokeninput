@@ -20,7 +20,7 @@ var DEFAULT_SETTINGS = {
     jsonContainer: null,
     contentType: "json",
 
-	// Prepopulation settings
+    // Prepopulation settings
     prePopulate: null,
     processPrePopulate: false,
 
@@ -32,6 +32,7 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     theme: null,
     zindex: 999,
+    resultsLimit: null,
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
 
@@ -488,9 +489,9 @@ $.TokenList = function (input, url_or_data, settings) {
     function insert_token(item) {
         var $this_token = $(settings.tokenFormatter(item));
         var readonly = item.readonly === true ? true : false;
-        
+
         if(readonly) $this_token.addClass(settings.classes.tokenReadOnly);
-        
+
         $this_token.addClass(settings.classes.token).insertBefore(input_token);
 
         // The 'delete token' button
@@ -663,7 +664,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var token_values = $.map(saved_tokens, function (el) {
             if(typeof settings.tokenValue == 'function')
               return settings.tokenValue.call(this, el);
-            
+
             return el[settings.tokenValue];
         });
         hidden_input.val(token_values.join(settings.tokenDelimiter));
@@ -731,6 +732,10 @@ $.TokenList = function (input, url_or_data, settings) {
                     return false;
                 })
                 .hide();
+
+            if (results.length > settings.resultsLimit) {
+                results = results.slice(0, settings.resultsLimit);
+            }
 
             $.each(results, function(index, value) {
                 var this_li = settings.resultsFormatter(value);
@@ -884,7 +889,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // Bring browser focus to the specified object.
     // Use of setTimeout is to get around an IE bug.
     // (See, e.g., http://stackoverflow.com/questions/2600186/focus-doesnt-work-in-ie)
-    // 
+    //
     // obj: a jQuery object to focus()
     function focus_with_timeout(obj) {
         setTimeout(function() { obj.focus(); }, 50);
