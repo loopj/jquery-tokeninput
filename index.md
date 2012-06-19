@@ -155,6 +155,12 @@ crossDomain
     ajax request. Note: JSONP is automatically enabled if we detect the search
 	request is a cross-domain request. *default: false*.
 
+localDataMatcher
+:   A function that takes the property and the query and returns a boolean.
+    Use this function to allow custom matching logic, like case sensitivity,
+    word boundary matching, etc. 
+    *default: function(property, query) { return property.toLowerCase().indexOf(query.toLowerCase()) > -1; }*
+
 ### Pre-population Settings ###
 
 prePopulate
