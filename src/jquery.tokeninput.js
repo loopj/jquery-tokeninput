@@ -43,6 +43,7 @@ var DEFAULT_SETTINGS = {
     tokenValue: "id",
 
     // Callbacks
+    beforeSend: null,
     onResult: null,
     onAdd: null,
     onDelete: null,
@@ -846,6 +847,13 @@ $.TokenList = function (input, url_or_data, settings) {
                 if(settings.crossDomain) {
                     ajax_params.dataType = "jsonp";
                 }
+
+                 // Attach on beforeCall callback
+                 ajax_params.beforeSend = function() {
+                     if($.isFunction(settings.beforeSend)) {
+                         results = settings.beforeSend.call(hidden_input);
+                     }
+                 };
 
                 // Attach the success callback
                 ajax_params.success = function(results) {
