@@ -32,6 +32,7 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     theme: null,
     zindex: 999,
+    tokenWithErrorClass: "with_error",
     resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
     tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
 
@@ -489,6 +490,8 @@ $.TokenList = function (input, url_or_data, settings) {
         this_token = $(this_token)
           .addClass(settings.classes.token)
           .insertBefore(input_token);
+
+        if (item.error) { this_token.addClass(settings.tokenWithErrorClass) };
 
         // The 'delete token' button
         $("<span>" + settings.deleteText + "</span>")
