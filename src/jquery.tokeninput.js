@@ -14,6 +14,7 @@ var DEFAULT_SETTINGS = {
     // Search settings
     method: "GET",
     queryParam: "q",
+    limitParam: "limit",
     searchDelay: 300,
     minChars: 1,
     propertyToSearch: "name",
@@ -840,6 +841,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
 
                 // Prepare the request
+                
+                if(settings.limitParam && settings.resultsLimit){
+                    ajax_params.data[settings.resultsLimit] = settings.limitParam;
+                }
+                
                 ajax_params.data[settings.queryParam] = query;
                 ajax_params.type = settings.method;
                 ajax_params.dataType = settings.contentType;
