@@ -14,6 +14,7 @@ var DEFAULT_SETTINGS = {
     // Search settings
     method: "GET",
     queryParam: "q",
+    limitParam: "limit",
     searchDelay: 300,
     minChars: 1,
     propertyToSearch: "name",
@@ -775,6 +776,19 @@ $.TokenList = function (input, url_or_data, settings) {
     // Highlight an item in the results dropdown
     function select_dropdown_item (item) {
         if(item) {
+            var windowScrollTop = $(window).scrollTop();
+            var windowScrollBotton = windowScrollTop + $(window).height();
+
+            var itemScrollTop = $(item).offset().top;
+            var itemScrollBotton = itemScrollTop + $(item).innerHeight();
+
+            //Scrolling only when the element is not visible and is active.
+            if(itemScrollTop < windowScrollTop){
+                $("html, body").scrollTop(windowScrollTop + itemScrollTop - windowScrollTop);
+            }else if(itemScrollBotton > windowScrollBotton){
+                $("html, body").scrollTop(windowScrollTop + itemScrollBotton - windowScrollBotton);
+            }
+
             if(selected_dropdown_item) {
                 deselect_dropdown_item($(selected_dropdown_item));
             }
@@ -840,6 +854,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
 
                 // Prepare the request
+                
+                if(settings.limitParam && settings.resultsLimit){
+                    ajax_params.data[settings.resultsLimit] = settings.limitParam;
+                }
+                
                 ajax_params.data[settings.queryParam] = query;
                 ajax_params.type = settings.method;
                 ajax_params.dataType = settings.contentType;
