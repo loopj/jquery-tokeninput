@@ -776,6 +776,19 @@ $.TokenList = function (input, url_or_data, settings) {
     // Highlight an item in the results dropdown
     function select_dropdown_item (item) {
         if(item) {
+            var windowScrollTop = $(window).scrollTop();
+            var windowScrollBotton = windowScrollTop + $(window).height();
+
+            var itemScrollTop = $(item).offset().top;
+            var itemScrollBotton = itemScrollTop + $(item).innerHeight();
+
+            //Scrolling only when the element is not visible and is active.
+            if(itemScrollTop < windowScrollTop){
+                $("html, body").scrollTop(windowScrollTop + itemScrollTop - windowScrollTop);
+            }else if(itemScrollBotton > windowScrollBotton){
+                $("html, body").scrollTop(windowScrollTop + itemScrollBotton - windowScrollBotton);
+            }
+
             if(selected_dropdown_item) {
                 deselect_dropdown_item($(selected_dropdown_item));
             }
