@@ -33,8 +33,18 @@ var DEFAULT_SETTINGS = {
     theme: null,
     zindex: 999,
     resultsLimit: null,
-    resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
-    tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
+
+    enableHTML: true,
+
+    resultsFormatter: function(item) {
+      var string = item[this.propertyToSearch];
+      return "<li>" + (this.enableHTML ? string : _escapeHTML(string)) + "</li>";
+    },
+
+    tokenFormatter: function(item) {
+      var string = item[this.propertyToSearch];
+      return "<li><p>" + (this.enableHTML ? string : _escapeHTML(string)) + "</p></li>";
+    },
 
     // Tokenization settings
     tokenLimit: null,
@@ -97,6 +107,44 @@ var KEY = {
     NUMPAD_ENTER: 108,
     COMMA: 188
 };
+
+var HTML_ESCAPES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#x27;',
+  '/': '&#x2F;'
+};
+
+var HTML_UNESCAPES = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#x27;': "'",
+  '&#x2F;': '/'
+};
+
+var HTML_ESCAPE_CHARS = /[&<>"'\/]/g;
+
+var HTML_UNESCAPE_TOKENS = /&amp;|&lt;|&gt;|&quot;|&#x27;|&#x2F;/g;
+
+function coerceToString(val) {
+  return String((val === null || val === undefined) ? '' : val);
+}
+
+function _escapeHTML(text) {
+  return coerceToString(text).replace(HTML_ESCAPE_CHARS, function(match) {
+    return HTML_ESCAPES[match];
+  });
+}
+
+function _unescapeHTML(text) {
+  return coerceToString(text).replace(HTML_UNESCAPE_TOKENS, function(match) {
+    return HTML_UNESCAPES[match];
+  });
+}
 
 // Additional public (exposed) methods
 var methods = {
@@ -443,6 +491,14 @@ $.TokenList = function (input, url_or_data, settings) {
     //
     // Private functions
     //
+
+    function escapeHTML(text) {
+      return settings.enableHTML ? text : _escapeHTML(text);
+    }
+
+    function unescapeHTML(text) {
+      return settings.enableHTML ? text : _unescapeHTML(text);
+    }
 
     // Toggles the widget between enabled and disabled state, or according
     // to the [disable] parameter.
