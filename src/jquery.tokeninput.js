@@ -117,18 +117,7 @@ var HTML_ESCAPES = {
   '/': '&#x2F;'
 };
 
-var HTML_UNESCAPES = {
-  '&amp;': '&',
-  '&lt;': '<',
-  '&gt;': '>',
-  '&quot;': '"',
-  '&#x27;': "'",
-  '&#x2F;': '/'
-};
-
 var HTML_ESCAPE_CHARS = /[&<>"'\/]/g;
-
-var HTML_UNESCAPE_TOKENS = /&amp;|&lt;|&gt;|&quot;|&#x27;|&#x2F;/g;
 
 function coerceToString(val) {
   return String((val === null || val === undefined) ? '' : val);
@@ -137,12 +126,6 @@ function coerceToString(val) {
 function _escapeHTML(text) {
   return coerceToString(text).replace(HTML_ESCAPE_CHARS, function(match) {
     return HTML_ESCAPES[match];
-  });
-}
-
-function _unescapeHTML(text) {
-  return coerceToString(text).replace(HTML_UNESCAPE_TOKENS, function(match) {
-    return HTML_UNESCAPES[match];
   });
 }
 
@@ -494,10 +477,6 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function escapeHTML(text) {
       return settings.enableHTML ? text : _escapeHTML(text);
-    }
-
-    function unescapeHTML(text) {
-      return settings.enableHTML ? text : _unescapeHTML(text);
     }
 
     // Toggles the widget between enabled and disabled state, or according
