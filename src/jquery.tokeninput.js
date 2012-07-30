@@ -34,7 +34,7 @@ var DEFAULT_SETTINGS = {
     zindex: 999,
     resultsLimit: null,
 
-    enableHTML: true,
+    enableHTML: false,
 
     resultsFormatter: function(item) {
       var string = item[this.propertyToSearch];
@@ -529,8 +529,7 @@ $.TokenList = function (input, url_or_data, settings) {
         if(input_val === (input_val = input_box.val())) {return;}
 
         // Enter new content into resizer and resize input accordingly
-        var escaped = input_val.replace(/&/g, '&amp;').replace(/\s/g,' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        input_resizer.html(escaped);
+        input_resizer.html(_escapeHTML(input_val));
         input_box.width(input_resizer.width() + 30);
     }
 
@@ -747,14 +746,14 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function show_dropdown_searching () {
         if(settings.searchingText) {
-            dropdown.html("<p>"+settings.searchingText+"</p>");
+            dropdown.html("<p>" + escapeHTML(settings.searchingText) + "</p>");
             show_dropdown();
         }
     }
 
     function show_dropdown_hint () {
         if(settings.hintText) {
-            dropdown.html("<p>"+settings.hintText+"</p>");
+            dropdown.html("<p>" + escapeHTML(settings.hintText) + "</p>");
             show_dropdown();
         }
     }
@@ -766,7 +765,14 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
-        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + regexp_escape(term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
+        return value.replace(
+          new RegExp(
+            "(?![^&;]+;)(?!<[^<>]*)(" + regexp_escape(term) + ")(?![^<>]*>)(?![^&;]+;)",
+            "gi"
+          ), function(match, p1) {
+            return "<b>" + escapeHTML(p1) + "</b>";
+          }
+        );
     }
 
     function find_value_and_highlight_term(template, value, term) {
@@ -822,7 +828,7 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         } else {
             if(settings.noResultsText) {
-                dropdown.html("<p>"+settings.noResultsText+"</p>");
+                dropdown.html("<p>" + escapeHTML(settings.noResultsText) + "</p>");
                 show_dropdown();
             }
         }
