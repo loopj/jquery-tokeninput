@@ -499,13 +499,13 @@ $.TokenList = function (input, url_or_data, settings) {
         } else {
             settings.disabled = !settings.disabled;
         }
-        input_box.prop('disabled', settings.disabled);
+        input_box.attr('disabled', settings.disabled);
         token_list.toggleClass(settings.classes.disabled, settings.disabled);
         // if there is any token selected we deselect it
         if(selected_token) {
             deselect_token($(selected_token), POSITION.END);
         }
-        hidden_input.prop('disabled', settings.disabled);
+        hidden_input.attr('disabled', settings.disabled);
     }
 
     function checkTokenLimit() {
