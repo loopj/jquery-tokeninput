@@ -48,6 +48,7 @@ var DEFAULT_SETTINGS = {
     // Callbacks
     onResult: null,
     onAdd: null,
+    onFreeTaggingAdd: null,
     onDelete: null,
     onReady: null,
 
@@ -504,6 +505,9 @@ $.TokenList = function (input, url_or_data, settings) {
             return;
           }
 
+          if ($.isFunction(settings.onFreeTaggingAdd)) {
+            token = settings.onFreeTaggingAdd.call(hidden_input, token);
+          }
           var object = {};
           object[settings.tokenValue] = object[settings.propertyToSearch] = token;
           add_token(object);
