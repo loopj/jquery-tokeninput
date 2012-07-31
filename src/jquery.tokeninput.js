@@ -33,8 +33,18 @@ var DEFAULT_SETTINGS = {
     theme: null,
     zindex: 999,
     resultsLimit: null,
-    resultsFormatter: function(item){ return "<li>" + item[this.propertyToSearch]+ "</li>" },
-    tokenFormatter: function(item) { return "<li><p>" + item[this.propertyToSearch] + "</p></li>" },
+
+    enableHTML: false,
+
+    resultsFormatter: function(item) {
+      var string = item[this.propertyToSearch];
+      return "<li>" + (this.enableHTML ? string : _escapeHTML(string)) + "</li>";
+    },
+
+    tokenFormatter: function(item) {
+      var string = item[this.propertyToSearch];
+      return "<li><p>" + (this.enableHTML ? string : _escapeHTML(string)) + "</p></li>";
+    },
 
     // Tokenization settings
     tokenLimit: null,
@@ -101,6 +111,27 @@ var KEY = {
     NUMPAD_ENTER: 108,
     COMMA: 188
 };
+
+var HTML_ESCAPES = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#x27;',
+  '/': '&#x2F;'
+};
+
+var HTML_ESCAPE_CHARS = /[&<>"'\/]/g;
+
+function coerceToString(val) {
+  return String((val === null || val === undefined) ? '' : val);
+}
+
+function _escapeHTML(text) {
+  return coerceToString(text).replace(HTML_ESCAPE_CHARS, function(match) {
+    return HTML_ESCAPES[match];
+  });
+}
 
 // Additional public (exposed) methods
 var methods = {
@@ -456,6 +487,10 @@ $.TokenList = function (input, url_or_data, settings) {
     // Private functions
     //
 
+    function escapeHTML(text) {
+      return settings.enableHTML ? text : _escapeHTML(text);
+    }
+
     // Toggles the widget between enabled and disabled state, or according
     // to the [disable] parameter.
     function toggleDisabled(disable) {
@@ -485,8 +520,7 @@ $.TokenList = function (input, url_or_data, settings) {
         if(input_val === (input_val = input_box.val())) {return;}
 
         // Enter new content into resizer and resize input accordingly
-        var escaped = input_val.replace(/&/g, '&amp;').replace(/\s/g,' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        input_resizer.html(escaped);
+        input_resizer.html(_escapeHTML(input_val));
         input_box.width(input_resizer.width() + 30);
     }
 
@@ -720,14 +754,14 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function show_dropdown_searching () {
         if(settings.searchingText) {
-            dropdown.html("<p>"+settings.searchingText+"</p>");
+            dropdown.html("<p>" + escapeHTML(settings.searchingText) + "</p>");
             show_dropdown();
         }
     }
 
     function show_dropdown_hint () {
         if(settings.hintText) {
-            dropdown.html("<p>"+settings.hintText+"</p>");
+            dropdown.html("<p>" + escapeHTML(settings.hintText) + "</p>");
             show_dropdown();
         }
     }
@@ -739,7 +773,14 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Highlight the query part of the search term
     function highlight_term(value, term) {
-        return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + regexp_escape(term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<b>$1</b>");
+        return value.replace(
+          new RegExp(
+            "(?![^&;]+;)(?!<[^<>]*)(" + regexp_escape(term) + ")(?![^<>]*>)(?![^&;]+;)",
+            "gi"
+          ), function(match, p1) {
+            return "<b>" + escapeHTML(p1) + "</b>";
+          }
+        );
     }
 
     function find_value_and_highlight_term(template, value, term) {
@@ -795,7 +836,7 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         } else {
             if(settings.noResultsText) {
-                dropdown.html("<p>"+settings.noResultsText+"</p>");
+                dropdown.html("<p>" + escapeHTML(settings.noResultsText) + "</p>");
                 show_dropdown();
             }
         }
