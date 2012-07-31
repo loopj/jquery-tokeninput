@@ -42,9 +42,13 @@ var DEFAULT_SETTINGS = {
     preventDuplicates: false,
     tokenValue: "id",
 
+    // Behavioral settings
+    allowFreeTagging: false,
+
     // Callbacks
     onResult: null,
     onAdd: null,
+    onFreeTaggingAdd: null,
     onDelete: null,
     onReady: null,
 
@@ -210,7 +214,12 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .blur(function () {
             hide_dropdown();
-            $(this).val("");
+
+            if (settings.allowFreeTagging) {
+              add_freetagging_tokens();
+            } else {
+              $(this).val("");
+            }
             token_list.removeClass(settings.classes.focused);
         })
         .bind("keyup keydown blur update", resize_input)
@@ -284,9 +293,12 @@ $.TokenList = function (input, url_or_data, settings) {
                   if(selected_dropdown_item) {
                     add_token($(selected_dropdown_item).data("tokeninput"));
                     hidden_input.change();
-                    return false;
+                  } else {
+                    add_freetagging_tokens();
+                    event.stopPropagation();
+                    event.preventDefault();
                   }
-                  break;
+                  return false;
 
                 case KEY.ESCAPE:
                   hide_dropdown();
@@ -483,6 +495,23 @@ $.TokenList = function (input, url_or_data, settings) {
                 (keycode >= 96 && keycode <= 111) ||    // numpad 0-9 + - / * .
                 (keycode >= 186 && keycode <= 192) ||   // ; = , - . / ^
                 (keycode >= 219 && keycode <= 222));    // ( \ ) '
+    }
+
+    function add_freetagging_tokens() {
+        var value = $.trim(input_box.val());
+        var tokens = value.split(settings.tokenDelimiter);
+        $.each(tokens, function(i, token) {
+          if (!token) {
+            return;
+          }
+
+          if ($.isFunction(settings.onFreeTaggingAdd)) {
+            token = settings.onFreeTaggingAdd.call(hidden_input, token);
+          }
+          var object = {};
+          object[settings.tokenValue] = object[settings.propertyToSearch] = token;
+          add_token(object);
+        });
     }
 
     // Inner function to a token to the list
