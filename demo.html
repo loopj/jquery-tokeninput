@@ -1,6 +1,6 @@
 <html>
 <head>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript" src="src/jquery.tokeninput.js"></script>
 
     <link rel="stylesheet" href="styles/token-input.css" type="text/css" />
@@ -483,6 +483,20 @@
                     {id: 555, name: "Bob Hoskins"},
                     {id: 9000, name: "Kriss Akabusi"}
                 ]
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2>Free Tagging</h2>
+    <div>
+        <input type="text" id="demo-input-free-tagging" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-free-tagging").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                allowFreeTagging: true
             });
         });
         </script>
