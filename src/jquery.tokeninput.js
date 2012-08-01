@@ -16,6 +16,7 @@ var DEFAULT_SETTINGS = {
     queryParam: "q",
     searchDelay: 300,
     minChars: 1,
+    maxChars: 50,
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
@@ -200,6 +201,7 @@ $.TokenList = function (input, url_or_data, settings) {
             outline: "none"
         })
         .attr("id", settings.idPrefix + input.id)
+        .attr("maxlength", settings.maxChars)
         .focus(function () {
             if (settings.disabled) {
                 return false;
