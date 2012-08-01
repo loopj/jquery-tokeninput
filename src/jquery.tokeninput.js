@@ -54,6 +54,7 @@ var DEFAULT_SETTINGS = {
 
     // Behavioral settings
     allowFreeTagging: false,
+    allowBackEditing: true,
 
     // Callbacks
     onResult: null,
@@ -274,8 +275,12 @@ $.TokenList = function (input, url_or_data, settings) {
                     if(!$(this).val()) {
                         previous_token = input_token.prev();
                         next_token = input_token.next();
+                        var matches = (
+                          previous_token.get(0) === selected_token ||
+                          next_token.get(0) === selected_token
+                        );
 
-                        if((previous_token.length && previous_token.get(0) === selected_token) || (next_token.length && next_token.get(0) === selected_token)) {
+                        if (settings.allowBackEditing && matches) {
                             // Check if there is a previous/next token and it is selected
                             if(event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) {
                                 deselect_token($(selected_token), POSITION.BEFORE);
