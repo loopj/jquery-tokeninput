@@ -57,6 +57,7 @@ var DEFAULT_SETTINGS = {
 
     // Callbacks
     onResult: null,
+    onCachedResult: null,
     onAdd: null,
     onFreeTaggingAdd: null,
     onDelete: null,
@@ -888,6 +889,9 @@ $.TokenList = function (input, url_or_data, settings) {
         var cache_key = query + computeURL();
         var cached_results = cache.get(cache_key);
         if(cached_results) {
+            if ($.isFunction(settings.onCachedResult)) {
+              cached_results = settings.onCachedResult.call(hidden_input, cached_results);
+            }
             populate_dropdown(query, cached_results);
         } else {
             // Are we doing an ajax search or local data search?
@@ -919,10 +923,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 // Attach the success callback
                 ajax_params.success = function(results) {
+                  cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
                   if($.isFunction(settings.onResult)) {
                       results = settings.onResult.call(hidden_input, results);
                   }
-                  cache.add(cache_key, settings.jsonContainer ? results[settings.jsonContainer] : results);
 
                   // only populate the dropdown if the results are associated with the active search query
                   if(input_box.val() === query) {
@@ -938,10 +942,10 @@ $.TokenList = function (input, url_or_data, settings) {
                     return row[settings.propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
                 });
 
+                cache.add(cache_key, results);
                 if($.isFunction(settings.onResult)) {
                     results = settings.onResult.call(hidden_input, results);
                 }
-                cache.add(cache_key, results);
                 populate_dropdown(query, results);
             }
         }
