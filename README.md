@@ -10,3 +10,10 @@ Documentation, Features and Demos
 Full details and documentation can be found on the project page here:
 
 <http://loopj.com/jquery-tokeninput/>
+
+Installation
+------------
+All you have to do is add the gem to your Gemfile:
+```
+gem 'jquery-tokeninput'
+```
