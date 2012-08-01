@@ -895,7 +895,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 var url = computeURL();
                 // Extract exisiting get params
                 var ajax_params = {};
-                ajax_params.data = {};
+                ajax_params.data = [];
                 if(url.indexOf("?") > -1) {
                     var parts = url.split("?");
                     ajax_params.url = parts[0];
@@ -903,14 +903,14 @@ $.TokenList = function (input, url_or_data, settings) {
                     var param_array = parts[1].split("&");
                     $.each(param_array, function (index, value) {
                         var kv = value.split("=");
-                        ajax_params.data[kv[0]] = kv[1];
+                        ajax_params.data.push({name:kv[0], value:kv[1]});
                     });
                 } else {
                     ajax_params.url = url;
                 }
 
                 // Prepare the request
-                ajax_params.data[settings.queryParam] = query;
+                ajax_params.data.push({name:settings.queryParam, value:query});
                 ajax_params.type = settings.method;
                 ajax_params.dataType = settings.contentType;
                 if(settings.crossDomain) {
