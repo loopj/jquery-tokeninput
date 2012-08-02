@@ -29,6 +29,7 @@ var DEFAULT_SETTINGS = {
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
+    placeholderText: null,
     animateDropdown: true,
     theme: null,
     zindex: 999,
@@ -84,7 +85,8 @@ var DEFAULT_CLASSES = {
     selectedDropdownItem: "token-input-selected-dropdown-item",
     inputToken: "token-input-input-token",
     focused: "token-input-focused",
-    disabled: "token-input-disabled"
+    disabled: "token-input-disabled",
+    placeholder: "token-input-placeholder"
 };
 
 // Input box position "enum"
