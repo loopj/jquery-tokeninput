@@ -266,6 +266,8 @@ $.TokenList = function (input, url_or_data, settings) {
             var previous_token;
             var next_token;
 
+            clear_search();
+
             switch(event.keyCode) {
                 case KEY.LEFT:
                 case KEY.RIGHT:
@@ -868,6 +870,14 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_dropdown_item = null;
     }
 
+    var ajaxRequestSequence = 0;
+
+    function clear_search() {
+        ajaxReqeustSequence++;
+        clearTimeout(timeout);
+        timeout = null;
+    }
+
     // Do a search and show the "searching" dropdown if the input is longer
     // than $(input).data("settings").minChars
     function do_search() {
@@ -882,8 +892,10 @@ $.TokenList = function (input, url_or_data, settings) {
                 show_dropdown_searching();
                 clearTimeout(timeout);
 
+                ajaxRequestSequence++;
+                var localSequence = ajaxRequestSequence;
                 timeout = setTimeout(function(){
-                    run_search(query);
+                    run_search(query, localSequence);
                 }, $(input).data("settings").searchDelay);
             } else {
                 hide_dropdown();
@@ -892,7 +904,11 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Do the actual search
-    function run_search(query) {
+    function run_search(query, sequence) {
+        if (sequence != ajaxRequestSequence) {
+            return;
+        }
+
         var cache_key = query + computeURL();
         var cached_results = cache.get(cache_key);
         if(cached_results) {
