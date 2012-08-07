@@ -651,7 +651,7 @@ $.TokenList = function (input, url_or_data, settings) {
             selected_token = token.get(0);
 
             var token_data = $.data(selected_token, "tokeninput");
-            var callback = settings.onSelect;
+            var callback = $(this).data('settings').onSelect;
 
             // Hide input box
             input_box.val("");
