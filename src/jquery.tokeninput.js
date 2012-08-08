@@ -50,7 +50,10 @@ var DEFAULT_SETTINGS = {
     tokenLimit: null,
     tokenDelimiter: ",",
     preventDuplicates: false,
+    
+    //Output Settings
     tokenValue: "id",
+    tokenOutputFormat: "csv", //csv or json
 
     // Behavioral settings
     allowFreeTagging: false,
@@ -738,7 +741,13 @@ $.TokenList = function (input, url_or_data, settings) {
 
             return el[$(input).data("settings").tokenValue];
         });
-        hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
+        if (settings.tokenOutputFormat == "csv") {
+            hidden_input.val(token_values.join(settings.tokenDelimiter));
+        }
+        else//JSON
+        {
+            hidden_input.val(JSON.stringify(saved_tokens));
+        }
 
     }
 
