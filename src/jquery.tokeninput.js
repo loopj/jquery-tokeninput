@@ -332,7 +332,7 @@ $.TokenList = function (input, url_or_data, settings) {
                   if(selected_dropdown_item) {
                     add_token($(selected_dropdown_item).data("tokeninput"));
                     hidden_input.change();
-                  } else {
+                  } else if ($(input).data("settings").allowFreeTagging) {
                     add_freetagging_tokens();
                     event.stopPropagation();
                     event.preventDefault();
