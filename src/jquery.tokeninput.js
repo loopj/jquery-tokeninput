@@ -46,6 +46,12 @@ var DEFAULT_SETTINGS = {
       return "<li><p>" + (this.enableHTML ? string : _escapeHTML(string)) + "</p></li>";
     },
 
+    tokenData: function (item) {
+        return eval({
+            "id": item.id
+        })
+    },
+
     // Tokenization settings
     tokenLimit: null,
     tokenDelimiter: ",",
@@ -583,7 +589,7 @@ $.TokenList = function (input, url_or_data, settings) {
         }
 
         // Store data on the token
-        var token_data = item;
+        var token_data = settings.tokenData(item);
         $.data($this_token.get(0), "tokeninput", item);
 
         // Save this token for duplicate checking
