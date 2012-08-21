@@ -12,6 +12,7 @@
 // Default settings
 var DEFAULT_SETTINGS = {
     // Search settings
+    useDataAttr: false,
     method: "GET",
     queryParam: "q",
     searchDelay: 300,
@@ -184,6 +185,24 @@ $.TokenList = function (input, url_or_data, settings) {
     //
     // Initialization
     //
+
+    //If we're using a data attr grab this.
+    if( $(input).data("settings").useDataAttr )
+    {
+        url_or_data = $(input).data('tokenizerAction');
+
+        //Get the settings from data attributes
+        $.each( $(input).data(), function(setting, value) {
+            if( setting != 'settings' &&
+                    setting != 'tokenInputObject' &&
+                    setting != 'tokenizerAction' &&
+                    setting != '__proto__' )
+            {
+                $(input).data("settings")[setting] = value;
+            }
+        } );
+
+    }
 
     // Configure the data source
     if($.type(url_or_data) === "string" || $.type(url_or_data) === "function") {
