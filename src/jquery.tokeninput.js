@@ -194,9 +194,16 @@ $.TokenList = function (input, url_or_data, settings) {
         //Get the settings from data attributes
         $.each( $(input).data(), function(setting, value) {
             if( setting != 'settings' &&
-                    setting != 'tokenInputObject' &&
-                    setting != 'tokenizerAction' &&
-                    setting != '__proto__' )
+                setting != 'tokenInputObject' &&
+                setting != 'tokenizerAction' &&
+                setting != '__proto__' &&
+                setting != 'onResult' &&
+                setting != 'onAdd' &&
+                setting != 'onDelete' &&
+                setting != 'onReady' &&
+                setting != 'resultFormatter' &&
+                setting != 'tokenFormatter'
+            )
             {
                 $(input).data("settings")[setting] = value;
             }
