@@ -201,7 +201,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 setting != 'onAdd' &&
                 setting != 'onDelete' &&
                 setting != 'onReady' &&
-                setting != 'resultFormatter' &&
+                setting != 'resultsFormatter' &&
                 setting != 'tokenFormatter'
             )
             {
