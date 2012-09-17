@@ -28,6 +28,7 @@ var DEFAULT_SETTINGS = {
     hintText: "Type in a search term",
     noResultsText: "No results",
     searchingText: "Searching...",
+    freeTaggingText: "Use",
     deleteText: "&times;",
     animateDropdown: true,
     theme: null,
@@ -38,7 +39,11 @@ var DEFAULT_SETTINGS = {
 
     resultsFormatter: function(item) {
       var string = item[this.propertyToSearch];
-      return "<li>" + (this.enableHTML ? string : _escapeHTML(string)) + "</li>";
+      if (this.allowFreeTagging && item[this.tokenValue].indexOf(this.freeTaggingTokenValueSign) != -1) {
+         return "<li><b><i>" + this.freeTaggingText + ' "' + (this.enableHTML ? string : _escapeHTML(string)) + '"</i></b></li>';
+      } else {
+         return "<li>" + (this.enableHTML ? string : _escapeHTML(string)) + "</li>";
+      }
     },
 
     tokenFormatter: function(item) {
@@ -54,6 +59,8 @@ var DEFAULT_SETTINGS = {
 
     // Behavioral settings
     allowFreeTagging: false,
+    allowFreeTaggingComma: true,
+    freeTaggingTokenValueSign: "+++",
 
     // Callbacks
     onResult: null,
@@ -329,17 +336,21 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
                 case KEY.COMMA:
-                  if(selected_dropdown_item) {
-                    add_token($(selected_dropdown_item).data("tokeninput"));
-                    hidden_input.change();
-                  } else {
-                    if ($(input).data("settings").allowFreeTagging) {
-                      add_freetagging_tokens();
-                    } else {
-                      $(this).val("");
-                    }
-                    event.stopPropagation();
-                    event.preventDefault();
+                  if (event.keyCode != KEY.COMMA || !($(input).data("settings").allowFreeTagging && $(input).data("settings").allowFreeTaggingComma)) {
+
+                     if(selected_dropdown_item) {
+                       add_token($(selected_dropdown_item).data("tokeninput"));
+                       hidden_input.change();
+                     } else {
+                       if ($(input).data("settings").allowFreeTagging) {
+                          add_freetagging_tokens();
+                       } else {
+                          $(this).val("");
+                       }
+                       event.stopPropagation();
+                       event.preventDefault();
+                     }
+
                   }
                   return false;
 

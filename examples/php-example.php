@@ -14,6 +14,13 @@ $query = sprintf("SELECT id, name from mytable WHERE name LIKE '%%%s%%' ORDER BY
 $arr = array();
 $rs = mysql_query($query);
 
+# If you want to use free tagging, you can add a free object item into result
+# array. You can add this object as the last element of the array
+// $arr[] = array(
+//    "id"=>$freeTaggingTokenValueSign.urlencode($key_word),
+//    "name"=$key_word
+// );
+
 # Collect the results
 while($obj = mysql_fetch_object($rs)) {
     $arr[] = $obj;
