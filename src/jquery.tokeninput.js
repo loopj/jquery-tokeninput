@@ -518,6 +518,11 @@ $.TokenList = function (input, url_or_data, settings) {
             deselect_token($(selected_token), POSITION.END);
         }
         hidden_input.attr('disabled', $(input).data("settings").disabled);
+
+        var callback = $(input).data("settings").onToggleDisabled;
+        if ($.isFunction(callback)) {
+			callback.call(hidden_input, $(input).data("settings").disabled);
+        }
     }
 
     function checkTokenLimit() {
