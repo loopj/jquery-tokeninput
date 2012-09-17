@@ -17,7 +17,7 @@ $rs = mysql_query($query);
 # If you want to use free tagging, you can add a free object item into result
 # array. You can add this object as the last element of the array
 // $arr[] = array(
-//    "id"=>$freeTaggingTokenValueSign.$key_word,
+//    "id"=>$freeTaggingTokenValueSign.urlencode($key_word),
 //    "name"=$key_word
 // );
 
