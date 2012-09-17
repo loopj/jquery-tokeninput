@@ -170,6 +170,11 @@ var methods = {
     changeLocalData: function (items) {
         this.data("tokenInputObject").changeLocalData(items);
         return this;
+    },
+    initialized: function () {
+        if (this.data("tokenInputObject"))
+            return true;
+        else return false;
     }
 }
 
