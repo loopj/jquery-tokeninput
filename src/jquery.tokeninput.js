@@ -67,7 +67,8 @@ var DEFAULT_SETTINGS = {
     idPrefix: "token-input-",
 
     // Keep track if the input is currently in disabled mode
-    disabled: false
+    disabled: false,
+    showDefaultResultSet: false
 };
 
 // Default classes to use when theming
@@ -254,7 +255,10 @@ $.TokenList = function (input, url_or_data, settings) {
                 return false;
             } else
             if ($(input).data("settings").tokenLimit === null || $(input).data("settings").tokenLimit !== token_count) {
-                show_dropdown_hint();
+                if (!$(input).data("settings").showDefaultResultSet)
+                  show_dropdown_hint();
+                else
+                  do_search();
             }
             token_list.addClass($(input).data("settings").classes.focused);
         })
@@ -839,8 +843,8 @@ $.TokenList = function (input, url_or_data, settings) {
 
             $.each(results, function(index, value) {
                 var this_li = $(input).data("settings").resultsFormatter(value);
-
-                this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
+                if (query && query.length) /*NOTE If query is empty it is not necessary to perform expensive queries */
+                  this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
 
                 this_li = $(this_li).appendTo(dropdown_ul);
 
@@ -895,6 +899,11 @@ $.TokenList = function (input, url_or_data, settings) {
     function do_search() {
         var query = input_box.val();
 
+        var callback = $(input).data("settings").onSearch;
+        if ($.isFunction(callback)) {
+            callback.call(hidden_input, query);
+        }
+
         if(query && query.length) {
             if(selected_token) {
                 deselect_token($(selected_token), POSITION.AFTER);
@@ -910,6 +919,9 @@ $.TokenList = function (input, url_or_data, settings) {
             } else {
                 hide_dropdown();
             }
+        } else {
+            if ($(input).data("settings").showDefaultResultSet)
+              run_search(query);
         }
     }
 
@@ -967,9 +979,15 @@ $.TokenList = function (input, url_or_data, settings) {
                 $.ajax(ajax_params);
             } else if($(input).data("settings").local_data) {
                 // Do the search through local data
-                var results = $.grep($(input).data("settings").local_data, function (row) {
-                    return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
-                });
+                var results = [];
+                if (query && query.length > 0) { /* In case of empty query use local data */
+                    results = $.grep($(input).data("settings").local_data, function (row) {
+                        return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+                    });
+                } else {
+                    if($(input).data("settings").showDefaultResultSet)
+                        results = $(input).data("settings").local_data;
+                }
 
                 cache.add(cache_key, results);
                 if($.isFunction($(input).data("settings").onResult)) {
