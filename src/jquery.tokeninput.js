@@ -166,6 +166,10 @@ var methods = {
     setOptions: function(options){
         $(this).data("settings", $.extend({}, $(this).data("settings"), options || {}));
         return this;
+    },
+    changeLocalData: function (items) {
+        this.data("tokenInputObject").changeLocalData(items);
+        return this;
     }
 }
 
@@ -495,6 +499,10 @@ $.TokenList = function (input, url_or_data, settings) {
         toggleDisabled(disable);
     }
 
+    this.changeLocalData = function (items) {
+        settings.local_data = items;
+        cache.flush();
+    };
     //
     // Private functions
     //
@@ -507,7 +515,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // to the [disable] parameter.
     function toggleDisabled(disable) {
         if (typeof disable === 'boolean') {
-            $(input).data("settings").disabled = disable
+            $(input).data("settings").disabled = disable;
         } else {
             $(input).data("settings").disabled = !$(input).data("settings").disabled;
         }
@@ -996,7 +1004,7 @@ $.TokenList.Cache = function (options) {
     var data = {};
     var size = 0;
 
-    var flush = function () {
+    this.flush = function () {
         data = {};
         size = 0;
     };
