@@ -426,6 +426,8 @@ $.TokenList = function (input, url_or_data, settings) {
         .appendTo("body")
         .hide();
 
+    this.dropdown = dropdown;
+
     // Magic element to help us resize the text input
     var input_resizer = $("<tester/>")
         .insertAfter(input_box)
