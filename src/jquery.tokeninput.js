@@ -324,7 +324,6 @@ $.TokenList = function (input, url_or_data, settings) {
                     if(!$(this).val().length) {
                         if(selected_token) {
                             delete_token($(selected_token));
-                            hidden_input.change();
                         } else if(previous_token.length) {
                             select_token($(previous_token.get(0)));
                         }
@@ -344,7 +343,6 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.COMMA:
                   if(selected_dropdown_item) {
                     add_token($(selected_dropdown_item).data("tokeninput"));
-                    hidden_input.change();
                   } else {
                     if ($(input).data("settings").allowFreeTagging) {
                       add_freetagging_tokens();
@@ -599,7 +597,6 @@ $.TokenList = function (input, url_or_data, settings) {
               .click(function () {
                   if (!$(input).data("settings").disabled) {
                       delete_token($(this).parent());
-                      hidden_input.change();
                       return false;
                   }
               });
@@ -765,7 +762,7 @@ $.TokenList = function (input, url_or_data, settings) {
             return el[$(input).data("settings").tokenValue];
         });
         hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
-
+        hidden_input.change();
     }
 
     // Hide and clear the results dropdown
@@ -832,7 +829,6 @@ $.TokenList = function (input, url_or_data, settings) {
                 })
                 .mousedown(function (event) {
                     add_token($(event.target).closest("li").data("tokeninput"));
-                    hidden_input.change();
                     return false;
                 })
                 .hide();
