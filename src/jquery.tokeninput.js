@@ -62,6 +62,9 @@ var DEFAULT_SETTINGS = {
     onFreeTaggingAdd: null,
     onDelete: null,
     onReady: null,
+    onShowDropdown: null,
+    onSearch: null,
+    onToggleDisabled: null,
 
     // Other settings
     idPrefix: "token-input-",
@@ -774,11 +777,17 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     function show_dropdown() {
+		var position = { top: $(token_list).offset().top + $(token_list).outerHeight(), left: $(token_list).offset().left };
+		var callback = $(input).data("settings").onShowDropdown;
+		if ($.isFunction(callback)) {
+			// can be used for position correction. For example borders are not taken into account in default scenario that causes a displacement.
+			position = callback.call(input, token_list, dropdown);
+		}
         dropdown
             .css({
                 position: "absolute",
-                top: $(token_list).offset().top + $(token_list).outerHeight(),
-                left: $(token_list).offset().left,
+                top: position.top,
+                left: position.left,
                 width: $(token_list).outerWidth(),
                 'z-index': $(input).data("settings").zindex
             })
