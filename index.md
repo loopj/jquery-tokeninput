@@ -3,7 +3,7 @@ layout: project
 title: jQuery Tokeninput
 tagline: A jQuery Tokenizing Autocomplete Text Entry
 version: 1.6.0
-github_url: https://github.com/loopj/jquery-tokeninput
+github_repo: jquery-tokeninput
 download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.6.0
 extra_head: |
     <script type="text/javascript" src="https://github.com/loopj/jquery-tokeninput/raw/master/src/jquery.tokeninput.js"></script>
