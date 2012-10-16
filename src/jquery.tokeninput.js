@@ -549,7 +549,6 @@ $.TokenList = function (input, url_or_data, settings) {
     function add_freetagging_tokens() {
         //If allowFreeTaggingDuringSearch option is false and the search is not finished, return from this function
         if (!$.isFunction($(input).data("settings").allowFreeTaggingDuringSearch) && search_in_progress){
-            console.log("non salvo il freetagging");
             return;
         }
 
