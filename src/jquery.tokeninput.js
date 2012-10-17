@@ -127,7 +127,7 @@ var methods = {
         this.data("tokenInputObject").toggleDisabled(disable);
         return this;
     }
-}
+};
 
 // Expose the .tokenInput function to jQuery as a plugin
 $.fn.tokenInput = function (method) {
