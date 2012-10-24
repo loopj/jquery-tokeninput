@@ -1,11 +1,13 @@
 /*
  * jQuery Plugin: Tokenizing Autocomplete Text Entry
- * Version 1.6.0
+ * Version 1.6.0-git
  *
  * Copyright (c) 2009 James Smith (http://loopj.com)
  * Licensed jointly under the GPL and MIT licenses,
  * choose which one suits your project best!
- *
+ * 
+ * Additions by Peter Andrews, ClickSpark LLC
+ * Used under the MIT license.
  */
 
 (function ($) {
