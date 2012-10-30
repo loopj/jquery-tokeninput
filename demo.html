@@ -1,6 +1,6 @@
 <html>
 <head>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript" src="src/jquery.tokeninput.js"></script>
 
     <link rel="stylesheet" href="styles/token-input.css" type="text/css" />
@@ -233,9 +233,12 @@
     </div>
 
 
-    <h2 id="plugin-methods">Using the add, remove and clear Methods</h2>
+    <h2 id="plugin-methods">Using the add, remove, clear and toggleDisabled Methods</h2>
     <div>
-        <a href="#" id="plugin-methods-add">Add Token</a> | <a href="#" id="plugin-methods-remove">Remove Token</a> | <a href="#" id="plugin-methods-clear">Clear Tokens</a><br />
+      <a href="#" id="plugin-methods-add">Add Token</a> | 
+      <a href="#" id="plugin-methods-remove">Remove Token</a> | 
+      <a href="#" id="plugin-methods-clear">Clear Tokens</a> | 
+      <a href="#" id="plugin-methods-toggle-disable">Toggle Disabled</a><br />
         <input type="text" id="demo-input-plugin-methods" name="blah" />
         <input type="button" value="Submit" />
         <script type="text/javascript">
@@ -257,6 +260,13 @@
             // Clear all tokens
             $("#plugin-methods-clear").click(function () {
                 $("#demo-input-plugin-methods").tokenInput("clear");
+                return false;
+            });
+
+
+            // Toggle Disable / Enable the widget
+            $("#plugin-methods-toggle-disable").click(function () {
+                $("#demo-input-plugin-methods").tokenInput("toggleDisabled");
                 return false;
             });
         });
@@ -445,5 +455,270 @@
         });
         </script>
     </div>
+
+    <h2>Change propertyToSearch anytime</h2>
+    <div>
+        <input type="text" id="demo-input-change-propertytosearch-anytime" name="blah" />
+        Search by :<input type="radio" checked="checked" name="search_key" value="first_name" /> First Name
+        <input type="radio" name="search_key" value="last_name" /> Last Name
+        <input type="radio" name="search_key" value="email" /> Email
+        <input type="radio" name="search_key" value="url" /> Url <br />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $('input[name="search_key"]').click(function() {
+              $("#demo-input-change-propertytosearch-anytime").tokenInput("setOptions", {propertyToSearch: $(this).val(), hintText: "Type "+$(this).val()+" here to search"});
+            });
+
+            $("#demo-input-change-propertytosearch-anytime").tokenInput([{
+                "id": 1,
+                "first_name": "Arthur",
+                "last_name": "Godfrey",
+                "email": "arthur_godfrey@nccu.edu",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 2,
+                "first_name": "Adam",
+                "last_name": "Johnson",
+                "email": "wravo@yahoo.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 3,
+                "first_name": "Jeff",
+                "last_name": "Johnson",
+                "email": "bballnine@hotmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 4,
+                "first_name": "Adriana",
+                "last_name": "Jameson",
+                "email": "adriana.jameson@gmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 5,
+                "first_name": "Adriano",
+                "last_name": "Pooley",
+                "email": "adrianolpooley@lautau.com.br",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 6,
+                "first_name": "Alcir",
+                "last_name": "Reis",
+                "email": "alcirreis@yahoo.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 7,
+                "first_name": "Jack",
+                "last_name": "Cunningham",
+                "email": "jcunningham@hotmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 8,
+                "first_name": "Alejandro",
+                "last_name": "Forbes",
+                "email": "alejandforbes@gmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 9,
+                "first_name": "Alessandra",
+                "last_name": "Mineiro",
+                "email": "alc_mineiro@aol.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 10,
+                "first_name": "Alex",
+                "last_name": "Frazo",
+                "email": "alex.frazo@yahoo.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 11,
+                "first_name": "Alexandre",
+                "last_name": "Crawford",
+                "email": "xandycrawford@gmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 12,
+                "first_name": "Alexandre",
+                "last_name": "Lalwani",
+                "email": "alexandrelalwani@globo.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 13,
+                "first_name": "Alexandre",
+                "last_name": "Jokos",
+                "email": "alex.jokos@gmail.com.br",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 14,
+                "first_name": "Alexandre",
+                "last_name": "Paro",
+                "email": "alexandre.paro@uol.com.br",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 15,
+                "first_name": "Andre",
+                "last_name": "Niemeyer",
+                "email": "a.niemeyer@globo.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 16,
+                "first_name": "Alyssa",
+                "last_name": "Fortes",
+                "email": "afort287@yahoo.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 17,
+                "first_name": "Amit",
+                "last_name": "Alvarenga",
+                "email": "amit.alva@gmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 18,
+                "first_name": "Ana Bia",
+                "last_name": "Borges",
+                "email": "abborges@gmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 19,
+                "first_name": "Ana",
+                "last_name": "Akamine",
+                "email": "ana.akamine@uol.com.br",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+              "id": 20,
+                "first_name": "Anderson",
+                "last_name": "Tovoros",
+                "email": "alvarenga.tovoros@gmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 21,
+                "first_name": "Andre",
+                "last_name": "Borges",
+                "email": "andreborges@hotmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 22,
+                "first_name": "Andre",
+                "last_name": "Wexler",
+                "email": "andre.wexler@aol.com.br",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 23,
+                "first_name": "Andre",
+                "last_name": "Williams",
+                "email": "awilly@yahoo.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 24,
+                "first_name": "Andre",
+                "last_name": "Sanford",
+                "email": "andre.sanford@gmail.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 25,
+                "first_name": "Andre",
+                "last_name": "Wayne",
+                "email": "andrewayne@uol.com.br",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 26,
+                "first_name": "Andre",
+                "last_name": "Jackson",
+                "email": "andre.jackson@yahoo.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 27,
+                "first_name": "Andre",
+                "last_name": "Jolly",
+                "email": "andre.jolly@uol.com.br",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            },
+            {
+                "id": 28,
+                "first_name": "Andre",
+                "last_name": "Henderson",
+                "email": "andre.henderson@globo.com",
+                "url": "https://si0.twimg.com/sticky/default_profile_images/default_profile_2_normal.png"
+            }
+          ], {
+              propertyToSearch: "first_name",
+              resultsFormatter: function(item){ return "<li>" + "<img src='" + item.url + "' title='" + item.first_name + " " + item.last_name + "' height='25px' width='25px' />" + "<div style='display: inline-block; padding-left: 10px;'><div class='first_name'>" + item.first_name + " " + item.last_name + "</div><div class='email'>" + item.email + "</div><div class='url'>" + item.url + "</div></div></li>" },
+              tokenFormatter: function(item) { return "<li><p>" + item.first_name + " " + item.last_name + "</p></li>" },
+          });
+        });
+        </script>
+    </div>
+    
+    <h2>Start disabled</h2>
+    <div>
+        <input type="text" id="demo-input-disabled" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-disabled").tokenInput([
+                {id: 7, name: "Ruby"},
+                {id: 11, name: "Python"},
+                {id: 13, name: "JavaScript"},
+                {id: 17, name: "ActionScript"},
+                {id: 19, name: "Scheme"},
+                {id: 23, name: "Lisp"},
+                {id: 29, name: "C#"},
+                {id: 31, name: "Fortran"},
+                {id: 37, name: "Visual Basic"},
+                {id: 41, name: "C"},
+                {id: 43, name: "C++"},
+                {id: 47, name: "Java"}
+            ], {
+                disabled: true,
+                prePopulate: [
+                    {id: 123, name: "Slurms MacKenzie"},
+                    {id: 555, name: "Bob Hoskins"},
+                    {id: 9000, name: "Kriss Akabusi"}
+                ]
+            });
+        });
+        </script>
+    </div>
+
+
+    <h2>Free Tagging</h2>
+    <div>
+        <input type="text" id="demo-input-free-tagging" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-free-tagging").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                allowFreeTagging: true
+            });
+        });
+        </script>
+    </div>
+
 </body>
 </html>
