@@ -955,7 +955,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 cache.add(cache_key, results);
                 if($.isFunction($(input).data("settings").onResult)) {
-                    results = $(input).data("settings").onResult.call(hidden_input, results);
+                    results = $(input).data("settings").onResult.call(hidden_input, results, query);
                 }
                 populate_dropdown(query, results);
             }
