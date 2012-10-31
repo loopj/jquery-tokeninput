@@ -256,6 +256,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
             if ($(input).data("settings").allowFreeTagging) {
               add_freetagging_tokens();
+              hidden_input.change();
             } else {
               $(this).val("");
             }
@@ -335,6 +336,7 @@ $.TokenList = function (input, url_or_data, settings) {
                   } else {
                     if ($(input).data("settings").allowFreeTagging) {
                       add_freetagging_tokens();
+                      hidden_input.change();
                     } else {
                       $(this).val("");
                     }
