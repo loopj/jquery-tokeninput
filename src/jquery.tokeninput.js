@@ -56,6 +56,7 @@ var DEFAULT_SETTINGS = {
 
     // Behavioral settings
     allowFreeTagging: false,
+    allowTabOut: false,
 
     // Callbacks
     onResult: null,
@@ -337,9 +338,16 @@ $.TokenList = function (input, url_or_data, settings) {
                     hidden_input.change();
                   } else {
                     if ($(input).data("settings").allowFreeTagging) {
-                      add_freetagging_tokens();
+                      if($(input).data("settings").allowTabOut && $(this).val() === "") {
+                        return true;
+                      } else {
+                        add_freetagging_tokens();
+                      }
                     } else {
                       $(this).val("");
+                      if($(input).data("settings").allowTabOut) {
+                        return true;
+                      }
                     }
                     event.stopPropagation();
                     event.preventDefault();
