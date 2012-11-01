@@ -252,7 +252,6 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .blur(function () {
             hide_dropdown();
-            $(this).val("");
             token_list.removeClass($(input).data("settings").classes.focused);
 
             if ($(input).data("settings").allowFreeTagging) {
