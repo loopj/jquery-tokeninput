@@ -19,6 +19,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+    allowCreation: false,
 
     // Prepopulation settings
     prePopulate: null,
@@ -29,6 +30,7 @@ var DEFAULT_SETTINGS = {
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
+    createTokenText: "(Create new token)",
     animateDropdown: true,
     theme: null,
     zindex: 999,
@@ -58,6 +60,7 @@ var DEFAULT_SETTINGS = {
 
     // Callbacks
     onResult: null,
+    onCreate: null,
     onCachedResult: null,
     onAdd: null,
     onFreeTaggingAdd: null,
@@ -637,6 +640,11 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         }
 
+        // For newly created tokens, restore the original name without the text saying it is a new token
+        if($(input).data("settings").allowCreation && item.wasCreated) {
+            ($(input).data("settings").tokenValue == "id") ? item.name = item.id : item.name = item[$(input).data("settings").tokenValue]; // restore the name without the token creation text
+        }
+
         // Insert the new tokens
         if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
             insert_token(item);
@@ -946,6 +954,11 @@ $.TokenList = function (input, url_or_data, settings) {
                   if($.isFunction($(input).data("settings").onResult)) {
                       results = $(input).data("settings").onResult.call(hidden_input, results);
                   }
+                  if($(input).data("settings").allowCreation) {
+                      handleCreation(results);
+                  } else {
+                      cache.add(cache_key, $(input).data("settings").jsonContainer ? results[$(input).data("settings").jsonContainer] : results);
+                  }
 
                   // only populate the dropdown if the results are associated with the active search query
                   if(input_box.val() === query) {
@@ -965,8 +978,27 @@ $.TokenList = function (input, url_or_data, settings) {
                 if($.isFunction($(input).data("settings").onResult)) {
                     results = $(input).data("settings").onResult.call(hidden_input, results);
                 }
+                if($(input).data("settings").allowCreation) {
+                    handleCreation(results);
+                } else {
+                    cache.add(cache_key, results);
+                }
                 populate_dropdown(query, results);
             }
+        }
+    }
+
+    function handleCreation(results) {
+        var displayedItem = {};
+        displayedItem['name'] = input_box.val() + ' ' + $(input).data("settings").createTokenText;
+        displayedItem[$(input).data("settings").tokenValue] = input_box.val();
+        displayedItem['wasCreated'] = true;
+        results.push(displayedItem);
+
+        if($.isFunction($(input).data("settings").onCreate)) {
+            var item = {};
+            item[$(input).data("settings").tokenValue] = input_box.val();
+            $(input).data("settings").onCreate.call(hidden_input, item);
         }
     }
 
