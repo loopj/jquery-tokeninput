@@ -775,6 +775,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function show_dropdown_searching () {
         if($(input).data("settings").searchingText) {
             dropdown.html("<p>" + escapeHTML($(input).data("settings").searchingText) + "</p>");
+            selected_dropdown_item = null;
             show_dropdown();
         }
     }
@@ -857,6 +858,7 @@ $.TokenList = function (input, url_or_data, settings) {
         } else {
             if($(input).data("settings").noResultsText) {
                 dropdown.html("<p>" + escapeHTML($(input).data("settings").noResultsText) + "</p>");
+                selected_dropdown_item = null;
                 show_dropdown();
             }
         }
