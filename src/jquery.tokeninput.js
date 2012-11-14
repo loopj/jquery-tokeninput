@@ -311,14 +311,14 @@ $.TokenList = function (input, url_or_data, settings) {
       add_token($(selected_dropdown_item).data("tokeninput"));
       hidden_input.change();
       return false;
-    };
+    }
     
     function addCurrentTokenInputValue() {
       var currentTokenInputItem = {"name": $("#" + settings.idPrefix + input.id).val()};
       add_token(currentTokenInputItem);
       hidden_input.change();
       return false;
-    };
+    }
 
     // Keep a reference to the original input box
     var hidden_input = $(input)
