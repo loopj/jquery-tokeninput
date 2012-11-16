@@ -1,6 +1,6 @@
 /*
  * jQuery Plugin: Tokenizing Autocomplete Text Entry
- * Version 1.6.0-git
+ * Version 1.6.0-git-1
  *
  * Copyright (c) 2009 James Smith (http://loopj.com)
  * Licensed jointly under the GPL and MIT licenses,
@@ -960,6 +960,12 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 // Prepare the request
                 ajax_params.data[$(input).data("settings").queryParam] = query;
+                parents = [];
+                $.each($(input).data("settings").parent, function(k, v) {
+                    parents.push($("#"+v).val());
+                });
+                ajax_params.data['parent'] = JSON.stringify(parents);
+                tokenquery = ajax_params.data;
                 ajax_params.type = $(input).data("settings").method;
                 ajax_params.dataType = $(input).data("settings").contentType;
                 if($(input).data("settings").crossDomain) {
