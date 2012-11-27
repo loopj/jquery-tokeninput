@@ -59,6 +59,7 @@ var DEFAULT_SETTINGS = {
 
     // Behavioral settings
     allowFreeTagging: false,
+    allowTabOut: false,
 
     // Callbacks
     onResult: null,
@@ -172,7 +173,7 @@ var methods = {
         $(this).data("settings", $.extend({}, $(this).data("settings"), options || {}));
         return this;
     }
-}
+};
 
 // Expose the .tokenInput function to jQuery as a plugin
 $.fn.tokenInput = function (method) {
@@ -354,9 +355,16 @@ $.TokenList = function (input, url_or_data, settings) {
                     hidden_input.change();
                   } else {
                     if ($(input).data("settings").allowFreeTagging) {
-                      add_freetagging_tokens();
+                      if($(input).data("settings").allowTabOut && $(this).val() === "") {
+                        return true;
+                      } else {
+                        add_freetagging_tokens();
+                      }
                     } else {
                       $(this).val("");
+                      if($(input).data("settings").allowTabOut) {
+                        return true;
+                      }
                     }
                     event.stopPropagation();
                     event.preventDefault();
@@ -488,11 +496,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 delete_token($(this));
             }
         });
-    }
+    };
 
     this.add = function(item) {
         add_token(item);
-    }
+    };
 
     this.remove = function(item) {
         token_list.children("li").each(function() {
@@ -510,15 +518,15 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
             }
         });
-    }
+    };
 
     this.getTokens = function() {
         return saved_tokens;
-    }
+    };
 
     this.toggleDisabled = function(disable) {
         toggleDisabled(disable);
-    }
+    };
 
     //
     // Private functions
