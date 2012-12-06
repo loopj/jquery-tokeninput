@@ -862,10 +862,10 @@ $.TokenList = function (input, url_or_data, settings) {
             } else if(settings.noResult) {
                 dropdown_markup = settings.noResults;
             } else if(settings.noResultsText) {
-                dropdown_markup = "<p>" + escapeHTML($(input).data("settings").noResultsText) + "</p>";
+                dropdown_markup = settings.noResultsText;
             }
             if (dropdown_markup) {
-                dropdown.html(dropdown_markup);
+                dropdown.html("<p>" + escapeHTML(dropdown_markup) + "</p>");
                 show_dropdown();
             }
         }
