@@ -809,6 +809,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Populate the results dropdown with some results
     function populate_dropdown (query, results) {
+        var settings = $(input).data("settings");
         if(results && results.length) {
             dropdown.empty();
             var dropdown_ul = $("<ul>")
@@ -823,7 +824,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 })
                 .hide();
 
-            if ($(input).data("settings").resultsLimit && results.length > $(input).data("settings").resultsLimit) {
+            if (settings.resultsLimit && results.length > $(input).data("settings").resultsLimit) {
                 results = results.slice(0, $(input).data("settings").resultsLimit);
             }
 
@@ -849,14 +850,22 @@ $.TokenList = function (input, url_or_data, settings) {
 
             show_dropdown();
 
-            if($(input).data("settings").animateDropdown) {
+            if(settings.animateDropdown) {
                 dropdown_ul.slideDown("fast");
             } else {
                 dropdown_ul.show();
             }
         } else {
-            if($(input).data("settings").noResultsText) {
-                dropdown.html("<p>" + escapeHTML($(input).data("settings").noResultsText) + "</p>");
+            var dropdown_markup;
+            if($.isFunction(settings.noResults)) {
+                dropdown_markup = settings.noResults.call(this, query);
+            } else if(settings.noResult) {
+                dropdown_markup = settings.noResults;
+            } else if(settings.noResultsText) {
+                dropdown_markup = "<p>" + escapeHTML($(input).data("settings").noResultsText) + "</p>";
+            }
+            if (dropdown_markup) {
+                dropdown.html(dropdown_markup);
                 show_dropdown();
             }
         }
