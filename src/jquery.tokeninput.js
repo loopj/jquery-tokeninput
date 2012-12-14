@@ -453,6 +453,7 @@ $.TokenList = function (input, url_or_data, settings) {
         $.each(li_data, function (index, value) {
             insert_token(value);
             checkTokenLimit();
+            input_box.attr("placeholder", null)
         });
     }
 
@@ -739,7 +740,6 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Remove this token from the saved list
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
-        // If there are no tokens left, restore the placeholder
         if (saved_tokens.length == 0) {
             input_box.attr("placeholder", settings.placeholder)
         }
