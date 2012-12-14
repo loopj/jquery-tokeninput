@@ -30,6 +30,7 @@ var DEFAULT_SETTINGS = {
     searchingText: "Searching...",
     deleteText: "&times;",
     animateDropdown: true,
+    placeholder: null,
     theme: null,
     zindex: 999,
     resultsLimit: null,
@@ -364,6 +365,10 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         });
 
+    // Keep reference for placeholder
+    if (settings.placeholder)
+        input_box.attr("placeholder", settings.placeholder)
+
     // Keep a reference to the original input box
     var hidden_input = $(input)
                            .hide()
@@ -503,6 +508,9 @@ $.TokenList = function (input, url_or_data, settings) {
         toggleDisabled(disable);
     };
 
+    // Resize input to maximum width so the placeholder can be seen
+    resize_input();
+
     //
     // Private functions
     //
@@ -539,9 +547,13 @@ $.TokenList = function (input, url_or_data, settings) {
     function resize_input() {
         if(input_val === (input_val = input_box.val())) {return;}
 
+        // Get width left on the current line
+        var width_left = token_list.width() - input_box.offset().left - token_list.offset().left;
         // Enter new content into resizer and resize input accordingly
         input_resizer.html(_escapeHTML(input_val));
-        input_box.width(input_resizer.width() + 30);
+        // Get maximum width, minimum the size of input and maximum the widget's width
+        input_box.width(Math.min(token_list.width(),
+                                 Math.max(width_left, input_resizer.width() + 30)));
     }
 
     function is_printable_character(keycode) {
@@ -637,9 +649,14 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         }
 
+        // Squeeze input_box so we force no unnecessary line break
+        input_box.width(0);
+
         // Insert the new tokens
         if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
             insert_token(item);
+            // Remove the placeholder so it's not seen after you've added a token
+            input_box.attr("placeholder", null)
             checkTokenLimit();
         }
 
@@ -722,6 +739,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Remove this token from the saved list
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
+        // If there are no tokens left, restore the placeholder
+        if (saved_tokens.length == 0) {
+            input_box.attr("placeholder", settings.placeholder)
+        }
         if(index < selected_token_index) selected_token_index--;
 
         // Update the hidden input
@@ -1021,3 +1042,4 @@ $.TokenList.Cache = function (options) {
     };
 };
 }(jQuery));
+
