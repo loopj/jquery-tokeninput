@@ -29,6 +29,7 @@ var DEFAULT_SETTINGS = {
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
+    placeHolderText: '',
     animateDropdown: true,
     theme: null,
     zindex: 999,
@@ -241,7 +242,8 @@ $.TokenList = function (input, url_or_data, settings) {
             outline: "none"
         })
         .attr("id", $(input).data("settings").idPrefix + input.id)
-        .focus(function () {
+        .attr("placeholder", $(input).data("settings").placeHolderText)
+		.focus(function () {
             if ($(input).data("settings").disabled) {
                 return false;
             } else
