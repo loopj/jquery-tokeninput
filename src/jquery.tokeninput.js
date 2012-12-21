@@ -252,14 +252,12 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .blur(function () {
             hide_dropdown();
-            token_list.removeClass($(input).data("settings").classes.focused);
-
+            
             if ($(input).data("settings").allowFreeTagging) {
               add_freetagging_tokens();
-              $(this).val("");
-            } else {
-              $(this).val("");
             }
+            
+            $(this).val("");
             token_list.removeClass($(input).data("settings").classes.focused);
         })
         .bind("keyup keydown blur update", resize_input)
