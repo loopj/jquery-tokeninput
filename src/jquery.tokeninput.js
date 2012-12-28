@@ -19,7 +19,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
-	reuseLargerResult: false,
+    reuseLargerResult: false,
 	
     // Prepopulation settings
     prePopulate: null,
@@ -904,11 +904,12 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Do the actual search
     function run_search(query) {
-        var cache_key = query + computeURL();
-        var cached_results = cache.get(cache_key);
-		if (!cached_results && $(input).data("settings").reuseLargerResult){
-			cached_results = cache.reuse(query,computeURL(),$(input).data("settings").propertyToSearch);
-		}
+    	$(input).attr("id") == "" ? $(input).attr($(input).get(0).nodeName + $.now()) : "";
+    	var cache_id = computeURL() !== undefined ? computeURL() : $(input).attr("id");
+    	cache_id = "___" + cache_id;
+        //var cache_key = query + computeURL();
+        var cache_key = query + cache_id;
+        var cached_results = $(input).data("settings").reuseLargerResult ? cache.reuse(query,cache_id,$(input).data("settings").propertyToSearch) : cache.get(cache_key);
         if(cached_results) {
             if ($.isFunction($(input).data("settings").onCachedResult)) {
               cached_results = $(input).data("settings").onCachedResult.call(hidden_input, cached_results);
@@ -1021,20 +1022,20 @@ $.TokenList.Cache = function (options) {
     this.get = function (query) {
         return data[query];
     };
-	this.reuse = function (query, queryURL, propertyToSearch) {
-		var retData = null;
-		var cache_key = query + queryURL;
-		for (i = query.length; i > 0; i--){
-			var check_cache_key = query.substr(0,i) + queryURL;
-			var results = this.get(check_cache_key);
-			if (results) {
-				retData = $.grep(results, function (row) {
-                    return row[propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
-                });
-				this.add(cache_key,retData);
-				break;
-			}
+    this.reuse = function (query, queryURL, propertyToSearch) {
+	var retData = null;
+	var cache_key = query + queryURL;
+	for (i = query.length; i > 0; i--){
+		var check_cache_key = query.substr(0,i) + queryURL;
+		var results = this.get(check_cache_key);
+		if (results) {
+			retData = $.grep(results, function (row) {
+			    return row[propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+			});
+			this.add(cache_key,retData);
+			break;
 		}
+	}
         return retData;
     };
 };
