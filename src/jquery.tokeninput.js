@@ -19,7 +19,8 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
-
+	reuseLargerResult: false,
+	
     // Prepopulation settings
     prePopulate: null,
     processPrePopulate: false,
@@ -905,6 +906,9 @@ $.TokenList = function (input, url_or_data, settings) {
     function run_search(query) {
         var cache_key = query + computeURL();
         var cached_results = cache.get(cache_key);
+		if (!cached_results && $(input).data("settings").reuseLargerResult){
+			cached_results = cache.reuse(query,computeURL(),$(input).data("settings").propertyToSearch);
+		}
         if(cached_results) {
             if ($.isFunction($(input).data("settings").onCachedResult)) {
               cached_results = $(input).data("settings").onCachedResult.call(hidden_input, cached_results);
@@ -1016,6 +1020,22 @@ $.TokenList.Cache = function (options) {
 
     this.get = function (query) {
         return data[query];
+    };
+	this.reuse = function (query, queryURL, propertyToSearch) {
+		var retData = null;
+		var cache_key = query + queryURL;
+		for (i = query.length; i > 0; i--){
+			var check_cache_key = query.substr(0,i) + queryURL;
+			var results = this.get(check_cache_key);
+			if (results) {
+				retData = $.grep(results, function (row) {
+                    return row[propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+                });
+				this.add(cache_key,retData);
+				break;
+			}
+		}
+        return retData;
     };
 };
 }(jQuery));
