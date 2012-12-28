@@ -856,7 +856,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 // Prepare the request
                 
                 if(settings.limitParam && settings.resultsLimit){
-                    ajax_params.data[settings.resultsLimit] = settings.limitParam;
+                    ajax_params.data[settings.limitParam] = settings.resultsLimit;
                 }
                 
                 ajax_params.data[settings.queryParam] = query;
