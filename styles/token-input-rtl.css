@@ -1,0 +1,8 @@
+/* Fixing tokeninput style #1: Token vertical list for RTL*/
+li.token-input-token p {
+    float: right;
+}
+
+li.token-input-token span {
+    float: left;
+}
