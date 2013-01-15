@@ -1,8 +1,0 @@
-/* Fixing tokeninput style #2: Facebook style to RTL */
-li.token-input-token-facebook {
-    float: right;
-}
-
-li.token-input-input-token-facebook {
-    float: right;
-}
