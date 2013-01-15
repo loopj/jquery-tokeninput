@@ -35,6 +35,8 @@ var DEFAULT_SETTINGS = {
     zindex: 999,
     resultsLimit: null,
 
+    //Behavioral settings
+    immediateDeletion:false,
     enableHTML: false,
 
     resultsFormatter: function(item) {
@@ -309,13 +311,15 @@ $.TokenList = function (input, url_or_data, settings) {
                     previous_token = input_token.prev();
 
                     if(!$(this).val().length) {
-                        if(selected_token) {
+                        if ($(input).data("settings").immediateDeletion) {
+                            select_token($(previous_token.get(0)));
+                        }
+                        if (selected_token) {
                             delete_token($(selected_token));
                             hidden_input.change();
                         } else if(previous_token.length) {
                             select_token($(previous_token.get(0)));
                         }
-
                         return false;
                     } else if($(this).val().length === 1) {
                         hide_dropdown();
