@@ -14,6 +14,8 @@ var DEFAULT_SETTINGS = {
     // Search settings
     method: "GET",
     queryParam: "q",
+    filterServer: false,
+    filterParam: "f",
     searchDelay: 300,
     minChars: 1,
     propertyToSearch: "name",
@@ -113,6 +115,7 @@ var KEY = {
     UP: 38,
     RIGHT: 39,
     DOWN: 40,
+    DELETE: 46,
     NUMPAD_ENTER: 108,
     COMMA: 188
 };
@@ -308,17 +311,18 @@ $.TokenList = function (input, url_or_data, settings) {
                     break;
 
                 case KEY.BACKSPACE:
-                    previous_token = input_token.prev();
+                case KEY.DELETE:
+                    focus_token = event.keyCode === KEY.BACKSPACE ? input_token.prev() : input_token.next();
 
                     if(!$(this).val().length) {
                         if ($(input).data("settings").immediateDeletion) {
-                            select_token($(previous_token.get(0)));
+                            select_token($(focus_token.get(0)));
                         }
                         if (selected_token) {
                             delete_token($(selected_token));
                             hidden_input.change();
-                        } else if(previous_token.length) {
-                            select_token($(previous_token.get(0)));
+                        } else if (focus_token.length) {
+                            select_token($(focus_token.get(0)));
                         }
                         return false;
                     } else if($(this).val().length === 1) {
@@ -957,6 +961,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 // Prepare the request
                 ajax_params.data[$(input).data("settings").queryParam] = query;
+                if ($(input).data("settings").filterServer) ajax_params.data[$(input).data("settings").filterParam] = JSON.stringify($(input).data("tokenInputObject").getTokens());
                 ajax_params.type = $(input).data("settings").method;
                 ajax_params.dataType = $(input).data("settings").contentType;
                 if($(input).data("settings").crossDomain) {
