@@ -237,7 +237,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var input_val;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\"  autocomplete=\"off\">")
+    var input_box = $("<input type=\"text\"  autocomplete=\"off\" autocapitalize=\"off\">")
         .css({
             outline: "none"
         })
@@ -253,11 +253,11 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .blur(function () {
             hide_dropdown();
-            
+
             if ($(input).data("settings").allowFreeTagging) {
               add_freetagging_tokens();
             }
-            
+
             $(this).val("");
             token_list.removeClass($(input).data("settings").classes.focused);
         })
