@@ -335,14 +335,14 @@ $.TokenList = function (input, url_or_data, settings) {
                   } else {
                     if ($(input).data("settings").allowFreeTagging) {
                       if($(input).data("settings").allowTabOut && $(this).val() === "") {
-                        return true;
+                        return event.keyCode == KEY.TAB;
                       } else {
                         add_freetagging_tokens();
                       }
                     } else {
                       $(this).val("");
                       if($(input).data("settings").allowTabOut) {
-                        return true;
+                        return event.keyCode == KEY.TAB;
                       }
                     }
                     event.stopPropagation();
