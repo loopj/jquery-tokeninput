@@ -112,7 +112,30 @@ var KEY = {
     RIGHT: 39,
     DOWN: 40,
     NUMPAD_ENTER: 108,
-    COMMA: 188
+    COMMA: 188,
+    SHIFT: 16,
+    CTRL: 17,
+    ALT: 18,
+    PAUSE_BREAK: 19,
+    CAPS_LOCK: 20,
+    INSERT: 45,
+    LEFT_WINDOW_KEY: 91,
+    RIGHT_WINDOW_KEY: 92,
+    SELECT_KEY: 93,
+    F1: 112,
+    F2: 113,
+    F3: 114,
+    F4: 115,
+    F5: 116,
+    F6: 117,
+    F7: 118,
+    F8: 119,
+    F9: 120,
+    F10: 121,
+    F11: 122,
+    F12: 123,
+    NUM_LOCK: 144,
+    SCROLL_LOCK: 145,
 };
 
 var HTML_ESCAPES = {
@@ -292,10 +315,12 @@ $.TokenList = function (input, url_or_data, settings) {
                     } else {
                         var dropdown_item = null;
 
-                        if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
+                        if(event.keyCode === KEY.DOWN) {
                             dropdown_item = $(selected_dropdown_item).next();
-                        } else {
+                        } else if(event.keyCode === KEY.UP) {
                             dropdown_item = $(selected_dropdown_item).prev();
+                        } else {
+                            return true;
                         }
 
                         if(dropdown_item.length) {
@@ -335,14 +360,14 @@ $.TokenList = function (input, url_or_data, settings) {
                   } else {
                     if ($(input).data("settings").allowFreeTagging) {
                       if($(input).data("settings").allowTabOut && $(this).val() === "") {
-                        return true;
+                        return event.keyCode == KEY.TAB;
                       } else {
                         add_freetagging_tokens();
                       }
                     } else {
                       $(this).val("");
                       if($(input).data("settings").allowTabOut) {
-                        return true;
+                        return event.keyCode == KEY.TAB;
                       }
                     }
                     event.stopPropagation();
@@ -352,6 +377,32 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 case KEY.ESCAPE:
                   hide_dropdown();
+                  return true;
+
+                case KEY.SHIFT:
+                case KEY.CTRL:
+                case KEY.ALT:
+                case KEY.PAUSE_BREAK:
+                case KEY.CAPS_LOCK:
+                case KEY.INSERT:
+                case KEY.LEFT_WINDOW_KEY:
+                case KEY.RIGHT_WINDOW_KEY:
+                case KEY.SELECT_KEY:
+                case KEY.F1:
+                case KEY.F2:
+                case KEY.F3:
+                case KEY.F4:
+                case KEY.F5:
+                case KEY.F6:
+                case KEY.F7:
+                case KEY.F8:
+                case KEY.F9:
+                case KEY.F10:
+                case KEY.F11:
+                case KEY.F12:
+                case KEY.NUM_LOCK:
+                case KEY.SCROLL_LOCK:
+                  // ignore remaining keys which don't alter text
                   return true;
 
                 default:
@@ -783,9 +834,9 @@ $.TokenList = function (input, url_or_data, settings) {
         dropdown
             .css({
                 position: "absolute",
-                top: $(token_list).offset().top + $(token_list).height(),
+                top: $(token_list).offset().top + $(token_list).outerHeight(),
                 left: $(token_list).offset().left,
-                width: $(token_list).width(),
+                width: $(token_list).outerWidth(),
                 'z-index': $(input).data("settings").zindex
             })
             .show();
