@@ -61,7 +61,7 @@ var DEFAULT_SETTINGS = {
     onResult: null,
     onCachedResult: null,
     onAdd: null,
-    onFreeTaggingAdd: null,
+    onBeforeAdd: null,
     onDelete: null,
     onReady: null,
 
@@ -570,12 +570,9 @@ $.TokenList = function (input, url_or_data, settings) {
             return;
           }
 
-          if ($.isFunction($(input).data("settings").onFreeTaggingAdd)) {
-            token = $(input).data("settings").onFreeTaggingAdd.call(hidden_input, token);
-          }
           var object = {};
           object[$(input).data("settings").tokenValue] = object[$(input).data("settings").propertyToSearch] = token;
-          add_token(object);
+          add_token(object, true);
         });
     }
 
@@ -625,7 +622,12 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Add a token to the token list based on user input
-    function add_token (item) {
+    function add_token (item, isNewToken) {
+        
+        if($.isFunction($(input).data("settings").onBeforeAdd)) {
+           item = $(input).data("settings").onBeforeAdd.call($(input).data("settings"), item, isNewToken);
+        }
+        
         var callback = $(input).data("settings").onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
