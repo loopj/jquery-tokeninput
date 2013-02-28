@@ -537,7 +537,6 @@ $.TokenList = function (input, url_or_data, settings) {
 
     function checkTokenLimit() {
         if($(input).data("settings").tokenLimit !== null && token_count >= $(input).data("settings").tokenLimit) {
-            input_box.hide();
             hide_dropdown();
             return;
         }
@@ -617,7 +616,6 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Check the token limit
         if($(input).data("settings").tokenLimit !== null && token_count >= $(input).data("settings").tokenLimit) {
-            input_box.hide();
             hide_dropdown();
         }
 
@@ -908,8 +906,12 @@ $.TokenList = function (input, url_or_data, settings) {
             if(selected_token) {
                 deselect_token($(selected_token), POSITION.AFTER);
             }
-
-            if(query.length >= $(input).data("settings").minChars) {
+            
+            cancelSearch = false;
+            if( $(input).data("settings").tokenLimit != null && token_count >= $(input).data("settings").tokenLimit )
+              cancelSearch = true;
+            
+            if(query.length >= $(input).data("settings").minChars && !cancelSearch) {
                 show_dropdown_searching();
                 clearTimeout(timeout);
 
@@ -1040,4 +1042,3 @@ $.TokenList.Cache = function (options) {
     };
 };
 }(jQuery));
-
