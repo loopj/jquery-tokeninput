@@ -740,7 +740,8 @@ $.TokenList = function (input, url_or_data, settings) {
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
         if (saved_tokens.length == 0 && settings.placeholder) {
             input_box.attr("placeholder", settings.placeholder)
-            resize_input();
+            input_val = null;  // bust the resize_input cache
+            resize_input();    // grow the input to show as much of the placeholder as possible
         }
         if(index < selected_token_index) selected_token_index--;
 
