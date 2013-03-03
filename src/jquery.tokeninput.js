@@ -56,6 +56,7 @@ var DEFAULT_SETTINGS = {
     // Behavioral settings
     allowFreeTagging: false,
     allowTabOut: false,
+    allowFreeTaggingDuringSearch: true,
 
     // Callbacks
     onResult: null,
