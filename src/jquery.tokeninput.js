@@ -19,6 +19,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+    clearEmptyQueries: true,
 
     // Prepopulation settings
     prePopulate: null,
@@ -258,7 +259,9 @@ $.TokenList = function (input, url_or_data, settings) {
               add_freetagging_tokens();
             }
 
-            $(this).val("");
+            if ($(input).data("settings").clearEmptyQueries) {
+                $(this).val("");
+            }
             token_list.removeClass($(input).data("settings").classes.focused);
         })
         .bind("keyup keydown blur update", resize_input)
