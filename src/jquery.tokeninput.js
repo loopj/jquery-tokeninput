@@ -376,6 +376,8 @@ $.TokenList = function (input, url_or_data, settings) {
                            })
                            .blur(function () {
                                input_box.blur();
+                               //return the object to this can be referenced in the callback functions.
+                               return hidden_input;
                            });
 
     // Keep a reference to the selected token and dropdown item
