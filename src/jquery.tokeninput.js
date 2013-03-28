@@ -947,7 +947,15 @@ $.TokenList = function (input, url_or_data, settings) {
                     var param_array = parts[1].split("&");
                     $.each(param_array, function (index, value) {
                         var kv = value.split("=");
-                        ajax_params.data[kv[0]] = kv[1];
+                        if(kv[0] in ajax_params.data){
+                            if($.isArray(ajax_params.data[kv[0]])){
+                                ajax_params.data[kv[0]].push(kv[1]);
+                            }else{
+                                ajax_params.data[kv[0]] = [ajax_params.data[kv[0]], kv[1]];
+                            }
+                        }else{
+                            ajax_params.data[kv[0]] = kv[1];
+                        }
                     });
                 } else {
                     ajax_params.url = url;
