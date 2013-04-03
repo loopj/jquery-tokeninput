@@ -168,6 +168,10 @@ var methods = {
     setOptions: function(options){
         $(this).data("settings", $.extend({}, $(this).data("settings"), options || {}));
         return this;
+    },
+    setData: function(items) {
+        this.data("settings").local_data = items;
+        return this;
     }
 };
 
