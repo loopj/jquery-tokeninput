@@ -168,6 +168,17 @@ var methods = {
     setOptions: function(options){
         $(this).data("settings", $.extend({}, $(this).data("settings"), options || {}));
         return this;
+    },
+    destroy: function () {
+        if(this.data("tokenInputObject")){
+            this.data("tokenInputObject").clear();
+            var tmpInput = this;
+            var closest = this.parent();
+            closest.empty();
+            tmpInput.show();
+            closest.append(tmpInput);
+            return tmpInput;
+        }
     }
 };
 
