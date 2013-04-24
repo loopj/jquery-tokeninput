@@ -888,6 +888,9 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         } else {
             if($(input).data("settings").noResultsText) {
+                if(selected_dropdown_item) {
+                    deselect_dropdown_item($(selected_dropdown_item));
+                }
                 dropdown.html("<p>" + escapeHTML($(input).data("settings").noResultsText) + "</p>");
                 show_dropdown();
             }
