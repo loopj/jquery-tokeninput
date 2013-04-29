@@ -921,7 +921,11 @@ $.TokenList = function (input, url_or_data, settings) {
             if(selected_token) {
                 deselect_token($(selected_token), POSITION.AFTER);
             }
-
+            
+            if (selected_dropdown_item) {
+                deselect_dropdown_item($(selected_dropdown_item));
+            }
+            
             if(query.length >= $(input).data("settings").minChars) {
                 show_dropdown_searching();
                 clearTimeout(timeout);
