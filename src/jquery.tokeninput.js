@@ -161,6 +161,9 @@ var methods = {
     get: function() {
         return this.data("tokenInputObject").getTokens();
     },
+    getSearchTerm: function() {
+        return this.data("tokenInputObject").getSearchTerm();
+    },
     toggleDisabled: function(disable) {
         this.data("tokenInputObject").toggleDisabled(disable);
         return this;
@@ -514,6 +517,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
     this.getTokens = function() {
         return saved_tokens;
+    };
+
+    this.getSearchTerm = function() {
+        return input_box.val();
     };
 
     this.toggleDisabled = function(disable) {
