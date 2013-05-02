@@ -963,6 +963,15 @@ $.TokenList = function (input, url_or_data, settings) {
                 } else {
                     ajax_params.url = url;
                 }
+				
+				//add params passed in as urlParams
+                if (settings.urlParams != null) {
+                    for (var key in settings.urlParams) {
+                        if (settings.urlParams.hasOwnProperty(key)) {
+                            ajax_params.data[key] = settings.urlParams[key];
+                        }
+                    }
+                }
 
                 // Prepare the request
                 ajax_params.data[$(input).data("settings").queryParam] = query;
