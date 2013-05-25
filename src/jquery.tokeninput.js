@@ -436,7 +436,7 @@ $.TokenList = function (input, url_or_data, settings) {
     // The list to store the dropdown items in
     var dropdown = $("<div>")
         .addClass($(input).data("settings").classes.dropdown)
-        .appendTo("body")
+        .appendTo("html")
         .hide();
 
     // Magic element to help us resize the text input
