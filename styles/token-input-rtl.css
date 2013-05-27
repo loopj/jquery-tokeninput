@@ -15,6 +15,23 @@ li.token-input-input-token-facebook {
     float: right;
     margin-right: 5px;
 }
+li.token-input-token-facebook span{
+    margin-right: 5px;
+    margin-left: 0;
+}
+/* Fixing tokeninput style "facebook-auto style" to RTL */
+li.token-input-token-facebook-auto {
+    float: right;
+}
+
+li.token-input-input-token-facebook-auto {
+    float: right;
+    margin-right: 5px;
+}
+li.token-input-token-facebook-auto span{
+    margin-right: 5px;
+    margin-left: 0;
+}
 /* Fixing tokeninput style "Mac style" to RTL */
 li.token-input-input-token-mac {
     float: right;
