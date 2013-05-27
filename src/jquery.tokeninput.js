@@ -36,7 +36,10 @@ var DEFAULT_SETTINGS = {
     theme: null,
     zindex: 999,
     resultsLimit: null,
-    rtl:false,
+    rtl: false,
+
+    //Interacting with another tokenInput object
+    tokenParent: "",
 
     enableHTML: false,
 
@@ -690,6 +693,19 @@ $.TokenList = function (input, url_or_data, settings) {
 
             // Hide dropdown if it is visible (eg if we clicked to select token)
             hide_dropdown();
+
+            if ($(input).data("settings").tokenParent != "") {
+                var suggestions = $(input).data("tokenInputObject").getTokens();
+                var selected = [];
+                for (var i = 0; i < suggestions.length; i++) {
+                    if (suggestions[i].name == token.find("p").text()) {
+                        selected = suggestions[i];
+                        break;
+                    }
+                }
+                $("#" + $(input).data("settings").tokenParent).tokenInput("add", selected);
+                delete_token(token);
+            }
         }
     }
 
@@ -891,7 +907,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Highlight an item in the results dropdown
     function select_dropdown_item (item) {
-        if(item) {
+        if (item) {
             if(selected_dropdown_item) {
                 deselect_dropdown_item($(selected_dropdown_item));
             }
