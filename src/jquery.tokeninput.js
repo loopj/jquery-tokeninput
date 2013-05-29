@@ -380,7 +380,13 @@ $.TokenList = function (input, url_or_data, settings) {
                     }
                     break;
             }
-        });
+        })
+        //If the input object get's removed, make sure to remove the dropdown if it's still open
+        .on('remove', function () {
+            var c = DEFAULT_CLASSES.dropdown;
+            $('.' + c).remove();
+        })
+        ;
 
     // Keep reference for placeholder
     if (settings.placeholder)
