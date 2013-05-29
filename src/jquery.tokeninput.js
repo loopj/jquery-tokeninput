@@ -19,6 +19,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+    extraParams: {},
 
     // Prepopulation settings
     prePopulate: null,
@@ -34,6 +35,7 @@ var DEFAULT_SETTINGS = {
     theme: null,
     zindex: 999,
     resultsLimit: null,
+    placeHolderText: '',
 
     enableHTML: false,
 
@@ -252,13 +254,19 @@ $.TokenList = function (input, url_or_data, settings) {
         .css({
             outline: "none"
         })
+        .attr("placeholder", $(input).data("settings").placeHolderText)
         .attr("id", $(input).data("settings").idPrefix + input.id)
         .focus(function () {
             if ($(input).data("settings").disabled) {
                 return false;
             } else
             if ($(input).data("settings").tokenLimit === null || $(input).data("settings").tokenLimit !== token_count) {
-                show_dropdown_hint();
+                if ($(input).data("settings").minChars === 0) {
+                    // set a timeout just long enough to let this function finish.
+                    setTimeout(function(){do_search();}, 5);
+                } else {
+                    show_dropdown_hint();
+                }
             }
             token_list.addClass($(input).data("settings").classes.focused);
         })
@@ -917,7 +925,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function do_search() {
         var query = input_box.val();
 
-        if(query && query.length) {
+        if(query !== null) {
             if(selected_token) {
                 deselect_token($(selected_token), POSITION.AFTER);
             }
@@ -963,6 +971,13 @@ $.TokenList = function (input, url_or_data, settings) {
                 } else {
                     ajax_params.url = url;
                 }
+
+                // Merge extraParams with other params
+                var data = $(input).data("settings").extraParams;
+                if(typeof data == 'function') {
+                    data = data.call($(input).data("settings"));
+                }
+                for (var attrname in data) { ajax_params.data[attrname] = data[attrname]; }
 
                 // Prepare the request
                 ajax_params.data[$(input).data("settings").queryParam] = query;
