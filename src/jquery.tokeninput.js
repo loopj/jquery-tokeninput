@@ -32,7 +32,7 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     placeholder: null,
     theme: null,
-    zindex: 999,
+    zindex: 1100,
     resultsLimit: null,
 
     enableHTML: false,
