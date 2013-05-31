@@ -773,8 +773,9 @@ $.TokenList = function (input, url_or_data, settings) {
             focus_with_timeout(input_box);
         }
 
-        // Execute the onDelete callback if defined
-        if($.isFunction(callback)) {
+        // Execute the onDelete callback if defined and this was a user-initiated delete
+        // (as opposed to a programmatic 'clear' or 'remove' call)
+        if($.isFunction(callback) && interactive) {
             callback.call(hidden_input,token_data);
         }
     }
