@@ -491,7 +491,7 @@ $.TokenList = function (input, url_or_data, settings) {
     };
 
     this.add = function(item) {
-        add_token(item);
+        add_token(item, false);
     };
 
     this.remove = function(item) {
@@ -639,7 +639,11 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Add a token to the token list based on user input
-    function add_token (item) {
+    function add_token (item, interactive) {
+        // Differentiates between programtic add_token and user add_token
+        // User actions would need to show the display hint, et all
+        interactive = typeof interactive !== 'undefined' ? interactive : true;
+      
         var callback = $(input).data("settings").onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
@@ -680,7 +684,7 @@ $.TokenList = function (input, url_or_data, settings) {
         hide_dropdown();
 
         // Execute the onAdd callback if defined
-        if($.isFunction(callback)) {
+        if($.isFunction(callback) && interactive) {
             callback.call(hidden_input,item);
         }
     }
