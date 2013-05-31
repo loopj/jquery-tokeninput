@@ -598,6 +598,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var readonly = item.readonly === true ? true : false;
 
         if(readonly) $this_token.addClass($(input).data("settings").classes.tokenReadOnly);
+        if(item.class) $this_token.addClass(item.class);
 
         $this_token.addClass($(input).data("settings").classes.token).insertBefore(input_token);
 
