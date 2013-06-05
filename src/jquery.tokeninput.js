@@ -171,14 +171,11 @@ var methods = {
     },
     destroy: function () {
         if(this.data("tokenInputObject")){
-            this.data("tokenInputObject").clear();
-            var tmpInput = this;
-            var closest = this.parent();
-            closest.empty();
-            tmpInput.show();
-            closest.append(tmpInput);
-            return tmpInput;
+            this.data("tokenInputObject").destroy();
+            this.siblings().remove();
+            this.show();
         }
+        return this;
     }
 };
 
@@ -518,6 +515,11 @@ $.TokenList = function (input, url_or_data, settings) {
 
     this.toggleDisabled = function(disable) {
         toggleDisabled(disable);
+    };
+
+    this.destroy = function() {
+        this.clear();
+        dropdown.remove();
     };
 
     // Resize input to maximum width so the placeholder can be seen
