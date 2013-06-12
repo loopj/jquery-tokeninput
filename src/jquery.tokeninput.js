@@ -556,17 +556,30 @@ $.TokenList = function (input, url_or_data, settings) {
         }
     }
 
-    function resize_input() {
-        if(input_val === (input_val = input_box.val())) {return;}
+	function resize_input() {
+		if (input_val === (input_val = input_box.val())) {
+			return;
+		}
 
-        // Get width left on the current line
-        var width_left = token_list.width() - input_box.offset().left - token_list.offset().left;
-        // Enter new content into resizer and resize input accordingly
-        input_resizer.html(_escapeHTML(input_val));
-        // Get maximum width, minimum the size of input and maximum the widget's width
-        input_box.width(Math.min(token_list.width(),
-                                 Math.max(width_left, input_resizer.width() + 30)));
-    }
+		// Get extra horizontal widths (in pixels)
+		var _tokenExtraLeft = parseInt(token_list.css('border-left-width')) + parseInt(token_list.css('padding-left')),
+			_inputBoxExtraLeft = parseInt(input_box.css('border-left-width')) + parseInt(input_box.css('padding-left')),
+			_inputBoxExtraRight = parseInt(input_box.css('border-right-width')) + parseInt(input_box.css('padding-right')) + parseInt(input_box.css('margin-right')),
+			offsetDifference,
+			widthLeft;
+
+		// Get the difference between input box offset and token offset, plus borders and paddings (offset() already takes care of margins)
+		offsetDifference = (input_box.offset().left + _inputBoxExtraLeft) - (token_list.offset().left + _tokenExtraLeft);
+
+		// Get the width left on the current line (taking care of margins, borders, and paddings)
+		widthLeft = token_list.width() - offsetDifference - _inputBoxExtraRight;
+
+		// Enter new content into resizer and resize input accordingly
+		input_resizer.html(_escapeHTML(input_val));
+
+		// Get the maximum width, minimum the size of input and maximum the widget's width
+		input_box.width(Math.min(token_list.width(), Math.max(widthLeft, input_resizer.width() + 30)));
+	}
 
     function is_printable_character(keycode) {
         return ((keycode >= 48 && keycode <= 90) ||     // 0-1a-z
