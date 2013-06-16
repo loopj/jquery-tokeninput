@@ -29,6 +29,7 @@ var DEFAULT_SETTINGS = {
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
+    newText: " (new)",
     animateDropdown: true,
     placeholder: null,
     theme: null,
@@ -55,6 +56,7 @@ var DEFAULT_SETTINGS = {
 
     // Behavioral settings
     allowFreeTagging: false,
+    freeTaggingHint: true,
     allowTabOut: false,
 
     // Callbacks
@@ -1009,6 +1011,10 @@ $.TokenList = function (input, url_or_data, settings) {
                   if($.isFunction($(input).data("settings").onResult)) {
                       results = $(input).data("settings").onResult.call(hidden_input, results);
                   }
+                  
+                  if($(input).data("settings").allowFreeTagging && $(input).data("settings").freeTaggingHint) {
+                      results.push({name: input_box.val() + $(input).data("settings").newText, id: input_box.val()});
+                  }
 
                   // only populate the dropdown if the results are associated with the active search query
                   if(input_box.val() === query) {
@@ -1023,6 +1029,10 @@ $.TokenList = function (input, url_or_data, settings) {
                 var results = $.grep($(input).data("settings").local_data, function (row) {
                     return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
                 });
+                
+                if($(input).data("settings").allowFreeTagging && $(input).data("settings").freeTaggingHint) {
+                    results.push({name: input_box.val() + $(input).data("settings").newText, id: input_box.val()});
+                }
 
                 cache.add(cache_key, results);
                 if($.isFunction($(input).data("settings").onResult)) {
