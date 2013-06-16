@@ -1,6 +1,25 @@
 jQuery Tokeninput ChangeLog
 ===========================
 
+Version 1.6.0 (2011-08-07)
+--------------------------
+- Now possible to pass a function as the URL to search, allowing dynamic endpoints
+- Customize which JSON property to send to the server with the `tokenValue` setting
+- Fix another `tokenLimit` bug
+- Added `get` method to fetch selected tokens programmatically
+- Control which JSON property to search inside with the `propertyToSearch` setting
+- Customize the token and results html with the `resultsFormatter` and `tokenFormatter` settings.
+- Fire a jQuery *change* event on original input whenever the selected tokens change
+- Fire the new `onReady` callback when the input has finished initializing
+- Fix bug which would focus the input after prepopulation
+
+Version 1.5.0 (2011-06-12)
+--------------------------
+- Added `add`, `remove` and `clear` methods to programmatically modify tokens
+- Support setting of ids on dynamic input (for html label targeting)
+- Fix token limit bug when using `prePopulate`
+- Various other bug fixes
+
 Version 1.4.2 (2011-03-26)
 --------------------------
 - Implemented basic local data search to search without an ajax request

@@ -1,2 +1,5 @@
 _site
 _layouts
+.DS_Store
+gh-pages
+*.sw*
