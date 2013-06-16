@@ -29,6 +29,7 @@ var DEFAULT_SETTINGS = {
     noResultsText: "No results",
     searchingText: "Searching...",
     deleteText: "&times;",
+    newText: " (new)",
     animateDropdown: true,
     placeholder: null,
     theme: null,
@@ -55,6 +56,7 @@ var DEFAULT_SETTINGS = {
 
     // Behavioral settings
     allowFreeTagging: false,
+    freeTaggingHint: true,
     allowTabOut: false,
 
     // Callbacks
@@ -378,18 +380,49 @@ $.TokenList = function (input, url_or_data, settings) {
     if (settings.placeholder)
         input_box.attr("placeholder", settings.placeholder)
 
-    // Keep a reference to the original input box
-    var hidden_input = $(input)
-                           .hide()
-                           .val("")
-                           .focus(function () {
-                               focus_with_timeout(input_box);
-                           })
-                           .blur(function () {
-                               input_box.blur();
-                               //return the object to this can be referenced in the callback functions.
-                               return hidden_input;
-                           });
+    if ($(input).get(0).tagName == 'SELECT') {
+        // Create a new input to store selected tokens, original will be removed later
+        var hidden_input = $("<input type=\"text\"  name=\"" + $(input).attr('name') + "\" autocomplete=\"off\">")
+                               .hide()
+                               .val("")
+                               .focus(function () {
+                                   focus_with_timeout(input_box);
+                               })
+                               .blur(function () {
+                                   input_box.blur();
+                                   return hidden_input;
+                               })
+                               .insertBefore(input);
+
+        // get prepopulate options and store them in hidden_input
+        var select_data = [];
+        $(input).children('option').each(function () {
+            var item = {};
+            item[$(input).data("settings").tokenValue] = $(this).attr('value');
+            item[$(input).data("settings").propertyToSearch] = $(this).text();
+            select_data[ select_data.length ] = item;
+        });
+        hidden_input.data("pre", select_data);
+        
+        // remove the SELECT object
+        hidden_input.data("settings", $(input).data("settings"));
+        $(input).remove();
+        input = hidden_input[0];
+
+    } else {
+        // Keep a reference to the original input box
+        var hidden_input = $(input)
+                               .hide()
+                               .val("")
+                               .focus(function () {
+                                   focus_with_timeout(input_box);
+                               })
+                               .blur(function () {
+                                   input_box.blur();
+                                   //return the object to this can be referenced in the callback functions.
+                                   return hidden_input;
+                               });
+    }
 
     // Keep a reference to the selected token and dropdown item
     var selected_token = null;
@@ -978,6 +1011,10 @@ $.TokenList = function (input, url_or_data, settings) {
                   if($.isFunction($(input).data("settings").onResult)) {
                       results = $(input).data("settings").onResult.call(hidden_input, results);
                   }
+                  
+                  if($(input).data("settings").allowFreeTagging && $(input).data("settings").freeTaggingHint) {
+                      results.push({name: input_box.val() + $(input).data("settings").newText, id: input_box.val()});
+                  }
 
                   // only populate the dropdown if the results are associated with the active search query
                   if(input_box.val() === query) {
@@ -992,6 +1029,10 @@ $.TokenList = function (input, url_or_data, settings) {
                 var results = $.grep($(input).data("settings").local_data, function (row) {
                     return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
                 });
+                
+                if($(input).data("settings").allowFreeTagging && $(input).data("settings").freeTaggingHint) {
+                    results.push({name: input_box.val() + $(input).data("settings").newText, id: input_box.val()});
+                }
 
                 cache.add(cache_key, results);
                 if($.isFunction($(input).data("settings").onResult)) {

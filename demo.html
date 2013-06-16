@@ -233,6 +233,21 @@
     </div>
 
 
+    <h2 id="select-pre-populated">Aplied on a SELECT with pre-populating values</h2>
+    <div>
+        <select id="demo-select-pre-populated" name="blah">
+          <option value="fdebf637a879b64115b7f9ad551a8c6d">Side Order of Life</option>
+          <option value="f1e6f0b5fac885f81f5afd2327f92928">The Life and Times of Tim</option>
+        </select>
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-select-pre-populated").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
+        });
+        </script>
+    </div>
+
+
     <h2 id="plugin-methods">Using the add, remove, clear and toggleDisabled Methods</h2>
     <div>
       <a href="#" id="plugin-methods-add">Add Token</a> | 
@@ -272,6 +287,7 @@
         });
         </script>
     </div>
+
     
     <h2>Local Data Search with custom propertyToSearch, resultsFormatter and tokenFormatter</h2>
     <div>
@@ -674,6 +690,7 @@
         });
         </script>
     </div>
+
     
     <h2>Start disabled</h2>
     <div>
