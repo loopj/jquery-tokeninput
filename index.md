@@ -6,7 +6,7 @@ version: 1.6.0
 github_repo: jquery-tokeninput
 download_url: https://github.com/loopj/jquery-tokeninput/zipball/jquery-tokeninput-1.6.0
 extra_head: |
-    <script type="text/javascript" src="https://github.com/loopj/jquery-tokeninput/raw/master/src/jquery.tokeninput.js"></script>
+    <script type="text/javascript" src="src/jquery.tokeninput.js"></script>
     <link rel="stylesheet" href="styles/token-input-facebook.css" type="text/css" />
     <script type="text/javascript"> 
     $(document).ready(function() {
