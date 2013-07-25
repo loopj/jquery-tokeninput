@@ -301,6 +301,8 @@ $.TokenList = function (input, url_or_data, settings) {
                             select_token($(next_token.get(0)));
                         }
                     } else {
+                    	var dropdown_item = null;
+                    	
                         if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
             			//If no item select yet, select first in dropdown
         					if(selected_dropdown_item == null){
