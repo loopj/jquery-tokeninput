@@ -985,6 +985,11 @@ $.TokenList = function (input, url_or_data, settings) {
                   }
                 };
 
+                // Provide a beforeSend callback
+                if (settings.onSend) {
+                  settings.onSend(ajax_params);
+                }
+
                 // Make the request
                 $.ajax(ajax_params);
             } else if($(input).data("settings").local_data) {
