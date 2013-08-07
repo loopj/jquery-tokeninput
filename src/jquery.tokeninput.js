@@ -158,6 +158,14 @@ var methods = {
         this.data("tokenInputObject").remove(item);
         return this;
     },
+    addItem: function(item) {
+        this.data('tokenInputObject').addItem(item);
+        return this;
+    },
+    removeItem: function(item) {
+        this.data('tokenInputObject').removeItem(item);
+        return this;
+    },
     get: function() {
         return this.data("tokenInputObject").getTokens();
     },
@@ -489,6 +497,21 @@ $.TokenList = function (input, url_or_data, settings) {
             }
         });
     };
+
+    this.addItem = function(item) {
+        settings.local_data.push(item);
+    }
+
+    this.removeItem = function(item) {
+       var newSettings = settings.local_data;
+       for (var i = 0; i <= settings.local_data.length; i++) {
+            var localItem = settings.local_data[i];
+            if (localItem.id == item.id) {
+                newSettings.splice(i, 1); break;
+            }
+        }
+        settings.local_data = newSettings;
+    }
 
     this.add = function(item) {
         add_token(item);
