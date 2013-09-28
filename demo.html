@@ -235,9 +235,9 @@
 
     <h2 id="plugin-methods">Using the add, remove, clear and toggleDisabled Methods</h2>
     <div>
-      <a href="#" id="plugin-methods-add">Add Token</a> | 
-      <a href="#" id="plugin-methods-remove">Remove Token</a> | 
-      <a href="#" id="plugin-methods-clear">Clear Tokens</a> | 
+      <a href="#" id="plugin-methods-add">Add Token</a> |
+      <a href="#" id="plugin-methods-remove">Remove Token</a> |
+      <a href="#" id="plugin-methods-clear">Clear Tokens</a> |
       <a href="#" id="plugin-methods-toggle-disable">Toggle Disabled</a><br />
         <input type="text" id="demo-input-plugin-methods" name="blah" />
         <input type="button" value="Submit" />
@@ -272,7 +272,7 @@
         });
         </script>
     </div>
-    
+
     <h2>Local Data Search with custom propertyToSearch, resultsFormatter and tokenFormatter</h2>
     <div>
         <input type="text" id="demo-input-local-custom-formatters" name="blah" />
@@ -674,7 +674,7 @@
         });
         </script>
     </div>
-    
+
     <h2>Start disabled</h2>
     <div>
         <input type="text" id="demo-input-disabled" name="blah" />
@@ -715,6 +715,20 @@
         $(document).ready(function() {
             $("#demo-input-free-tagging").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
                 allowFreeTagging: true
+            });
+        });
+        </script>
+    </div>
+
+    <h2>Free Tagging, automatic selection of first result disabled</h2>
+    <div>
+        <input type="text" id="demo-input-free-tagging-no-autoselect" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-free-tagging-no-autoselect").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                allowFreeTagging: true,
+                autoSelectFirstResult: false
             });
         });
         </script>

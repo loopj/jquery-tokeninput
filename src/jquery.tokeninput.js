@@ -56,6 +56,7 @@ var DEFAULT_SETTINGS = {
     // Behavioral settings
     allowFreeTagging: false,
     allowTabOut: false,
+    autoSelectFirstResult: true,
 
     // Callbacks
     onResult: null,
@@ -304,9 +305,9 @@ $.TokenList = function (input, url_or_data, settings) {
                         var dropdown_item = null;
 
                         if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
-                            dropdown_item = $(selected_dropdown_item).next();
+                            dropdown_item = (selected_dropdown_item) ? $(selected_dropdown_item).next() : $(dropdown).find('li').first();
                         } else {
-                            dropdown_item = $(selected_dropdown_item).prev();
+                            dropdown_item = (selected_dropdown_item) ? $(selected_dropdown_item).prev() : $(dropdown).find('li').last();
                         }
 
                         if(dropdown_item.length) {
@@ -872,7 +873,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     this_li.addClass($(input).data("settings").classes.dropdownItem2);
                 }
 
-                if(index === 0) {
+                if((index === 0) && $(input).data("settings").autoSelectFirstResult) {
                     select_dropdown_item(this_li);
                 }
 
