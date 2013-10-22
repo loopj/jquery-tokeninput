@@ -34,6 +34,8 @@ var DEFAULT_SETTINGS = {
     theme: null,
     zindex: 999,
     resultsLimit: null,
+    itemGrouper: null,
+    groupKey: "group",
 
     enableHTML: false,
 
@@ -86,7 +88,8 @@ var DEFAULT_CLASSES = {
     selectedDropdownItem: "token-input-selected-dropdown-item",
     inputToken: "token-input-input-token",
     focused: "token-input-focused",
-    disabled: "token-input-disabled"
+    disabled: "token-input-disabled",
+    itemGroup: "token-input-group"
 };
 
 // Input box position "enum"
@@ -849,8 +852,11 @@ $.TokenList = function (input, url_or_data, settings) {
                     select_dropdown_item($(event.target).closest("li"));
                 })
                 .mousedown(function (event) {
-                    add_token($(event.target).closest("li").data("tokeninput"));
-                    hidden_input.change();
+                    var item = $(event.target).closest("li").data("tokeninput");
+                    if (item) {
+                        add_token(item);
+                        hidden_input.change();
+                    }
                     return false;
                 })
                 .hide();
@@ -859,7 +865,24 @@ $.TokenList = function (input, url_or_data, settings) {
                 results = results.slice(0, $(input).data("settings").resultsLimit);
             }
 
+            var current_group = null;
+
             $.each(results, function(index, value) {
+
+                if ($(input).data("settings").itemGrouper) {
+                    value = $(input).data("settings").itemGrouper(value);
+                }
+                var item_group = value[$(input).data("settings").groupKey];
+                if (item_group && item_group != current_group) {
+                    dropdown_ul.append($("<lh />")
+                        .text(item_group)
+                        .addClass(
+                            $(input).data("settings").classes.itemGroup
+                        )
+                    );
+                    current_group = item_group;
+                }
+
                 var this_li = $(input).data("settings").resultsFormatter(value);
 
                 this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);

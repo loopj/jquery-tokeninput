@@ -125,3 +125,11 @@ div.token-input-dropdown ul li em {
 div.token-input-dropdown ul li.token-input-selected-dropdown-item {
     background-color: #d0efa0;
 }
+
+div.token-input-dropdown ul lh.token-input-group {
+    background-color: #f2f2f2;
+    border-top: 1px solid #e2e2e2;
+    border-bottom: none;
+    font-weight: bold;
+    padding: 2px 15px 2px 6px;
+}

@@ -68,6 +68,21 @@
         </script>
     </div>
 
+    <h2 id="groups">Group alphabetically</h2>
+    <div>
+        <input type="text" id="demo-input-group" name="blah2" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+        $(document).ready(function() {
+            $("#demo-input-group").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
+                onResult: function(result) { result.sort(function (a, b) { return a.name > b.name; }); return result; },
+                itemGrouper: function (item) { item.group = item.name[0]; return item; }
+            });
+        });
+        </script>
+    </div>
+
+
 
     <h2 id="custom-labels">Custom Labels</h2>
     <div>
