@@ -56,6 +56,12 @@ var DEFAULT_SETTINGS = {
     // Behavioral settings
     allowFreeTagging: false,
     allowTabOut: false,
+    
+    // Data storage
+    returnAsJson: false,
+    dataFilter: function(item) {
+        return item;
+    },
 
     // Callbacks
     onResult: null,
@@ -777,12 +783,20 @@ $.TokenList = function (input, url_or_data, settings) {
     // Update the hidden input box value
     function update_hidden_input(saved_tokens, hidden_input) {
         var token_values = $.map(saved_tokens, function (el) {
-            if(typeof $(input).data("settings").tokenValue == 'function')
-              return $(input).data("settings").tokenValue.call(this, el);
-
-            return el[$(input).data("settings").tokenValue];
+            if(typeof $(input).data("settings").dataFilter == 'function') {
+                el = $(input).data("settings").dataFilter.call(this, el);
+            }
+            if (true === $(input).data("settings").returnAsJson) {
+                return el;
+            } else {
+                return el[$(input).data("settings").tokenValue];
+            }
         });
-        hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
+        if (true === $(input).data("settings").returnAsJson) {
+            hidden_input.val(JSON.stringify(token_values));
+        } else {
+            hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
+        }
 
     }
 
