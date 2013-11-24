@@ -120,7 +120,8 @@ var KEY = {
     DOWN: 40,
     DELETE: 46,
     NUMPAD_ENTER: 108,
-    COMMA: 188
+    COMMA: 188,
+    HEBCOMMA: 222
 };
 
 var HTML_ESCAPES = {
@@ -214,6 +215,11 @@ $.TokenList = function (input, url_or_data, settings) {
     } else if(typeof(url_or_data) === "object") {
         // Set the local data to search through
         $(input).data("settings").local_data = url_or_data;
+    }
+
+    //Set comma for Hebrew
+    if ($(input).data("settings").rtl) {
+        KEY.COMMA = KEY.HEBCOMMA;
     }
 
     // Build class names
