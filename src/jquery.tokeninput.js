@@ -64,6 +64,7 @@ var DEFAULT_SETTINGS = {
     onFreeTaggingAdd: null,
     onDelete: null,
     onReady: null,
+    onItemClick: null,
 
     // Other settings
     idPrefix: "token-input-",
@@ -601,6 +602,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
         $this_token.addClass($(input).data("settings").classes.token).insertBefore(input_token);
 
+        $this_token.click(function(){
+            click_token($this_token);
+        });
+
         // The 'delete token' button
         if(!readonly) {
           $("<span>" + $(input).data("settings").deleteText + "</span>")
@@ -730,6 +735,16 @@ $.TokenList = function (input, url_or_data, settings) {
             deselect_token(token, POSITION.END);
         } else {
             select_token(token);
+        }
+    }
+
+    // Click a token
+    function click_token(token) {
+        var callback = $(input).data("settings").onItemClick,
+            index = token.prevAll().length;
+
+        if($.isFunction(callback)) {
+            callback.call(hidden_input, saved_tokens[index]);
         }
     }
 
