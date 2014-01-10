@@ -330,7 +330,11 @@ $.TokenList = function (input, url_or_data, settings) {
 
                         return false;
                     } else if($(this).val().length === 1) {
-                        hide_dropdown();
+	                    if ($(input).data("settings").minChars < 0) {
+		                    setTimeout(function(){do_search();}, 5);
+	                    } else {
+		                    hide_dropdown();
+	                    }
                     } else {
                         // set a timeout just long enough to let this function finish.
                         setTimeout(function(){do_search();}, 5);
