@@ -254,7 +254,8 @@ $.TokenList = function (input, url_or_data, settings) {
         })
         .attr("id", $(input).data("settings").idPrefix + input.id)
         .focus(function () {
-            if ($(input).data("settings").disabled) {
+		    do_search();
+		    if ($(input).data("settings").disabled) {
                 return false;
             } else
             if ($(input).data("settings").tokenLimit === null || $(input).data("settings").tokenLimit !== token_count) {
@@ -917,7 +918,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function do_search() {
         var query = input_box.val();
 
-        if(query && query.length) {
+        if($(input).data("settings").minChars < 0 || query && query.length) {
             if(selected_token) {
                 deselect_token($(selected_token), POSITION.AFTER);
             }
