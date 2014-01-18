@@ -34,6 +34,7 @@ var DEFAULT_SETTINGS = {
     theme: null,
     zindex: 999,
     resultsLimit: null,
+    txtMaxLength: null,
 
     enableHTML: false,
 
@@ -373,6 +374,11 @@ $.TokenList = function (input, url_or_data, settings) {
                     break;
             }
         });
+
+    //add maxlength attribute to textbox
+    if (settings.txtMaxLength !== null) {
+        input_box.attr("maxlength", settings.txtMaxLength);
+    }
 
     // Keep reference for placeholder
     if (settings.placeholder)
