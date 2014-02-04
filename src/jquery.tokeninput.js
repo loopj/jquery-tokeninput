@@ -199,7 +199,7 @@ $.TokenList = function (input, url_or_data, settings) {
     //
 
     // Configure the data source
-    if($.type(url_or_data) === "string" || $.type(url_or_data) === "function") {
+    if($.type(url_or_data) === "string") {
         // Set the url to query against
         $(input).data("settings").url = url_or_data;
 
@@ -214,7 +214,11 @@ $.TokenList = function (input, url_or_data, settings) {
                 $(input).data("settings").crossDomain = (location.href.split(/\/+/g)[1] !== url.split(/\/+/g)[1]);
             }
         }
-    } else if(typeof(url_or_data) === "object") {
+    }
+    else if ($.type(url_or_data) === "function") {
+        $(input).data("settings").search_function = url_or_data;
+    }
+    else if (typeof (url_or_data) === "object") {
         // Set the local data to search through
         $(input).data("settings").local_data = url_or_data;
     }
@@ -992,7 +996,17 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 // Make the request
                 $.ajax(ajax_params);
-            } else if($(input).data("settings").local_data) {
+
+            }
+            else if ($(input).data("settings").search_function) {
+                var results = $(input).data("settings").search_function.call(hidden_input, query);
+                cache.add(cache_key, results);
+                if ($.isFunction($(input).data("settings").onResult)) {
+                    results = $(input).data("settings").onResult.call(hidden_input, results);
+                }
+                populate_dropdown(query, results);
+
+            } else if ($(input).data("settings").local_data) {
                 // Do the search through local data
                 var results = $.grep($(input).data("settings").local_data, function (row) {
                     return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
