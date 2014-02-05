@@ -54,6 +54,7 @@ var DEFAULT_SETTINGS = {
     tokenValue: "id",
 
     // Behavioral settings
+    defaultValue: -1,
     allowFreeTagging: false,
     allowTabOut: false,
 
@@ -587,7 +588,8 @@ $.TokenList = function (input, url_or_data, settings) {
             token = $(input).data("settings").onFreeTaggingAdd.call(hidden_input, token);
           }
           var object = {};
-          object[$(input).data("settings").tokenValue] = object[$(input).data("settings").propertyToSearch] = token;
+          object[$(input).data("settings").tokenValue] = $(input).data("settings").defaultValue;
+          object[$(input).data("settings").propertyToSearch] = token;
           add_token(object);
         });
     }
