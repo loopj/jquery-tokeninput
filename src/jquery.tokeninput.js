@@ -966,6 +966,9 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 // Prepare the request
                 ajax_params.data[$(input).data("settings").queryParam] = query;
+                if($.isFunction(settings.beforeRequest)) {
+                    settings.beforeRequest.call(hidden_input, ajax_params.data);
+                }
                 ajax_params.type = $(input).data("settings").method;
                 ajax_params.dataType = $(input).data("settings").contentType;
                 if($(input).data("settings").crossDomain) {
