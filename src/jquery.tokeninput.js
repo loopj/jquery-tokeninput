@@ -58,6 +58,7 @@ var DEFAULT_SETTINGS = {
     allowTabOut: false,
 
     // Callbacks
+    beforeSend: null,
     onResult: null,
     onCachedResult: null,
     onAdd: null,
@@ -971,6 +972,13 @@ $.TokenList = function (input, url_or_data, settings) {
                 if($(input).data("settings").crossDomain) {
                     ajax_params.dataType = "jsonp";
                 }
+
+                 // Attach on beforeCall callback
+                 ajax_params.beforeSend = function() {
+                     if($.isFunction(settings.beforeSend)) {
+                         results = settings.beforeSend.call(hidden_input);
+                     }
+                 };
 
                 // Attach the success callback
                 ajax_params.success = function(results) {
