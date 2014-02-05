@@ -63,6 +63,7 @@ var DEFAULT_SETTINGS = {
     onAdd: null,
     onFreeTaggingAdd: null,
     onDelete: null,
+    onSelect: null,
     onReady: null,
 
     // Other settings
@@ -690,11 +691,19 @@ $.TokenList = function (input, url_or_data, settings) {
             token.addClass($(input).data("settings").classes.selectedToken);
             selected_token = token.get(0);
 
+            var token_data = $.data(selected_token, "tokeninput");
+            var callback = $(this).data('settings').onSelect;
+
             // Hide input box
             input_box.val("");
 
             // Hide dropdown if it is visible (eg if we clicked to select token)
             hide_dropdown();
+
+            // Execute the onSelect callback if defined
+            if($.isFunction(callback)) {
+                callback.call(hidden_input, token_data);
+            }
         }
     }
 
