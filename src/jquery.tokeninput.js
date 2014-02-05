@@ -64,6 +64,7 @@ var DEFAULT_SETTINGS = {
     onFreeTaggingAdd: null,
     onDelete: null,
     onReady: null,
+	onError: null,
 
     // Other settings
     idPrefix: "token-input-",
@@ -984,6 +985,12 @@ $.TokenList = function (input, url_or_data, settings) {
                       populate_dropdown(query, $(input).data("settings").jsonContainer ? results[$(input).data("settings").jsonContainer] : results);
                   }
                 };
+				
+				ajax_params.error = function (XMLHttpRequest, textStatus, errorThrown) {
+                        if ($.isFunction(settings.onError)) {
+                            results = settings.onError.call(XMLHttpRequest, textStatus, errorThrown);
+                        }
+                    };
 
                 // Provide a beforeSend callback
                 if (settings.onSend) {
