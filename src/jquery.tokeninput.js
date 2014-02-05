@@ -590,6 +590,7 @@ $.TokenList = function (input, url_or_data, settings) {
           object[$(input).data("settings").tokenValue] = object[$(input).data("settings").propertyToSearch] = token;
           add_token(object);
         });
+        hidden_input.change();
     }
 
     // Inner function to a token to the list
