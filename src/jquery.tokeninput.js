@@ -19,6 +19,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+    ajaxHeaders: null,
 
     // Prepopulation settings
     prePopulate: null,
@@ -965,6 +966,7 @@ $.TokenList = function (input, url_or_data, settings) {
                 }
 
                 // Prepare the request
+                ajax_params.headers = settings.ajaxHeaders;
                 ajax_params.data[$(input).data("settings").queryParam] = query;
                 ajax_params.type = $(input).data("settings").method;
                 ajax_params.dataType = $(input).data("settings").contentType;
