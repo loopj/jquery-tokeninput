@@ -952,13 +952,21 @@ $.TokenList = function (input, url_or_data, settings) {
                 var ajax_params = {};
                 ajax_params.data = {};
                 if(url.indexOf("?") > -1) {
+                    var array;
                     var parts = url.split("?");
                     ajax_params.url = parts[0];
 
                     var param_array = parts[1].split("&");
                     $.each(param_array, function (index, value) {
                         var kv = value.split("=");
-                        ajax_params.data[kv[0]] = kv[1];
+                        if((/[a-z][A-Z]?\[\]/).test(kv[0])) {
+                            array = (ajax_params.data.hasOwnProperty(kv[0]) == true) ?
+                              ajax_params.data[kv[0]] : []
+                            array.push(kv[1]);
+                            ajax_params.data[kv[0]] = array;
+                        }
+                        else
+                            ajax_params.data[kv[0]] = kv[1];
                     });
                 } else {
                     ajax_params.url = url;
