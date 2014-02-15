@@ -301,17 +301,23 @@ $.TokenList = function (input, url_or_data, settings) {
                             select_token($(next_token.get(0)));
                         }
                     } else {
-                        var dropdown_item = null;
-
+                    	var dropdown_item = null;
+                    	
                         if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
-                            dropdown_item = $(selected_dropdown_item).next();
-                        } else {
-                            dropdown_item = $(selected_dropdown_item).prev();
-                        }
-
-                        if(dropdown_item.length) {
-                            select_dropdown_item(dropdown_item);
-                        }
+            			//If no item select yet, select first in dropdown
+        					if(selected_dropdown_item == null){
+								select_dropdown_item(first_dropdown_item);
+							}
+							else{
+								dropdown_item = $(selected_dropdown_item).next();
+							}
+						} else if (selected_dropdown_item != null) {
+							dropdown_item = $(selected_dropdown_item).prev();
+						}
+						//Only run this line if there is a selected item
+						if(dropdown_item != null && dropdown_item.length) {
+							select_dropdown_item(dropdown_item);
+						}
                     }
                     return false;
                     break;
@@ -395,6 +401,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var selected_token = null;
     var selected_token_index = 0;
     var selected_dropdown_item = null;
+    var first_dropdown_item = null;
 
     // The list to store the token items in
     var token_list = $("<ul />")
@@ -872,9 +879,11 @@ $.TokenList = function (input, url_or_data, settings) {
                     this_li.addClass($(input).data("settings").classes.dropdownItem2);
                 }
 
+                //If freetagging enabled, store first item in dropdown, else select it as default
                 if(index === 0) {
-                    select_dropdown_item(this_li);
-                }
+      			    if (!$(input).data("settings").allowFreeTagging) select_dropdown_item(this_li);
+				    else first_dropdown_item = this_li;
+				}
 
                 $.data(this_li.get(0), "tokeninput", value);
             });
