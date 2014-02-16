@@ -234,7 +234,7 @@ $.TokenList = function (input, source, settings) {
     }
 
     // Save the tokens
-    var saved_tokens = [];
+    var tokenStorage = [];
 
     // Keep track of the number of tokens in the list
     var token_count = 0;
@@ -415,7 +415,7 @@ $.TokenList = function (input, source, settings) {
         .on("click", function (event) {
             var li = $(event.target).closest("li");
             if(li && li.get(0) && $.data(li.get(0), "tokeninput")) {
-                toggle_onTokenSelect(li);
+                onToggleTokenSelect(li);
             } else {
                 // Deselect selected token
                 if(tokenSelected) {
@@ -484,7 +484,7 @@ $.TokenList = function (input, source, settings) {
 
     if(li_data && li_data.length) {
         $.each(li_data, function (index, value) {
-            insert_token(value);
+            onTokenInsert(value);
             checkTokenLimit();
             input_box.attr("placeholder", null)
         });
@@ -519,14 +519,16 @@ $.TokenList = function (input, source, settings) {
     this.remove = function(item) {
         tokenList.children("li").each(function() {
             if ($(this).children("input").length === 0) {
-                var currToken = $(this).data("tokeninput");
-                var match = true;
+                var currToken = $(this).data("tokeninput"),
+                    match = true;
+
                 for (var prop in item) {
                     if (item[prop] !== currToken[prop]) {
                         match = false;
                         break;
                     }
                 }
+
                 if (match) {
                     onDelete($(this));
                 }
@@ -535,7 +537,7 @@ $.TokenList = function (input, source, settings) {
     };
 
     this.getTokens = function() {
-        return saved_tokens;
+        return tokenStorage;
     };
 
     this.toggleDisabled = function(disable) {
@@ -548,7 +550,6 @@ $.TokenList = function (input, source, settings) {
     //
     // Private functions
     //
-
     function escapeHTML(text) {
       return Settings.enableHTML ? text : _escapeHTML(text);
     }
@@ -579,7 +580,9 @@ $.TokenList = function (input, source, settings) {
     }
 
     function onResizeInput() {
-        if(inputValue === (inputValue = input_box.val())) {return;}
+        if(inputValue === (inputValue = input_box.val())) {
+            return;
+        }
 
         // Get width left on the current line
         var width_left = tokenList.width() - input_box.offset().left - tokenList.offset().left;
@@ -619,14 +622,13 @@ $.TokenList = function (input, source, settings) {
 
           object[Settings.tokenValue] = object[Settings.propertyToSearch] = token;
           onTokenAdd(object);
-
         });
     }
 
     // Inner function to a token to the list
-    function insert_token(item) {
-        var $this_token = $(Settings.tokenFormatter(item));
-        var readonly = item.readonly === true ? true : false;
+    function onTokenInsert(item) {
+        var $this_token = $(Settings.tokenFormatter(item)),
+            readonly = item.readonly === true ? true : false;
 
         if(readonly) {
             $this_token.addClass(Settings.classes.tokenReadOnly);
@@ -653,11 +655,11 @@ $.TokenList = function (input, source, settings) {
         $.data($this_token.get(0), "tokeninput", item);
 
         // Save this token for duplicate checking
-        saved_tokens = saved_tokens.slice(0,tokenSelected_index).concat([token_data]).concat(saved_tokens.slice(tokenSelected_index));
+        tokenStorage = tokenStorage.slice(0,tokenSelected_index).concat([token_data]).concat(tokenStorage.slice(tokenSelected_index));
         tokenSelected_index++;
 
         // Update the hidden input
-        update_inputHidden(saved_tokens, inputHidden);
+        onUpdateInputHidden(tokenStorage, inputHidden);
 
         token_count += 1;
 
@@ -700,7 +702,7 @@ $.TokenList = function (input, source, settings) {
 
         // Insert the new tokens
         if(Settings.tokenLimit == null || token_count < Settings.tokenLimit) {
-            insert_token(item);
+            onTokenInsert(item);
             // Remove the placeholder so it's not seen after you've added a token
             input_box.attr("placeholder", null)
             checkTokenLimit();
@@ -753,7 +755,7 @@ $.TokenList = function (input, source, settings) {
     }
 
     // Toggle selection of a token in the token list
-    function toggle_onTokenSelect(token) {
+    function onToggleTokenSelect(token) {
         var previous_tokenSelected = tokenSelected;
 
         if(tokenSelected) {
@@ -784,9 +786,9 @@ $.TokenList = function (input, source, settings) {
         onFocusWithTimeout(input_box);
 
         // Remove this token from the saved list
-        saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
+        tokenStorage = tokenStorage.slice(0,index).concat(tokenStorage.slice(index+1));
 
-        if (saved_tokens.length == 0) {
+        if (tokenStorage.length == 0) {
             input_box.attr("placeholder", settings.placeholder)
         }
 
@@ -795,7 +797,7 @@ $.TokenList = function (input, source, settings) {
         }
 
         // Update the hidden input
-        update_inputHidden(saved_tokens, inputHidden);
+        onUpdateInputHidden(tokenStorage, inputHidden);
 
         token_count -= 1;
 
@@ -807,14 +809,14 @@ $.TokenList = function (input, source, settings) {
         }
 
         // Execute the onDelete callback if defined
-        if($.isFunction(callback)) {
-            callback.call(inputHidden,token_data);
+        if(typeof callback === "function") {
+            callback.call(inputHidden, token_data);
         }
     }
 
     // Update the hidden input box value
-    function update_inputHidden(saved_tokens, inputHidden) {
-        var token_values = $.map(saved_tokens, function (el) {
+    function onUpdateInputHidden(tokenStorage, inputHidden) {
+        var token_values = $.map(tokenStorage, function (el) {
             if (typeof Settings.tokenValue == 'function') {
                 return Settings.tokenValue.call(this, el);
             }
@@ -856,24 +858,24 @@ $.TokenList = function (input, source, settings) {
     }
 
     var regexp_special_chars = new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\-]', 'g');
-    function regexp_escape(term) {
+    function regexpEscape(term) {
         return term.replace(regexp_special_chars, '\\$&');
     }
 
     // Highlight the query part of the search term
-    function highlight_term(value, term) {
+    function onHighlight(value, term) {
         return value.replace(
-            new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + regexp_escape(term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"),
+            new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + regexpEscape(term) + ")(?![^<>]*>)(?![^&;]+;)", "gi"),
             function(match, p1) {
                 return "<b>" + escapeHTML(p1) + "</b>";
             }
         );
     }
 
-    function find_value_and_highlight_term(template, value, term) {
+    function findValueAndHighlight(template, value, term) {
         return template.replace(
-            new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + regexp_escape(value) + ")(?![^<>]*>)(?![^&;]+;)", "g"),
-            highlight_term(value, term)
+            new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + regexpEscape(value) + ")(?![^<>]*>)(?![^&;]+;)", "g"),
+            onHighlight(value, term)
         );
     }
 
@@ -902,7 +904,7 @@ $.TokenList = function (input, source, settings) {
 
             $.each(results, function(index, value) {
                 var this_li = Settings.resultsFormatter(value);
-                    this_li = find_value_and_highlight_term(this_li ,value[Settings.propertyToSearch], query);
+                    this_li = findValueAndHighlight(this_li ,value[Settings.propertyToSearch], query);
                     this_li = $(this_li).appendTo(dropdown_ul);
 
                 if(index % 2) {
@@ -1021,7 +1023,7 @@ $.TokenList = function (input, source, settings) {
                 ajax_params.success = function(results) {
                     cache.add(cacheKey, Settings.jsonContainer ? results[Settings.jsonContainer] : results);
 
-                    if($.isFunction(Settings.onResult)) {
+                    if(typeof Settings.onResult === "function") {
                         results = Settings.onResult.call(inputHidden, results);
                     }
 
@@ -1041,9 +1043,12 @@ $.TokenList = function (input, source, settings) {
 
             } else if(Settings.local_data) {
                 // Do the search through local data
-                var results = $.grep(Settings.local_data, function (row) {
-                    return row[Settings.propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
-                });
+                var results = $.grep(
+                    Settings.local_data,
+                    function (row) {
+                        return row[Settings.propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+                    })
+                ;
 
                 cache.add(cacheKey, results);
 
