@@ -19,6 +19,7 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+    extraParams: {},
 
     // Prepopulation settings
     prePopulate: null,
@@ -252,13 +253,19 @@ $.TokenList = function (input, url_or_data, settings) {
         .css({
             outline: "none"
         })
+        .attr("placeholder", $(input).data("settings").placeholder)
         .attr("id", $(input).data("settings").idPrefix + input.id)
         .focus(function () {
             if ($(input).data("settings").disabled) {
                 return false;
             } else
             if ($(input).data("settings").tokenLimit === null || $(input).data("settings").tokenLimit !== token_count) {
-                show_dropdown_hint();
+                if ($(input).data("settings").minChars === 0) {
+                    // set a timeout just long enough to let this function finish.
+                    setTimeout(function(){do_search();}, 5);
+                } else {
+                    show_dropdown_hint();
+                }
             }
             token_list.addClass($(input).data("settings").classes.focused);
         })
@@ -372,7 +379,13 @@ $.TokenList = function (input, url_or_data, settings) {
                     }
                     break;
             }
-        });
+        })
+        //If the input object get's removed, make sure to remove the dropdown if it's still open
+        .on('remove', function () {
+            var c = DEFAULT_CLASSES.dropdown;
+            $('.' + c).remove();
+        })
+        ;
 
     // Keep reference for placeholder
     if (settings.placeholder)
@@ -751,8 +764,11 @@ $.TokenList = function (input, url_or_data, settings) {
 
         // Remove this token from the saved list
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
-        if (saved_tokens.length == 0) {
+        console.log(settings);
+        if(saved_tokens.length == 0 && settings.placeholder) {
             input_box.attr("placeholder", settings.placeholder)
+            input_val = null;  // bust the resize_input cache
+            resize_input();    // grow the input to show as much of the placeholder as possible
         }
         if(index < selected_token_index) selected_token_index--;
 
@@ -917,7 +933,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function do_search() {
         var query = input_box.val();
 
-        if(query && query.length) {
+        if(query !== null) {
             if(selected_token) {
                 deselect_token($(selected_token), POSITION.AFTER);
             }
@@ -937,7 +953,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Do the actual search
     function run_search(query) {
-        var cache_key = query + computeURL();
+        var cache_key = query + computeURL() + $.param(computeExtraParams());
         var cached_results = cache.get(cache_key);
         if(cached_results) {
             if ($.isFunction($(input).data("settings").onCachedResult)) {
@@ -964,6 +980,10 @@ $.TokenList = function (input, url_or_data, settings) {
                     ajax_params.url = url;
                 }
 
+                // Merge extraParams with other params
+                var data = computeExtraParams();
+                for (var attrname in data) { ajax_params.data[attrname] = data[attrname]; }
+
                 // Prepare the request
                 ajax_params.data[$(input).data("settings").queryParam] = query;
                 ajax_params.type = $(input).data("settings").method;
@@ -979,8 +999,10 @@ $.TokenList = function (input, url_or_data, settings) {
                       results = $(input).data("settings").onResult.call(hidden_input, results);
                   }
 
+                  // only populate if if the results are associated with the input in focus
+                  if (input_box.is(":focus")) {
                   // only populate the dropdown if the results are associated with the active search query
-                  if(input_box.val() === query) {
+                  //if(input_box.val() === query) {
                       populate_dropdown(query, $(input).data("settings").jsonContainer ? results[$(input).data("settings").jsonContainer] : results);
                   }
                 };
@@ -1016,6 +1038,15 @@ $.TokenList = function (input, url_or_data, settings) {
         return url;
     }
 
+    // compute exrtaParams. Return object if object, return restult of function if function
+    function computeExtraParams() {
+        var data = $(input).data("settings").extraParams;
+        if(typeof data == 'function') {
+            data = data.call($(input).data("settings"));
+        }
+        return data;
+    }
+    
     // Bring browser focus to the specified object.
     // Use of setTimeout is to get around an IE bug.
     // (See, e.g., http://stackoverflow.com/questions/2600186/focus-doesnt-work-in-ie)
@@ -1058,4 +1089,3 @@ $.TokenList.Cache = function (options) {
     };
 };
 }(jQuery));
-
