@@ -21,8 +21,8 @@ fieldset.token-input-mac.token-input-dropdown-mac {
 }
 
 ul.token-input-list-mac {
-    overflow: hidden; 
-    height: auto !important; 
+    overflow: hidden;
+    height: auto !important;
     height: 1%;
     cursor: text;
     font-size: 12px;
@@ -61,11 +61,11 @@ li.token-input-token-mac {
     font-family: "Lucida Grande", Arial, sans-serif;
     font-size: 9pt;
     line-height: 12pt;
-    overflow: hidden; 
-    height: 16px; 
+    overflow: hidden;
+    height: 16px;
     margin: 3px;
-    padding: 0 10px;   
-    background: none; 
+    padding: 0 10px;
+    background: none;
     background-color: #dee7f8;
     color: #000;
     cursor: default;

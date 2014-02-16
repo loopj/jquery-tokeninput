@@ -1,13 +1,13 @@
 /* Example tokeninput style #1: Token vertical list*/
 ul.token-input-list {
-    overflow: hidden; 
-    height: auto !important; 
+    overflow: hidden;
+    height: auto !important;
     height: 1%;
     width: 400px;
     border: 1px solid #999;
     cursor: text;
-    font-size: 12px;
-    font-family: Verdana, sans-serif;
+    font-size: 13px;
+    font-family: "helvetica neue", helvetica, arial, freesans, sans-serif;
     z-index: 999;
     margin: 0;
     padding: 0;
@@ -44,8 +44,8 @@ ul.token-input-disabled li.token-input-token span {
 }
 
 li.token-input-token {
-    overflow: hidden; 
-    height: auto !important; 
+    overflow: hidden;
+    height: auto !important;
     height: 1%;
     margin: 3px;
     padding: 3px 5px;
@@ -86,8 +86,8 @@ div.token-input-dropdown {
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     cursor: default;
-    font-size: 12px;
-    font-family: Verdana, sans-serif;
+    font-size: 13px;
+    font-family: "helvetica neue", helvetica, arial, freesans, sans-serif;
     z-index: 1;
 }
 
@@ -124,4 +124,8 @@ div.token-input-dropdown ul li em {
 
 div.token-input-dropdown ul li.token-input-selected-dropdown-item {
     background-color: #d0efa0;
+}
+
+.token-input-delete-token {
+    line-height: 1;
 }
