@@ -9,7 +9,29 @@
  */
 (function ($) {
 
-    var DEFAULT_SETTINGS = {
+    var HTML_ESCAPE_CHARS,
+        DEFAULT_SETTINGS,
+        DEFAULT_CLASSES,
+        POSITION,
+        KEY,
+        HTML_ESCAPE_CHARS,
+        HTML_ESCAPES,
+        Settings,
+        methods,
+
+        // Save the tokens
+        tokenStorage = [],
+
+        // Keep track of the number of tokens in the list
+        tokenCount = 0,
+        cache,
+
+        // Keep track of the timeout, old vals
+        timeout,
+        inputValue;
+
+
+    DEFAULT_SETTINGS = {
         method: "GET",
         queryParam: "q",
         searchDelay: 300,
@@ -54,6 +76,7 @@
         // Behavioral settings
         allowFreeTagging: false,
         allowTabOut: false,
+        onSelectFirstResult: false,
 
         // Callbacks
         onResult: null,
@@ -71,7 +94,7 @@
 };
 
 // Default classes to use when theming
-var DEFAULT_CLASSES = {
+DEFAULT_CLASSES = {
     tokenList            : "token-input-list",
     token                : "token-input-token",
     tokenReadOnly        : "token-input-token-readonly",
@@ -88,13 +111,13 @@ var DEFAULT_CLASSES = {
 };
 
 // Input box position "enum"
-var POSITION = {
+POSITION = {
     BEFORE : 0,
     AFTER  : 1,
     END    : 2
 };
 
-var KEY = {
+KEY = {
     BACKSPACE    : 8,
     TAB          : 9,
     ENTER        : 13,
@@ -112,8 +135,8 @@ var KEY = {
     COMMA        : 188
 };
 
-var HTML_ESCAPE_CHARS = /[&<>"'\/]/g;
-var HTML_ESCAPES = {
+HTML_ESCAPE_CHARS = /[&<>"'\/]/g;
+HTML_ESCAPES = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
@@ -121,8 +144,6 @@ var HTML_ESCAPES = {
   "'": '&#x27;',
   '/': '&#x2F;'
 };
-
-var Settings;
 
 function coerceToString(val) {
   return String((val === null || val === undefined) ? '' : val);
@@ -135,7 +156,7 @@ function _escapeHTML(text) {
 }
 
 // Additional public (exposed) methods
-var methods = {
+methods = {
     init: function(url_or_data_or_function, options) {
         var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
 
@@ -233,18 +254,8 @@ $.TokenList = function (input, source, settings) {
         Settings.classes = DEFAULT_CLASSES;
     }
 
-    // Save the tokens
-    var tokenStorage = [];
-
-    // Keep track of the number of tokens in the list
-    var token_count = 0;
-
     // Basic cache to save on db hits
-    var cache = new $.TokenList.Cache();
-
-    // Keep track of the timeout, old vals
-    var timeout;
-    var inputValue;
+    cache = new $.TokenList.Cache();
 
     // Create a new text input an attach keyup events
     var input_box = $("<input type=\"text\"  autocomplete=\"off\" autocapitalize=\"off\"/>")
@@ -256,7 +267,7 @@ $.TokenList = function (input, source, settings) {
             if (Settings.disabled) {
                 return false;
             } else {
-                if (Settings.tokenLimit === null || Settings.tokenLimit !== token_count) {
+                if (Settings.tokenLimit === null || Settings.tokenLimit !== tokenCount) {
                     onDropdownShow_hint();
                 }
             }
@@ -308,12 +319,20 @@ $.TokenList = function (input, source, settings) {
                         var dropdownItem = null;
 
                         if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
-                            dropdownItem = $(selected_dropdownItem).next();
+                            dropdownItem = $(dropdown).find('li').first();
+
+                            if (optionSelected) {
+                                dropdownItem = $(optionSelected).next();
+                            }
                         } else {
-                            dropdownItem = $(selected_dropdownItem).prev();
+                            dropdownItem = $(dropdown).find('li').last();
+
+                            if (optionSelected) {
+                                dropdownItem = $(optionSelected).prev();
+                            }
                         }
 
-                        if(dropdownItem.length) {
+                        if(dropdownItem) {
                             onDropdownItem(dropdownItem);
                         }
                     }
@@ -347,8 +366,8 @@ $.TokenList = function (input, source, settings) {
                 case KEY.ENTER:
                 case KEY.NUMPAD_ENTER:
                 case KEY.COMMA:
-                    if(selected_dropdownItem) {
-                        onTokenAdd($(selected_dropdownItem).data("tokeninput"));
+                    if(optionSelected) {
+                        onTokenAdd($(optionSelected).data("tokeninput"));
                         inputHidden.change();
                   } else {
                     if (Settings.allowFreeTagging) {
@@ -407,7 +426,7 @@ $.TokenList = function (input, source, settings) {
     // Keep a reference to the selected token and dropdown item
     var tokenSelected = null;
     var tokenSelected_index = 0;
-    var selected_dropdownItem = null;
+    var optionSelected = null;
 
     // The list to store the token items in
     var tokenList = $("<ul />")
@@ -572,7 +591,7 @@ $.TokenList = function (input, source, settings) {
     }
 
     function checkTokenLimit() {
-        if(Settings.tokenLimit !== null && token_count >= Settings.tokenLimit) {
+        if(Settings.tokenLimit !== null && tokenCount >= Settings.tokenLimit) {
             input_box.hide();
             onHideDropdown();
             return;
@@ -661,10 +680,10 @@ $.TokenList = function (input, source, settings) {
         // Update the hidden input
         onUpdateInputHidden(tokenStorage, inputHidden);
 
-        token_count += 1;
+        tokenCount += 1;
 
         // Check the token limit
-        if(Settings.tokenLimit !== null && token_count >= Settings.tokenLimit) {
+        if(Settings.tokenLimit !== null && tokenCount >= Settings.tokenLimit) {
             input_box.hide();
             onHideDropdown();
         }
@@ -677,7 +696,7 @@ $.TokenList = function (input, source, settings) {
         var callback = Settings.onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
-        if(token_count > 0 && Settings.preventDuplicates) {
+        if(tokenCount > 0 && Settings.preventDuplicates) {
             var found_existing_token = null;
 
             tokenList.children().each(function () {
@@ -701,7 +720,7 @@ $.TokenList = function (input, source, settings) {
         input_box.width(0);
 
         // Insert the new tokens
-        if(Settings.tokenLimit == null || token_count < Settings.tokenLimit) {
+        if(Settings.tokenLimit == null || tokenCount < Settings.tokenLimit) {
             onTokenInsert(item);
             // Remove the placeholder so it's not seen after you've added a token
             input_box.attr("placeholder", null)
@@ -747,7 +766,7 @@ $.TokenList = function (input, source, settings) {
             tokenSelected_index++;
         } else {
             tokenInput.appendTo(tokenList);
-            tokenSelected_index = token_count;
+            tokenSelected_index = tokenCount;
         }
 
         // Show the input box and give it focus again
@@ -799,7 +818,7 @@ $.TokenList = function (input, source, settings) {
         // Update the hidden input
         onUpdateInputHidden(tokenStorage, inputHidden);
 
-        token_count -= 1;
+        tokenCount -= 1;
 
         if(Settings.tokenLimit !== null) {
             input_box
@@ -830,7 +849,7 @@ $.TokenList = function (input, source, settings) {
     // Hide and clear the results dropdown
     function onHideDropdown () {
         dropdown.hide().empty();
-        selected_dropdownItem = null;
+        optionSelected = null;
     }
 
     function onDropdownShow() {
@@ -913,7 +932,7 @@ $.TokenList = function (input, source, settings) {
                     this_li.addClass(Settings.classes.dropdownItem2);
                 }
 
-                if(index === 0) {
+                if((index === 0) && Settings.onSelectFirstResult) {
                     onDropdownItem(this_li);
                 }
 
@@ -939,19 +958,19 @@ $.TokenList = function (input, source, settings) {
     // Highlight an item in the results dropdown
     function onDropdownItem (item) {
         if(item) {
-            if(selected_dropdownItem) {
-                deonDropdownItem($(selected_dropdownItem));
+            if(optionSelected) {
+                deonDropdownItem($(optionSelected));
             }
 
             item.addClass(Settings.classes.selectedDropdownItem);
-            selected_dropdownItem = item.get(0);
+            optionSelected = item.get(0);
         }
     }
 
     // Remove highlighting from an item in the results dropdown
     function deonDropdownItem (item) {
         item.removeClass(Settings.classes.selectedDropdownItem);
-        selected_dropdownItem = null;
+        optionSelected = null;
     }
 
     // Do a search and show the "searching" dropdown if the input is longer
