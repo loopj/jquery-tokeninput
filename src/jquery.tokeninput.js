@@ -1,12 +1,12 @@
 /*
- * jQuery Plugin: Tokenizing Autocomplete Text Entry
- * Version 1.6.1
- *
- * Copyright (c) 2009 James Smith (http://loopj.com)
- * Licensed jointly under the GPL and MIT licenses,
- * choose which one suits your project best!
- *
- */
+* jQuery Plugin: Tokenizing Autocomplete Text Entry
+* Version 1.6.1
+*
+* Copyright (c) 2009 James Smith (http://loopj.com)
+* Licensed jointly under the GPL and MIT licenses,
+* choose which one suits your project best!
+*
+*/
 
 (function ($) {
 // Default settings
@@ -16,6 +16,7 @@ var DEFAULT_SETTINGS = {
     queryParam: "q",
     searchDelay: 300,
     minChars: 1,
+    propertiesToSearch: ["last_name", "first_name"],
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
@@ -248,7 +249,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var input_val;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\"  autocomplete=\"off\" autocapitalize=\"off\"/>")
+    var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\"/>")
         .css({
             outline: "none"
         })
@@ -569,10 +570,10 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     function is_printable_character(keycode) {
-        return ((keycode >= 48 && keycode <= 90) ||     // 0-1a-z
-                (keycode >= 96 && keycode <= 111) ||    // numpad 0-9 + - / * .
-                (keycode >= 186 && keycode <= 192) ||   // ; = , - . / ^
-                (keycode >= 219 && keycode <= 222));    // ( \ ) '
+        return ((keycode >= 48 && keycode <= 90) || // 0-1a-z
+                (keycode >= 96 && keycode <= 111) || // numpad 0-9 + - / * .
+                (keycode >= 186 && keycode <= 192) || // ; = , - . / ^
+                (keycode >= 219 && keycode <= 222)); // ( \ ) '
     }
 
     function add_freetagging_tokens() {
@@ -864,6 +865,18 @@ $.TokenList = function (input, url_or_data, settings) {
 
                 this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
 
+
+                if($(input).data("settings").propertiesToSearch.length>0){
+                    var string_concatened = "";
+                    for (i=0; i<$(input).data("settings").propertiesToSearch.length;i++){
+                        string_concatened += value[$(input).data("settings").propertiesToSearch[i]]+" "
+                    }
+                     this_li = find_value_and_highlight_term(this_li ,string_concatened, query);
+                }else{
+                    this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
+                }
+
+
                 this_li = $(this_li).appendTo(dropdown_ul);
 
                 if(index % 2) {
@@ -995,7 +1008,18 @@ $.TokenList = function (input, url_or_data, settings) {
             } else if($(input).data("settings").local_data) {
                 // Do the search through local data
                 var results = $.grep($(input).data("settings").local_data, function (row) {
-                    return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+                
+                    if($(input).data("settings").propertiesToSearch.length>0){
+                        var string_concatened = "";
+                        for (i=0; i<$(input).data("settings").propertiesToSearch.length;i++){
+                           string_concatened += row[$(input).data("settings").propertiesToSearch[i]].toLowerCase()+" "
+                        }
+                        return string_concatened.indexOf(query.toLowerCase()) > -1;
+                    }else{
+                            return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;                        
+                    }
+                
+
                 });
 
                 cache.add(cache_key, results);
