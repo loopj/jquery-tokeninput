@@ -863,8 +863,6 @@ $.TokenList = function (input, url_or_data, settings) {
             $.each(results, function(index, value) {
                 var this_li = $(input).data("settings").resultsFormatter(value);
 
-                this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
-
 
                 if($(input).data("settings").propertiesToSearch.length>0){
                     var string_concatened = "";
