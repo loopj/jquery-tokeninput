@@ -19,6 +19,8 @@ var DEFAULT_SETTINGS = {
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
+    excludeCurrent: false,
+    excludeCurrentParam: "x",
 
     // Prepopulation settings
     prePopulate: null,
@@ -839,8 +841,38 @@ $.TokenList = function (input, url_or_data, settings) {
         return template.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + regexp_escape(value) + ")(?![^<>]*>)(?![^&;]+;)", "g"), highlight_term(value, term));
     }
 
+    // exclude existing tokens from dropdown, so the list is clearer
+    function excludeCurrent(results) {
+        // if enabled, remove existing tokens
+        if ($(input).data("settings").excludeCurrent) {
+            var currentTokens = $(input).data("tokenInputObject").getTokens(),
+                trimmedList = [];
+            if (currentTokens.length > 0) {
+                $.each(results, function(index, value) {
+                    var notFound = true;
+                    $.each(currentTokens, function(cIndex, cValue) {
+                        if (value[$(input).data("settings").propertyToSearch] == cValue[$(input).data("settings").propertyToSearch]) {
+                            notFound = false;
+                            return false;
+                        }
+                    });
+
+                    if (notFound) {
+                        trimmedList.push(value);
+                    }
+                });
+                results = trimmedList;
+            }
+        }
+
+        return results;
+    }
+
     // Populate the results dropdown with some results
     function populate_dropdown (query, results) {
+        // exclude current tokens if configured
+        results = excludeCurrent(results);
+
         if(results && results.length) {
             dropdown.empty();
             var dropdown_ul = $("<ul/>")
@@ -939,7 +971,7 @@ $.TokenList = function (input, url_or_data, settings) {
     function run_search(query) {
         var cache_key = query + computeURL();
         var cached_results = cache.get(cache_key);
-        if(cached_results) {
+        if (cached_results) {
             if ($.isFunction($(input).data("settings").onCachedResult)) {
               cached_results = $(input).data("settings").onCachedResult.call(hidden_input, cached_results);
             }
@@ -948,7 +980,7 @@ $.TokenList = function (input, url_or_data, settings) {
             // Are we doing an ajax search or local data search?
             if($(input).data("settings").url) {
                 var url = computeURL();
-                // Extract exisiting get params
+                // Extract existing get params
                 var ajax_params = {};
                 ajax_params.data = {};
                 if(url.indexOf("?") > -1) {
@@ -968,8 +1000,22 @@ $.TokenList = function (input, url_or_data, settings) {
                 ajax_params.data[$(input).data("settings").queryParam] = query;
                 ajax_params.type = $(input).data("settings").method;
                 ajax_params.dataType = $(input).data("settings").contentType;
-                if($(input).data("settings").crossDomain) {
+                if ($(input).data("settings").crossDomain) {
                     ajax_params.dataType = "jsonp";
+                }
+
+                // exclude current tokens?
+                // send exclude list to the server, so it can also exclude existing tokens
+                if ($(input).data("settings").excludeCurrent) {
+                    var currentTokens = $(input).data("tokenInputObject").getTokens();
+                    var tokenList = $.map(currentTokens, function (el) {
+                        if(typeof $(input).data("settings").tokenValue == 'function')
+                            return $(input).data("settings").tokenValue.call(this, el);
+
+                        return el[$(input).data("settings").tokenValue];
+                    });
+
+                    ajax_params.data[$(input).data("settings").excludeCurrentParam] = tokenList.join($(input).data("settings").tokenDelimiter);
                 }
 
                 // Attach the success callback
