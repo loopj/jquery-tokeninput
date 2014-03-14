@@ -20,7 +20,7 @@ var DEFAULT_SETTINGS = {
     jsonContainer: null,
     contentType: "json",
     excludeCurrent: false,
-    excludeCurrentParam: "x",
+    excludeCurrentParameter: "x",
 
     // Prepopulation settings
     prePopulate: null,
@@ -843,11 +843,10 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // exclude existing tokens from dropdown, so the list is clearer
     function excludeCurrent(results) {
-        // if enabled, remove existing tokens
         if ($(input).data("settings").excludeCurrent) {
             var currentTokens = $(input).data("tokenInputObject").getTokens(),
                 trimmedList = [];
-            if (currentTokens.length > 0) {
+            if (currentTokens.length) {
                 $.each(results, function(index, value) {
                     var notFound = true;
                     $.each(currentTokens, function(cIndex, cValue) {
@@ -1015,7 +1014,7 @@ $.TokenList = function (input, url_or_data, settings) {
                         return el[$(input).data("settings").tokenValue];
                     });
 
-                    ajax_params.data[$(input).data("settings").excludeCurrentParam] = tokenList.join($(input).data("settings").tokenDelimiter);
+                    ajax_params.data[$(input).data("settings").excludeCurrentParameter] = tokenList.join($(input).data("settings").tokenDelimiter);
                 }
 
                 // Attach the success callback
