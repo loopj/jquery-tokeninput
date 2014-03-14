@@ -15,7 +15,7 @@
     </script>
 </head>
 
-<body>
+<body style="margin-bottom: 200px;">
     <h1>jQuery Tokeninput Demos</h1>
 
     <h2>Simple Server-Backed Search</h2>
@@ -235,9 +235,9 @@
 
     <h2 id="plugin-methods">Using the add, remove, clear and toggleDisabled Methods</h2>
     <div>
-      <a href="#" id="plugin-methods-add">Add Token</a> | 
-      <a href="#" id="plugin-methods-remove">Remove Token</a> | 
-      <a href="#" id="plugin-methods-clear">Clear Tokens</a> | 
+      <a href="#" id="plugin-methods-add">Add Token</a> |
+      <a href="#" id="plugin-methods-remove">Remove Token</a> |
+      <a href="#" id="plugin-methods-clear">Clear Tokens</a> |
       <a href="#" id="plugin-methods-toggle-disable">Toggle Disabled</a><br />
         <input type="text" id="demo-input-plugin-methods" name="blah" />
         <input type="button" value="Submit" />
@@ -272,7 +272,7 @@
         });
         </script>
     </div>
-    
+
     <h2>Local Data Search with custom propertyToSearch, resultsFormatter and tokenFormatter</h2>
     <div>
         <input type="text" id="demo-input-local-custom-formatters" name="blah" />
@@ -674,7 +674,7 @@
         });
         </script>
     </div>
-    
+
     <h2>Start disabled</h2>
     <div>
         <input type="text" id="demo-input-disabled" name="blah" />
@@ -717,6 +717,32 @@
                 allowFreeTagging: true
             });
         });
+        </script>
+    </div>
+
+    <h2>Exclude Current Tokens From Autocomplete</h2>
+    <div>
+        <input type="text" id="demo-input-local-exclude" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#demo-input-local-exclude").tokenInput([
+                    {id: 7, name: "Ruby"},
+                    {id: 11, name: "Python"},
+                    {id: 13, name: "JavaScript"},
+                    {id: 17, name: "ActionScript"},
+                    {id: 19, name: "Scheme"},
+                    {id: 23, name: "Lisp"},
+                    {id: 29, name: "C#"},
+                    {id: 31, name: "Fortran"},
+                    {id: 37, name: "Visual Basic"},
+                    {id: 41, name: "C"},
+                    {id: 43, name: "C++"},
+                    {id: 47, name: "Java"}
+                ], {
+                    excludeCurrent: true
+                });
+            });
         </script>
     </div>
 
