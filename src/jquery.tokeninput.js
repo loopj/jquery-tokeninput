@@ -739,40 +739,45 @@ $.TokenList = function (input, url_or_data, settings) {
     function delete_token (token) {
         // Remove the id from the saved list
         var token_data = $.data(token.get(0), "tokeninput");
-        var callback = $(input).data("settings").onDelete;
 
-        var index = token.prevAll().length;
-        if(index > selected_token_index) index--;
+        // don't delete readonly tokens
+        if (!token_data.readonly) {
 
-        // Delete the token
-        token.remove();
-        selected_token = null;
+            var callback = $(input).data("settings").onDelete;
+                index = token.prevAll().length;
 
-        // Show the input box and give it focus again
-        focus_with_timeout(input_box);
+            if(index > selected_token_index) index--;
 
-        // Remove this token from the saved list
-        saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
-        if (saved_tokens.length == 0) {
-            input_box.attr("placeholder", settings.placeholder)
-        }
-        if(index < selected_token_index) selected_token_index--;
+            // Delete the token
+            token.remove();
+            selected_token = null;
 
-        // Update the hidden input
-        update_hidden_input(saved_tokens, hidden_input);
-
-        token_count -= 1;
-
-        if($(input).data("settings").tokenLimit !== null) {
-            input_box
-                .show()
-                .val("");
+            // Show the input box and give it focus again
             focus_with_timeout(input_box);
-        }
 
-        // Execute the onDelete callback if defined
-        if($.isFunction(callback)) {
-            callback.call(hidden_input,token_data);
+            // Remove this token from the saved list
+            saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
+            if (saved_tokens.length == 0) {
+                input_box.attr("placeholder", settings.placeholder)
+            }
+            if(index < selected_token_index) selected_token_index--;
+
+            // Update the hidden input
+            update_hidden_input(saved_tokens, hidden_input);
+
+            token_count -= 1;
+
+            if($(input).data("settings").tokenLimit !== null) {
+                input_box
+                    .show()
+                    .val("");
+                focus_with_timeout(input_box);
+            }
+
+            // Execute the onDelete callback if defined
+            if($.isFunction(callback)) {
+                callback.call(hidden_input,token_data);
+            }
         }
     }
 
