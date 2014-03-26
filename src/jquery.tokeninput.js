@@ -66,6 +66,7 @@ var DEFAULT_SETTINGS = {
     onFreeTaggingAdd: null,
     onDelete: null,
     onReady: null,
+    onSend: null,
 
     // Other settings
     idPrefix: "token-input-",
@@ -377,8 +378,8 @@ $.TokenList = function (input, url_or_data, settings) {
         });
 
     // Keep reference for placeholder
-    if (settings.placeholder)
-        input_box.attr("placeholder", settings.placeholder)
+    if ($(input).data("settings").placeholder)
+        input_box.attr("placeholder", $(input).data("settings").placeholder);
 
     // Keep a reference to the original input box
     var hidden_input = $(input)
@@ -466,7 +467,7 @@ $.TokenList = function (input, url_or_data, settings) {
         $.each(li_data, function (index, value) {
             insert_token(value);
             checkTokenLimit();
-            input_box.attr("placeholder", null)
+            input_box.attr("placeholder", null);
         });
     }
 
@@ -564,7 +565,7 @@ $.TokenList = function (input, url_or_data, settings) {
         // Get width left on the current line
         var width_left = token_list.width() - input_box.offset().left - token_list.offset().left;
         // Enter new content into resizer and resize input accordingly
-        input_resizer.html(_escapeHTML(input_val) || _escapeHTML(settings.placeholder));
+        input_resizer.html(_escapeHTML(input_val) || _escapeHTML($(input).data("settings").placeholder));
         // Get maximum width, minimum the size of input and maximum the widget's width
         input_box.width(Math.min(token_list.width(),
                                  Math.max(width_left, input_resizer.width() + 30)));
@@ -649,7 +650,7 @@ $.TokenList = function (input, url_or_data, settings) {
             token_list.children().each(function () {
                 var existing_token = $(this);
                 var existing_data = $.data(existing_token.get(0), "tokeninput");
-                if(existing_data && existing_data[settings.tokenValue] === item[settings.tokenValue]) {
+                if(existing_data && existing_data[$(input).data("settings").tokenValue] === item[$(input).data("settings").tokenValue]) {
                     found_existing_token = existing_token;
                     return false;
                 }
@@ -670,7 +671,7 @@ $.TokenList = function (input, url_or_data, settings) {
         if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
             insert_token(item);
             // Remove the placeholder so it's not seen after you've added a token
-            input_box.attr("placeholder", null)
+            input_box.attr("placeholder", null);
             checkTokenLimit();
         }
 
@@ -754,7 +755,7 @@ $.TokenList = function (input, url_or_data, settings) {
         // Remove this token from the saved list
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
         if (saved_tokens.length == 0) {
-            input_box.attr("placeholder", settings.placeholder)
+            input_box.attr("placeholder", $(input).data("settings").placeholder);
         }
         if(index < selected_token_index) selected_token_index--;
 
@@ -1031,8 +1032,8 @@ $.TokenList = function (input, url_or_data, settings) {
                 };
 
                 // Provide a beforeSend callback
-                if (settings.onSend) {
-                  settings.onSend(ajax_params);
+                if ($(input).data("settings").onSend) {
+                  $(input).data("settings").onSend(ajax_params);
                 }
 
                 // Make the request
