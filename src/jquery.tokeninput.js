@@ -14,8 +14,8 @@ var DEFAULT_SETTINGS = {
     // Search settings
     method: "GET",
     queryParam: "q",
-    searchDelay: 300,
-    minChars: 1,
+    searchDelay: 175,
+    minChars: 3,
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
@@ -236,6 +236,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Save the tokens
     var saved_tokens = [];
+    var token_values = [];
 
     // Keep track of the number of tokens in the list
     var token_count = 0;
@@ -625,7 +626,7 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_token_index++;
 
         // Update the hidden input
-        update_hidden_input(saved_tokens, hidden_input);
+        hidden_input_insert(hidden_input, token_data);
 
         token_count += 1;
 
@@ -643,7 +644,7 @@ $.TokenList = function (input, url_or_data, settings) {
         // Differentiates between programtic add_token and user add_token
         // User actions would need to show the display hint, et all
         interactive = typeof interactive !== 'undefined' ? interactive : true;
-      
+
         var callback = $(input).data("settings").onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
@@ -743,7 +744,7 @@ $.TokenList = function (input, url_or_data, settings) {
         // Differentiates between programtic delete_token and user delete_token
         // User actions would need to show the display hint, et all
         interactive = typeof interactive !== 'undefined' ? interactive : true;
-        
+
         // Remove the id from the saved list
         var token_data = $.data(token.get(0), "tokeninput");
         var callback = $(input).data("settings").onDelete;
@@ -766,7 +767,7 @@ $.TokenList = function (input, url_or_data, settings) {
         if(index < selected_token_index) selected_token_index--;
 
         // Update the hidden input
-        update_hidden_input(saved_tokens, hidden_input);
+        hidden_input_remove(hidden_input, token_data);
 
         token_count -= 1;
 
@@ -784,16 +785,16 @@ $.TokenList = function (input, url_or_data, settings) {
         }
     }
 
-    // Update the hidden input box value
-    function update_hidden_input(saved_tokens, hidden_input) {
-        var token_values = $.map(saved_tokens, function (el) {
-            if(typeof $(input).data("settings").tokenValue == 'function')
-              return $(input).data("settings").tokenValue.call(this, el);
+    // Update the hidden input box value by adding a single value
+    function hidden_input_insert(hidden_input, token_data) {
+      token_values.push(token_data[$(input).data("settings").tokenValue]);
+      hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
+    }
 
-            return el[$(input).data("settings").tokenValue];
-        });
-        hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
-
+    // Update the hidden input box value by adding a single value
+    function hidden_input_remove(hidden_input, token_data) {
+      token_values.splice(token_values.indexOf(token_data[$(input).data("settings").tokenValue]), 1);
+      hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
     }
 
     // Hide and clear the results dropdown
@@ -1063,4 +1064,3 @@ $.TokenList.Cache = function (options) {
     };
 };
 }(jQuery));
-
