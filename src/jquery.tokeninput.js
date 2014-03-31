@@ -14,8 +14,8 @@ var DEFAULT_SETTINGS = {
     // Search settings
     method: "GET",
     queryParam: "q",
-    searchDelay: 300,
-    minChars: 1,
+    searchDelay: 175,
+    minChars: 3,
     propertyToSearch: "name",
     jsonContainer: null,
     contentType: "json",
@@ -34,7 +34,7 @@ var DEFAULT_SETTINGS = {
     animateDropdown: true,
     placeholder: null,
     theme: null,
-    zindex: 999,
+    zindex: 1100,
     resultsLimit: null,
 
     enableHTML: false,
@@ -238,6 +238,7 @@ $.TokenList = function (input, url_or_data, settings) {
 
     // Save the tokens
     var saved_tokens = [];
+    var token_values = [];
 
     // Keep track of the number of tokens in the list
     var token_count = 0;
@@ -487,13 +488,13 @@ $.TokenList = function (input, url_or_data, settings) {
     this.clear = function() {
         token_list.children("li").each(function() {
             if ($(this).children("input").length === 0) {
-                delete_token($(this));
+                delete_token($(this), false);
             }
         });
     };
 
     this.add = function(item) {
-        add_token(item);
+        add_token(item, false);
     };
 
     this.remove = function(item) {
@@ -508,7 +509,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     }
                 }
                 if (match) {
-                    delete_token($(this));
+                    delete_token($(this), false);
                 }
             }
         });
@@ -600,6 +601,7 @@ $.TokenList = function (input, url_or_data, settings) {
         var readonly = item.readonly === true ? true : false;
 
         if(readonly) $this_token.addClass($(input).data("settings").classes.tokenReadOnly);
+        if(item.class) $this_token.addClass(item.class);
 
         $this_token.addClass($(input).data("settings").classes.token).insertBefore(input_token);
 
@@ -626,7 +628,7 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_token_index++;
 
         // Update the hidden input
-        update_hidden_input(saved_tokens, hidden_input);
+        hidden_input_insert(hidden_input, token_data);
 
         token_count += 1;
 
@@ -640,7 +642,11 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Add a token to the token list based on user input
-    function add_token (item) {
+    function add_token (item, interactive) {
+        // Differentiates between programtic add_token and user add_token
+        // User actions would need to show the display hint, et all
+        interactive = typeof interactive !== 'undefined' ? interactive : true;
+
         var callback = $(input).data("settings").onAdd;
 
         // See if the token already exists and select it if we don't want duplicates
@@ -681,7 +687,7 @@ $.TokenList = function (input, url_or_data, settings) {
         hide_dropdown();
 
         // Execute the onAdd callback if defined
-        if($.isFunction(callback)) {
+        if($.isFunction(callback) && interactive) {
             callback.call(hidden_input,item);
         }
     }
@@ -736,7 +742,11 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Delete a token from the token list
-    function delete_token (token) {
+    function delete_token (token, interactive) {
+        // Differentiates between programtic delete_token and user delete_token
+        // User actions would need to show the display hint, et all
+        interactive = typeof interactive !== 'undefined' ? interactive : true;
+
         // Remove the id from the saved list
         var token_data = $.data(token.get(0), "tokeninput");
         var callback = $(input).data("settings").onDelete;
@@ -749,7 +759,7 @@ $.TokenList = function (input, url_or_data, settings) {
         selected_token = null;
 
         // Show the input box and give it focus again
-        focus_with_timeout(input_box);
+        if(interactive) focus_with_timeout(input_box);
 
         // Remove this token from the saved list
         saved_tokens = saved_tokens.slice(0,index).concat(saved_tokens.slice(index+1));
@@ -759,7 +769,7 @@ $.TokenList = function (input, url_or_data, settings) {
         if(index < selected_token_index) selected_token_index--;
 
         // Update the hidden input
-        update_hidden_input(saved_tokens, hidden_input);
+        hidden_input_remove(hidden_input, token_data);
 
         token_count -= 1;
 
@@ -770,22 +780,23 @@ $.TokenList = function (input, url_or_data, settings) {
             focus_with_timeout(input_box);
         }
 
-        // Execute the onDelete callback if defined
-        if($.isFunction(callback)) {
+        // Execute the onDelete callback if defined and this was a user-initiated delete
+        // (as opposed to a programmatic 'clear' or 'remove' call)
+        if($.isFunction(callback) && interactive) {
             callback.call(hidden_input,token_data);
         }
     }
 
-    // Update the hidden input box value
-    function update_hidden_input(saved_tokens, hidden_input) {
-        var token_values = $.map(saved_tokens, function (el) {
-            if(typeof $(input).data("settings").tokenValue == 'function')
-              return $(input).data("settings").tokenValue.call(this, el);
+    // Update the hidden input box value by adding a single value
+    function hidden_input_insert(hidden_input, token_data) {
+      token_values.push(token_data[$(input).data("settings").tokenValue]);
+      hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
+    }
 
-            return el[$(input).data("settings").tokenValue];
-        });
-        hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
-
+    // Update the hidden input box value by adding a single value
+    function hidden_input_remove(hidden_input, token_data) {
+      token_values.splice(token_values.indexOf(token_data[$(input).data("settings").tokenValue]), 1);
+      hidden_input.val(token_values.join($(input).data("settings").tokenDelimiter));
     }
 
     // Hide and clear the results dropdown
@@ -1103,4 +1114,3 @@ $.TokenList.Cache = function (options) {
     };
 };
 }(jQuery));
-
