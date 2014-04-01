@@ -254,7 +254,10 @@ $.TokenList = function (input, url_or_data, settings) {
         .css({
             outline: "none"
         })
-        .attr("id", $(input).data("settings").idPrefix + input.id)
+        .attr({
+            "id": $(input).data("settings").idPrefix + input.id,
+            "tabIndex": input.tabIndex
+        })
         .focus(function () {
             if ($(input).data("settings").disabled) {
                 return false;
