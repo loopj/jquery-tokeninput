@@ -7,10 +7,10 @@
  * choose which one suits your project best!
  *
  */
+;(function ($) {
 
-(function ($) {
-// Default settings
-var DEFAULT_SETTINGS = {
+  // Default settings
+  var DEFAULT_SETTINGS = {
     // Search settings
     method: "GET",
     queryParam: "q",
@@ -58,6 +58,7 @@ var DEFAULT_SETTINGS = {
     // Behavioral settings
     allowFreeTagging: false,
     allowTabOut: false,
+    autoSelectFirstResult: false,
 
     // Callbacks
     onResult: null,
@@ -72,10 +73,10 @@ var DEFAULT_SETTINGS = {
 
     // Keep track if the input is currently in disabled mode
     disabled: false
-};
+  };
 
-// Default classes to use when theming
-var DEFAULT_CLASSES = {
+  // Default classes to use when theming
+  var DEFAULT_CLASSES = {
     tokenList: "token-input-list",
     token: "token-input-token",
     tokenReadOnly: "token-input-token-readonly",
@@ -89,17 +90,17 @@ var DEFAULT_CLASSES = {
     inputToken: "token-input-input-token",
     focused: "token-input-focused",
     disabled: "token-input-disabled"
-};
+  };
 
-// Input box position "enum"
-var POSITION = {
+  // Input box position "enum"
+  var POSITION = {
     BEFORE: 0,
     AFTER: 1,
     END: 2
-};
+  };
 
-// Keys "enum"
-var KEY = {
+  // Keys "enum"
+  var KEY = {
     BACKSPACE: 8,
     TAB: 9,
     ENTER: 13,
@@ -115,18 +116,18 @@ var KEY = {
     DOWN: 40,
     NUMPAD_ENTER: 108,
     COMMA: 188
-};
+  };
 
-var HTML_ESCAPES = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#x27;',
-  '/': '&#x2F;'
-};
+  var HTML_ESCAPES = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '/': '&#x2F;'
+  };
 
-var HTML_ESCAPE_CHARS = /[&<>"'\/]/g;
+  var HTML_ESCAPE_CHARS = /[&<>"'\/]/g;
 
 function coerceToString(val) {
   return String((val === null || val === undefined) ? '' : val);
@@ -201,7 +202,7 @@ $.TokenList = function (input, url_or_data, settings) {
     //
 
     // Configure the data source
-    if($.type(url_or_data) === "string" || $.type(url_or_data) === "function") {
+    if(typeof(url_or_data) === "string" || typeof(url_or_data) === "function") {
         // Set the url to query against
         $(input).data("settings").url = url_or_data;
 
@@ -235,7 +236,6 @@ $.TokenList = function (input, url_or_data, settings) {
         $(input).data("settings").classes = DEFAULT_CLASSES;
     }
 
-
     // Save the tokens
     var saved_tokens = [];
 
@@ -250,7 +250,7 @@ $.TokenList = function (input, url_or_data, settings) {
     var input_val;
 
     // Create a new text input an attach keyup events
-    var input_box = $("<input type=\"text\"  autocomplete=\"off\" autocapitalize=\"off\"/>")
+    var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\"/>")
         .css({
             outline: "none"
         })
@@ -284,39 +284,46 @@ $.TokenList = function (input, url_or_data, settings) {
                 case KEY.RIGHT:
                 case KEY.UP:
                 case KEY.DOWN:
-                    if(!$(this).val()) {
-                        previous_token = input_token.prev();
-                        next_token = input_token.next();
+                  if(this.value.length === 0) {
+                      previous_token = input_token.prev();
+                      next_token = input_token.next();
 
-                        if((previous_token.length && previous_token.get(0) === selected_token) || (next_token.length && next_token.get(0) === selected_token)) {
-                            // Check if there is a previous/next token and it is selected
-                            if(event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) {
-                                deselect_token($(selected_token), POSITION.BEFORE);
-                            } else {
-                                deselect_token($(selected_token), POSITION.AFTER);
-                            }
-                        } else if((event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) && previous_token.length) {
-                            // We are moving left, select the previous token if it exists
-                            select_token($(previous_token.get(0)));
-                        } else if((event.keyCode === KEY.RIGHT || event.keyCode === KEY.DOWN) && next_token.length) {
-                            // We are moving right, select the next token if it exists
-                            select_token($(next_token.get(0)));
-                        }
+                      if((previous_token.length && previous_token.get(0) === selected_token) || (next_token.length && next_token.get(0) === selected_token)) {
+                          // Check if there is a previous/next token and it is selected
+                          if(event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) {
+                              deselect_token($(selected_token), POSITION.BEFORE);
+                          } else {
+                              deselect_token($(selected_token), POSITION.AFTER);
+                          }
+                      } else if((event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) && previous_token.length) {
+                          // We are moving left, select the previous token if it exists
+                          select_token($(previous_token.get(0)));
+                      } else if((event.keyCode === KEY.RIGHT || event.keyCode === KEY.DOWN) && next_token.length) {
+                          // We are moving right, select the next token if it exists
+                          select_token($(next_token.get(0)));
+                      }
+                  } else {
+                    var dropdown_item = null;
+
+                    if (event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
+                      dropdown_item = $(dropdown).find('li').first();
+
+                      if (selected_dropdown_item) {
+                        dropdown_item = $(selected_dropdown_item).next();
+                      }
                     } else {
-                        var dropdown_item = null;
+                      dropdown_item = $(dropdown).find('li').last();
 
-                        if(event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
-                            dropdown_item = $(selected_dropdown_item).next();
-                        } else {
-                            dropdown_item = $(selected_dropdown_item).prev();
-                        }
-
-                        if(dropdown_item.length) {
-                            select_dropdown_item(dropdown_item);
-                        }
+                      if (selected_dropdown_item) {
+                        dropdown_item = $(selected_dropdown_item).prev();
+                      }
                     }
-                    return false;
-                    break;
+
+                    select_dropdown_item(dropdown_item);
+                  }
+
+                  return false;
+                  break;
 
                 case KEY.BACKSPACE:
                     previous_token = input_token.prev();
@@ -377,21 +384,24 @@ $.TokenList = function (input, url_or_data, settings) {
         });
 
     // Keep reference for placeholder
-    if (settings.placeholder)
-        input_box.attr("placeholder", settings.placeholder)
+    if (settings.placeholder) {
+      input_box.attr("placeholder", settings.placeholder);
+    }
 
     // Keep a reference to the original input box
     var hidden_input = $(input)
-                           .hide()
-                           .val("")
-                           .focus(function () {
-                               focus_with_timeout(input_box);
-                           })
-                           .blur(function () {
-                               input_box.blur();
-                               //return the object to this can be referenced in the callback functions.
-                               return hidden_input;
-                           });
+      .hide()
+      .val("")
+      .focus(function () {
+        focus_with_timeout(input_box);
+      })
+      .blur(function () {
+        input_box.blur();
+
+        //return the object to this can be referenced in the callback functions.
+        return hidden_input;
+      })
+    ;
 
     // Keep a reference to the selected token and dropdown item
     var selected_token = null;
@@ -459,10 +469,12 @@ $.TokenList = function (input, url_or_data, settings) {
     // Pre-populate list if items exist
     hidden_input.val("");
     var li_data = $(input).data("settings").prePopulate || hidden_input.data("pre");
-    if($(input).data("settings").processPrePopulate && $.isFunction($(input).data("settings").onResult)) {
+
+    if ($(input).data("settings").processPrePopulate && $.isFunction($(input).data("settings").onResult)) {
         li_data = $(input).data("settings").onResult.call(hidden_input, li_data);
     }
-    if(li_data && li_data.length) {
+
+    if (li_data && li_data.length) {
         $.each(li_data, function (index, value) {
             insert_token(value);
             checkTokenLimit();
@@ -476,8 +488,8 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Initialization is done
-    if($.isFunction($(input).data("settings").onReady)) {
-        $(input).data("settings").onReady.call();
+    if ($(input).data("settings").onReady === "function") {
+      $(input).data("settings").onReady.call();
     }
 
     //
@@ -894,7 +906,6 @@ $.TokenList = function (input, url_or_data, settings) {
                 var this_li = $(input).data("settings").resultsFormatter(value);
 
                 this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
-
                 this_li = $(this_li).appendTo(dropdown_ul);
 
                 if(index % 2) {
@@ -903,7 +914,7 @@ $.TokenList = function (input, url_or_data, settings) {
                     this_li.addClass($(input).data("settings").classes.dropdownItem2);
                 }
 
-                if(index === 0) {
+                if(index === 0 && $(input).data("settings").autoSelectFirstResult) {
                     select_dropdown_item(this_li);
                 }
 
@@ -1102,5 +1113,5 @@ $.TokenList.Cache = function (options) {
         return data[query];
     };
 };
-}(jQuery));
 
+}(jQuery));
