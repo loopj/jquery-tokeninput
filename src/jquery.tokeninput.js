@@ -488,7 +488,7 @@ $.TokenList = function (input, url_or_data, settings) {
     }
 
     // Initialization is done
-    if ($(input).data("settings").onReady === "function") {
+    if (typeof($(input).data("settings").onReady) === "function") {
       $(input).data("settings").onReady.call();
     }
 
