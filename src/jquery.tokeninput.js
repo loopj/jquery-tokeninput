@@ -322,7 +322,6 @@
                       select_dropdown_item(dropdown_item);
                     }
 
-                    return false;
                     break;
 
                   case KEY.BACKSPACE:
@@ -580,13 +579,6 @@
           // Get maximum width, minimum the size of input and maximum the widget's width
           input_box.width(Math.min(token_list.width(),
                                    Math.max(width_left, input_resizer.width() + 30)));
-      }
-
-      function is_printable_character(keycode) {
-          return ((keycode >= 48 && keycode <= 90) ||     // 0-1a-z
-                  (keycode >= 96 && keycode <= 111) ||    // numpad 0-9 + - / * .
-                  (keycode >= 186 && keycode <= 192) ||   // ; = , - . / ^
-                  (keycode >= 219 && keycode <= 222));    // ( \ ) '
       }
 
       function add_freetagging_tokens() {
