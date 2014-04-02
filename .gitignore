@@ -3,3 +3,4 @@ _layouts
 .DS_Store
 gh-pages
 *.sw*
+node_modules
