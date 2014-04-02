@@ -1,6 +1,6 @@
 {
     "name"         : "jquery-tokeninput",
-    "version"      : "1.6.1",
+    "version"      : "1.6.2",
     "description"  : "Tokeninput is a jQuery plugin which allows your users to select multiple items from a predefined list, using autocompletion as they type to find each item.",
     "main"         : [ "./src/jquery.tokeninput.js", "./styles/token-input.css" ],
     "homepage"     : "http://loopj.com/jquery-tokeninput",
