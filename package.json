@@ -1,5 +1,5 @@
 {
-  "name": "jquery-tokeninput",
+  "name": "jquery.tokeninput",
   "version": "2.0.0",
   "devDependencies": {
     "grunt": "~0.4.2",
