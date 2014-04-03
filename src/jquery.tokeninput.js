@@ -701,6 +701,9 @@
 
               // Hide dropdown if it is visible (eg if we clicked to select token)
               hide_dropdown();
+              
+              //Update selected tokeIndex
+              selected_token_index = token.prevAll().length + 1;
           }
       }
 
