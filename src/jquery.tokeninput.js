@@ -36,6 +36,7 @@
     theme: null,
     zindex: 999,
     resultsLimit: null,
+    multiselect: false,
 
     enableHTML: false,
 
@@ -682,7 +683,10 @@
           input_box.val("");
 
           // Don't show the help dropdown, they've got the idea
-          hide_dropdown();
+          if ( !!$(input).data("settings").multiselect && event.shiftKey) {
+          } else {
+              hide_dropdown();
+          };
 
           // Execute the onAdd callback if defined
           if($.isFunction(callback)) {
