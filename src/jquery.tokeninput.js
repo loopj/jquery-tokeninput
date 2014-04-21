@@ -438,6 +438,20 @@
           })
           .insertBefore(hidden_input);
 
+		// find all labels for fields and apply focus ability to them
+		var label = $('label[for="' + $($(hidden_input).filter('[id]')[0]).attr('id') + '"]');
+
+	  	// if label exists...
+		if(label.length > 0) {
+			// mimic default label behavior
+			label.on('click', function(e) {
+				e.preventDefault();
+
+				// focus
+				focus_with_timeout(input_box);
+			});
+		}
+	  
       // The token holding the input box
       var input_token = $("<li />")
           .addClass($(input).data("settings").classes.inputToken)
