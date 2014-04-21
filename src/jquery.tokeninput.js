@@ -798,17 +798,28 @@
           selected_dropdown_item = null;
       }
 
-      function show_dropdown() {
-          dropdown
-              .css({
-                  position: "absolute",
-                  top: token_list.offset().top + token_list.outerHeight(true),
-                  left: token_list.offset().left,
-                  width: token_list.width(),
-                  'z-index': $(input).data("settings").zindex
-              })
-              .show();
-      }
+		function show_dropdown() {
+			dropdown
+			  .css({
+				position: "absolute",
+				// make it the size of the token input area
+				width: $(token_list).width()-((parseInt(token_list.css('borderLeftWidth'))+parseInt(token_list.css('borderRightWidth'))+parseInt(token_list.css('paddingLeft'))+parseInt(token_list.css('paddingRight')))+(parseInt(dropdown.css('borderLeftWidth'))+parseInt(dropdown.css('borderRightWidth'))+parseInt(dropdown.css('paddingLeft'))+parseInt(dropdown.css('paddingRight')))),
+				maxHeight: '200px',
+				top: $(token_list).offset().top + $(token_list).outerHeight(),
+				left: $(token_list).offset().left,
+				// make it scrollable
+				overflow: 'auto',
+				zindex: 999
+			  })
+			  .show();
+		}
+	  	
+	  	// hide dropdown when clicked outside its' region
+		$('body').on('click', function(e) {
+			if($(e.target)[0] !== $(dropdown)[0]) {
+				hide_dropdown();
+			}
+		});
 
       function show_dropdown_searching () {
           if($(input).data("settings").searchingText) {
