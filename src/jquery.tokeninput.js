@@ -249,8 +249,11 @@
       var timeout;
       var input_val;
 
+	var tabIndex = $(input).attr('tabindex') || -1;
+		tabIndex = (tabIndex !== -1) ? ' tabindex="' + tabIndex + '"' : '';
+	  
       // Create a new text input an attach keyup events
-      var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\"/>")
+      var input_box = $("<input type=\"text\"" + tabIndex + " autocomplete=\"off\">")
           .css({
               outline: "none"
           })
@@ -265,8 +268,6 @@
               token_list.addClass($(input).data("settings").classes.focused);
           })
           .blur(function () {
-              hide_dropdown();
-
               if ($(input).data("settings").allowFreeTagging) {
                 add_freetagging_tokens();
               }
@@ -391,6 +392,7 @@
       var hidden_input = $(input)
         .hide()
         .val("")
+	  	.removeAttr('tabindex')
         .focus(function () {
           focus_with_timeout(input_box);
         })
