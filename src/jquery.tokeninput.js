@@ -535,7 +535,18 @@
       };
 
       this.add = function(item) {
-          add_token(item);
+			// fix for when dynamically adding tags to free-tagging field
+			if($(input).data("settings").allowFreeTagging) {
+				var token = item;
+				if ($.isFunction($(input).data("settings").onFreeTaggingAdd)) {
+					token = $(input).data("settings").onFreeTaggingAdd.call(hidden_input, token);
+				}
+
+				item = {};
+				item[$(input).data("settings").tokenValue] = item[$(input).data("settings").propertyToSearch] = token;
+			}
+
+			add_token(item);
       };
 
       this.remove = function(item) {
