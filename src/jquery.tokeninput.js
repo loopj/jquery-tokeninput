@@ -452,6 +452,21 @@
 			});
 		}
 	  
+	  	// debounce resize; update dropdown position
+		var timer;
+		$(window).on('resize', function() {
+			if(timer) {
+				clearTimeout(timer);
+			}
+
+			timer = setTimeout(function() {
+				if(dropdown.css('display') !== 'none') {
+					// recalculate
+					show_dropdown();
+				}
+			}, 50);
+		});
+	  
       // The token holding the input box
       var input_token = $("<li />")
           .addClass($(input).data("settings").classes.inputToken)
