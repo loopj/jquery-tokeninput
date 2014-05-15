@@ -976,6 +976,8 @@
           if (cached_results) {
               if ($.isFunction($(input).data("settings").onCachedResult)) {
                 cached_results = $(input).data("settings").onCachedResult.call(hidden_input, cached_results);
+              } else if($.isFunction($(input).data("settings").onResult)) {
+                cached_results = $(input).data("settings").onResult.call(hidden_input, cached_results);
               }
               populate_dropdown(query, cached_results);
           } else {
