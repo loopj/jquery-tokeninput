@@ -34,7 +34,7 @@
     animateDropdown: true,
     placeholder: null,
     theme: null,
-    zindex: 999,
+    zindex: 110000,
     resultsLimit: null,
 
     enableHTML: false,
