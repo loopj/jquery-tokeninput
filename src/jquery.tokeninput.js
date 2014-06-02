@@ -36,6 +36,7 @@
     theme: null,
     zindex: 999,
     resultsLimit: null,
+    appendTo: null,
 
     enableHTML: false,
 
@@ -445,9 +446,17 @@
           .append(input_box);
 
       // The list to store the dropdown items in
+      var li_container;
+
+      if($(input).data("settings").appendTo) {
+        li_container = $($(input).data("settings").appendTo);
+      } else {
+        li_container = $("<div/>");
+      }
+
       var dropdown = $("<div/>")
           .addClass($(input).data("settings").classes.dropdown)
-          .appendTo("body")
+          .appendTo(li_container)
           .hide();
 
       // Magic element to help us resize the text input
@@ -799,15 +808,19 @@
       }
 
       function show_dropdown() {
-          dropdown
-              .css({
-                  position: "absolute",
-                  top: token_list.offset().top + token_list.outerHeight(true),
-                  left: token_list.offset().left,
-                  width: token_list.width(),
-                  'z-index': $(input).data("settings").zindex
-              })
-              .show();
+          // Set default styles if not appending to existing element
+          if(!$(input).data("settings").appendTo) {
+            dropdown
+                .css({
+                    position: "absolute",
+                    top: token_list.offset().top + token_list.outerHeight(true),
+                    left: token_list.offset().left,
+                    width: token_list.width(),
+                    'z-index': $(input).data("settings").zindex
+                })
+          }
+
+          dropdown.show();
       }
 
       function show_dropdown_searching () {
