@@ -921,10 +921,19 @@
                   dropdown_ul.show();
               }
           } else {
-              if($(input).data("settings").noResultsText) {
-                  dropdown.html("<p>" + escapeHTML($(input).data("settings").noResultsText) + "</p>");
-                  show_dropdown();
+              var settings = $(input).data("settings");
+
+              if(!settings.noResultsText) { return; }
+
+              if(typeof settings.noResultsText === 'function') {
+                escapedQuery  = escapeHTML(query);
+                noResultsText = settings.noResultsText(escapedQuery, results);
+              } else {
+                noResultsText = "<p>" + escapeHTML(noResultsSetting) + "</p>";
               }
+
+              dropdown.html(noResultsText);
+              show_dropdown();
           }
       }
 

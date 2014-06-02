@@ -77,7 +77,7 @@
         $(document).ready(function() {
             $("#demo-input-custom-labels").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php", {
                 hintText: "I can has tv shows?",
-                noResultsText: "O noes",
+                noResultsText: function(query, results) { return "O noes, " + results.length + ' results for <em>' + query + '</em>!'},
                 searchingText: "Meowing..."
             });
         });
