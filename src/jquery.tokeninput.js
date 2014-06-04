@@ -382,6 +382,11 @@
               }
           });
 
+      // Copy original placeholder unless overridden
+      if (!settings.placeholder) {
+        settings.placeholder = $(input).attr('placeholder')
+      }
+
       // Keep reference for placeholder
       if (settings.placeholder) {
         input_box.attr("placeholder", settings.placeholder);
