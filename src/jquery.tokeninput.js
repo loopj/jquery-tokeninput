@@ -248,6 +248,9 @@
       // Keep track of the timeout, old vals
       var timeout;
       var input_val;
+      
+      // Keep track of pending searches
+      var pending_search = false;
 
       // Create a new text input an attach keyup events
       var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\"/>")
@@ -358,7 +361,7 @@
                         } else {
                           add_freetagging_tokens();
                         }
-                      } else {
+                      } else if (pending_search == false) {
                         $(this).val("");
                         if($(input).data("settings").allowTabOut) {
                           return true;
@@ -796,6 +799,7 @@
       function hide_dropdown () {
           dropdown.hide().empty();
           selected_dropdown_item = null;
+          pending_search = false;
       }
 
       function show_dropdown() {
@@ -926,6 +930,8 @@
                   show_dropdown();
               }
           }
+          
+          pending_search = false;
       }
 
       // Highlight an item in the results dropdown
@@ -949,6 +955,7 @@
       // Do a search and show the "searching" dropdown if the input is longer
       // than $(input).data("settings").minChars
       function do_search() {
+          pending_search = true;
           var query = input_box.val();
 
           if(query && query.length) {
@@ -966,6 +973,8 @@
               } else {
                   hide_dropdown();
               }
+          } else {
+              pending_search = false;
           }
       }
 
