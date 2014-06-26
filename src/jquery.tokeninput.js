@@ -712,8 +712,11 @@
           // Squeeze input_box so we force no unnecessary line break
           input_box.width(1);
 
+          // save before added token is incremented to total token count
+          var inLimit = ($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit);
+		  
           // Insert the new tokens
-          if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
+          if(inLimit) {
               insert_token(item);
               // Remove the placeholder so it's not seen after you've added a token
               input_box.attr("placeholder", null)
@@ -726,8 +729,8 @@
           // Don't show the help dropdown, they've got the idea
           hide_dropdown();
 
-          // Execute the onAdd callback if defined
-          if($.isFunction(callback)) {
+          // Execute the onAdd callback if defined and token limit not exceeded
+          if(typeof callback === 'function' && inLimit) {
               callback.call(hidden_input,item);
           }
       }
