@@ -249,8 +249,11 @@
       var timeout;
       var input_val;
 
+	var tabIndex = $(input).attr('tabindex') || -1;
+		tabIndex = (tabIndex !== -1) ? ' tabindex="' + tabIndex + '"' : '';
+	  
       // Create a new text input an attach keyup events
-      var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\"/>")
+      var input_box = $("<input type=\"text\"" + tabIndex + " autocomplete=\"off\">")
           .css({
               outline: "none"
           })
@@ -265,8 +268,6 @@
               token_list.addClass($(input).data("settings").classes.focused);
           })
           .blur(function () {
-              hide_dropdown();
-
               if ($(input).data("settings").allowFreeTagging) {
                 add_freetagging_tokens();
               }
@@ -391,6 +392,7 @@
       var hidden_input = $(input)
         .hide()
         .val("")
+	  	.removeAttr('tabindex')
         .focus(function () {
           focus_with_timeout(input_box);
         })
@@ -438,6 +440,35 @@
           })
           .insertBefore(hidden_input);
 
+		// find all labels for fields and apply focus ability to them
+		var label = $('label[for="' + $($(hidden_input).filter('[id]')[0]).attr('id') + '"]');
+
+	  	// if label exists...
+		if(label.length > 0) {
+			// mimic default label behavior
+			label.on('click', function(e) {
+				e.preventDefault();
+
+				// focus
+				focus_with_timeout(input_box);
+			});
+		}
+	  
+	  	// debounce resize; update dropdown position
+		var timer;
+		$(window).on('resize', function() {
+			if(timer) {
+				clearTimeout(timer);
+			}
+
+			timer = setTimeout(function() {
+				if(dropdown.css('display') !== 'none') {
+					// recalculate
+					show_dropdown();
+				}
+			}, 50);
+		});
+	  
       // The token holding the input box
       var input_token = $("<li />")
           .addClass($(input).data("settings").classes.inputToken)
@@ -504,7 +535,18 @@
       };
 
       this.add = function(item) {
-          add_token(item);
+			// fix for when dynamically adding tags to free-tagging field
+			if($(input).data("settings").allowFreeTagging) {
+				var token = item;
+				if ($.isFunction($(input).data("settings").onFreeTaggingAdd)) {
+					token = $(input).data("settings").onFreeTaggingAdd.call(hidden_input, token);
+				}
+
+				item = {};
+				item[$(input).data("settings").tokenValue] = item[$(input).data("settings").propertyToSearch] = token;
+			}
+
+			add_token(item);
       };
 
       this.remove = function(item) {
@@ -670,8 +712,11 @@
           // Squeeze input_box so we force no unnecessary line break
           input_box.width(1);
 
+          // save before added token is incremented to total token count
+          var inLimit = ($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit);
+		  
           // Insert the new tokens
-          if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
+          if(inLimit) {
               insert_token(item);
               // Remove the placeholder so it's not seen after you've added a token
               input_box.attr("placeholder", null)
@@ -684,8 +729,8 @@
           // Don't show the help dropdown, they've got the idea
           hide_dropdown();
 
-          // Execute the onAdd callback if defined
-          if($.isFunction(callback)) {
+          // Execute the onAdd callback if defined and token limit not exceeded
+          if(typeof callback === 'function' && inLimit) {
               callback.call(hidden_input,item);
           }
       }
@@ -798,17 +843,28 @@
           selected_dropdown_item = null;
       }
 
-      function show_dropdown() {
-          dropdown
-              .css({
-                  position: "absolute",
-                  top: token_list.offset().top + token_list.outerHeight(true),
-                  left: token_list.offset().left,
-                  width: token_list.width(),
-                  'z-index': $(input).data("settings").zindex
-              })
-              .show();
-      }
+		function show_dropdown() {
+			dropdown
+			  .css({
+				position: "absolute",
+				// make it the size of the token input area
+				width: $(token_list).width()-((parseInt(token_list.css('borderLeftWidth'))+parseInt(token_list.css('borderRightWidth'))+parseInt(token_list.css('paddingLeft'))+parseInt(token_list.css('paddingRight')))+(parseInt(dropdown.css('borderLeftWidth'))+parseInt(dropdown.css('borderRightWidth'))+parseInt(dropdown.css('paddingLeft'))+parseInt(dropdown.css('paddingRight')))),
+				maxHeight: '200px',
+				top: $(token_list).offset().top + $(token_list).outerHeight(),
+				left: $(token_list).offset().left,
+				// make it scrollable
+				overflow: 'auto',
+				zindex: 999
+			  })
+			  .show();
+		}
+	  	
+	  	// hide dropdown when clicked outside its' region
+		$('body').on('click', function(e) {
+			if($(e.target)[0] !== $(dropdown)[0]) {
+				hide_dropdown();
+			}
+		});
 
       function show_dropdown_searching () {
           if($(input).data("settings").searchingText) {
