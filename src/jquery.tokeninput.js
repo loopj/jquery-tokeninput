@@ -1,6 +1,6 @@
 /*
  * jQuery Plugin: Tokenizing Autocomplete Text Entry
- * Version 1.6.2
+ * Version 1.7.0
  *
  * Copyright (c) 2009 James Smith (http://loopj.com)
  * Licensed jointly under the GPL and MIT licenses,
@@ -286,7 +286,7 @@
                         previous_token = input_token.prev();
                         next_token = input_token.next();
 
-                        if((previous_token.length && previous_token.get(0) === selected_token) || 
+                        if((previous_token.length && previous_token.get(0) === selected_token) ||
 						   (next_token.length && next_token.get(0) === selected_token)) {
                             // Check if there is a previous/next token and it is selected
                             if(event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) {
@@ -673,7 +673,7 @@
           if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
               insert_token(item);
               // Remove the placeholder so it's not seen after you've added a token
-              input_box.attr("placeholder", null)
+              input_box.attr("placeholder", null);
               checkTokenLimit();
           }
 
@@ -1072,7 +1072,7 @@
           setTimeout(
             function() {
 			  object.focus();
-            }, 
+            },
 			50
 		  );
       }
