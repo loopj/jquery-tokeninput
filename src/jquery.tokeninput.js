@@ -286,7 +286,7 @@
                         previous_token = input_token.prev();
                         next_token = input_token.next();
 
-                        if((previous_token.length && previous_token.get(0) === selected_token) || 
+                        if((previous_token.length && previous_token.get(0) === selected_token) ||
 						   (next_token.length && next_token.get(0) === selected_token)) {
                             // Check if there is a previous/next token and it is selected
                             if(event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) {
@@ -600,7 +600,7 @@
       // Inner function to a token to the list
       function insert_token(item) {
           var $this_token = $($(input).data("settings").tokenFormatter(item));
-          var readonly = item.readonly === true ? true : false;
+          var readonly = item.readonly === true;
 
           if(readonly) $this_token.addClass($(input).data("settings").classes.tokenReadOnly);
 
@@ -673,7 +673,7 @@
           if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
               insert_token(item);
               // Remove the placeholder so it's not seen after you've added a token
-              input_box.attr("placeholder", null)
+              input_box.attr("placeholder", null);
               checkTokenLimit();
           }
 
@@ -1072,7 +1072,7 @@
           setTimeout(
             function() {
 			  object.focus();
-            }, 
+            },
 			50
 		  );
       }
