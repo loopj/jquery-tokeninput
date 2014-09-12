@@ -600,7 +600,7 @@
       // Inner function to a token to the list
       function insert_token(item) {
           var $this_token = $($(input).data("settings").tokenFormatter(item));
-          var readonly = item.readonly === true ? true : false;
+          var readonly = item.readonly === true;
 
           if(readonly) $this_token.addClass($(input).data("settings").classes.tokenReadOnly);
 
