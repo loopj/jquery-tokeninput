@@ -7,7 +7,18 @@
  * choose which one suits your project best!
  *
  */
-;(function ($) {
+
+(function (factory) {
+    //if Require JS is being used . . .
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['jquery'], factory);
+
+    } else {
+        // Just do normal w Browser globals
+        factory(jQuery);
+    }
+}(function ($) {
   var DEFAULT_SETTINGS = {
     // Search settings
     method: "GET",
@@ -287,7 +298,7 @@
                         next_token = input_token.next();
 
                         if((previous_token.length && previous_token.get(0) === selected_token) ||
-						   (next_token.length && next_token.get(0) === selected_token)) {
+               (next_token.length && next_token.get(0) === selected_token)) {
                             // Check if there is a previous/next token and it is selected
                             if(event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) {
                                 deselect_token($(selected_token), POSITION.BEFORE);
@@ -1071,10 +1082,10 @@
       function focusWithTimeout(object) {
           setTimeout(
             function() {
-			  object.focus();
+        object.focus();
             },
-			50
-		  );
+      50
+      );
       }
   };
 
@@ -1106,4 +1117,4 @@
     };
   };
 
-}(jQuery));
+}));
