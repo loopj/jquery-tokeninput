@@ -574,10 +574,15 @@
           // Get width left on the current line
           var width_left = token_list.width() - input_box.offset().left - token_list.offset().left;
           // Enter new content into resizer and resize input accordingly
-          input_resizer.html(_escapeHTML(input_val) || _escapeHTML(settings.placeholder));
+          var t_val = _escapeHTML(settings.placeholder);
+          var w_placeholder = w_val = 30;
+          if (t_val) w_placeholder += input_resizer.html(t_val).width();
+          t_val = _escapeHTML(input_val);
+          if (t_val) w_val += input_resizer.html(t_val).width();
+
           // Get maximum width, minimum the size of input and maximum the widget's width
           input_box.width(Math.min(token_list.width(),
-                                   Math.max(width_left, input_resizer.width() + 30)));
+                                   Math.max(width_left, w_placeholder, w_val)));
       }
 
       function add_freetagging_tokens() {
@@ -667,13 +672,11 @@
           }
 
           // Squeeze input_box so we force no unnecessary line break
-          input_box.width(1);
+          resize_input();
 
           // Insert the new tokens
           if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
               insert_token(item);
-              // Remove the placeholder so it's not seen after you've added a token
-              input_box.attr("placeholder", null);
               checkTokenLimit();
           }
 
