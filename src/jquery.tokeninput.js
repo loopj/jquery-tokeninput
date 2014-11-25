@@ -113,7 +113,9 @@
     RIGHT        : 39,
     DOWN         : 40,
     NUMPAD_ENTER : 108,
-    COMMA        : 188
+    COMMA        : 188,
+    CTRL:        : 17,
+    SHIFT:       : 16
   };
 
   var HTML_ESCAPES = {
@@ -370,6 +372,10 @@
 
                   case KEY.ESCAPE:
                     hide_dropdown();
+                    return true;
+                    
+                  case KEY.CTRL:
+                  case KEY.SHIFT:
                     return true;
 
                   default:
