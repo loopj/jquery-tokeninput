@@ -965,6 +965,8 @@
               } else {
                   hide_dropdown();
               }
+          } else {
+              hide_dropdown();
           }
       }
 
