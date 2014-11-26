@@ -1066,6 +1066,10 @@
                   // Make the request
                   $.ajax(ajax_params);
               } else if($(input).data("settings").local_data) {
+                  // fix delay time
+                  if ($(input).data("settings").localDataEmptyList && input_box.val().length == 0) {
+                      return;
+                  }
                   // Do the search through local data
                   var results = $.grep($(input).data("settings").local_data, function (row) {
                       return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
