@@ -476,7 +476,6 @@
           $.each(li_data, function (index, value) {
               insert_token(value);
               checkTokenLimit();
-              input_box.attr("placeholder", null)
           });
       }
 
