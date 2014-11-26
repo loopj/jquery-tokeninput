@@ -260,7 +260,7 @@
               if ($(input).data("settings").disabled) {
                   return false;
               } else
-              if ($(input).data("settings").localDataEmptyList && $(input).data("settings").local_data) {
+              if (!this.value.length && $(input).data("settings").localDataEmptyList && $(input).data("settings").local_data) {
                 // show all local data list
                 populateEmptyDropdown();
               } else
