@@ -343,7 +343,12 @@
 
                         return false;
                       } else if($(this).val().length === 1) {
+                          if ($(input).data("settings").localDataEmptyList && $(input).data("settings").local_data) {
+                          // show all local data list
+                          populateEmptyDropdown();
+                        } else {
                           hide_dropdown();
+                        }
                       } else {
                           // set a timeout just long enough to let this function finish.
                           setTimeout(function(){ do_search(); }, 5);
