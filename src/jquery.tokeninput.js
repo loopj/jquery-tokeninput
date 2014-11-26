@@ -305,16 +305,18 @@
                       var dropdown_item = null;
 
                       if (event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
-                        dropdown_item = $(dropdown).find('li').first();
-
                         if (selected_dropdown_item) {
                           dropdown_item = $(selected_dropdown_item).next();
                         }
+                        if (!dropdown_item || !dropdown_item.length) {
+                          dropdown_item = $(dropdown).find('li').first();
+                        }
                       } else {
-                        dropdown_item = $(dropdown).find('li').last();
-
                         if (selected_dropdown_item) {
                           dropdown_item = $(selected_dropdown_item).prev();
+                        }
+                        if (!dropdown_item || !dropdown_item.length) {
+                          dropdown_item = $(dropdown).find('li').last();
                         }
                       }
 
