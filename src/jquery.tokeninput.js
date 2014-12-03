@@ -1051,7 +1051,7 @@
               } else if($(input).data("settings").local_data) {
                   // Do the search through local data
                   var results = $.grep($(input).data("settings").local_data, function (row) {
-                      return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+                      return row[$(input).data("settings").propertyToSearch].toLowerCase().replace(/<\/?[^>]+(>|$)/g, "").indexOf(query.toLowerCase()) > -1;
                   });
 
                   cache.add(cache_key, results);
