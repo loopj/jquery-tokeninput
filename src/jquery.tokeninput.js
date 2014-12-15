@@ -12,6 +12,7 @@
     var DEFAULT_SETTINGS = {
 
         token_prefix: [],
+        prefix_object: [],
 
         // Search settings
         method: "GET",
@@ -228,9 +229,10 @@
                 // Iterate object for each prefix
                 for (var key in keys_for_token_type_object) {
                     var token_prefix = keys_for_token_type_object[key]
-                    if (typeof(url_or_data[token_prefix]) === 'string') {
+                    if (typeof(url_or_data[token_prefix]) === 'object') {
                         //Add token pre fix to input settings
-                        $(input).data("settings").token_prefix.push(token_prefix)
+                        $(input).data("settings").token_prefix.push(token_prefix);
+                        $(input).data("settings").prefix_object.push(url_or_data[token_prefix]);
                     }
                 }
             } else {
@@ -290,7 +292,7 @@
                     add_freetagging_tokens();
                 }
 
-                $(this).val("");
+                //$(this).val("");
                 token_list.removeClass($(input).data("settings").classes.focused);
             })
             .bind("keyup keydown blur update", resize_input)
@@ -361,9 +363,8 @@
                         } else {
 
                             if ($(input).data("settings").prefix === true) {
-                                console.log($(this).val().charAt(0))
                                 if ($.inArray($(this).val().charAt(0), $(input).data("settings").token_prefix)) {
-                                    console.log('in prefix')
+                                    find_in_prefix($(this).val().charAt(0));
 
                                 }
                             } else {
@@ -390,10 +391,18 @@
                                     add_freetagging_tokens();
                                 }
                             } else {
-                                $(this).val("");
-                                if ($(input).data("settings").allowTabOut) {
-                                    return true;
+                                var prefix = $(this).val().trim().charAt(0);
+                                // index 1 is boolean value for free taging prefix
+                                var allow_freetagging = url_or_data[prefix][1].freetagging;
+                                if (allow_freetagging) {
+                                    add_freetagging_tokens();
+                                } else {
+                                    $(this).val("");
+                                    if ($(input).data("settings").allowTabOut) {
+                                        return true;
+                                    }
                                 }
+
                             }
                             event.stopPropagation();
                             event.preventDefault();
@@ -404,15 +413,28 @@
                         hide_dropdown();
                         return true;
 
+                    case KEY.SPACE:
+                        if ($(input).data("settings").prefix === true) {
+                            var prefix = $(this).val().trim().charAt(0);
+                            try {
+                                // index 1 is boolean value for free taging prefix
+                                var allow_freetagging = url_or_data[prefix][1].freetagging;
+                                if (allow_freetagging) {
+                                    add_freetagging_tokens();
+                                }
+                            } catch (error) {
+                                return false;
+                            }
+
+
+                        }
+                        break;
+
                     default:
                         if (String.fromCharCode(event.which)) {
                             // set a timeout just long enough to let this function finish.
                             if ($(input).data("settings").prefix === true) {
-                                find_in_prefix($(this).val().charAt(0));
-                                // console.log($(this).val().charAt(0))
-                                // if ($.inArray($(this).val().charAt(0), $(input).data("settings").token_prefix)) {
-                                //     console.log($(input).data("settings").token_prefix)
-                                // }
+                                find_in_prefix($(this).val().trim().charAt(0));
                             } else {
                                 setTimeout(function() {
                                     do_search();
@@ -1097,7 +1119,8 @@
                     }
                     populateDropdown(query, results);
                 } else if ($(input).data("settings").prefix) {
-                    var url = url_or_data[arguments[1]];
+                    // Getting url. The url will be in index 0
+                    var url = url_or_data[arguments[1]][0];
                     // Extract existing get params
                     var ajax_params = {};
                     ajax_params.data = {};
@@ -1144,7 +1167,7 @@
                         }
 
                         // only populate the dropdown if the results are associated with the active search query
-                        if (input_box.val() === query) {
+                        if (input_box.val().trim().substring(1) === query) {
                             populateDropdown(query, $(input).data("settings").jsonContainer ? results[$(input).data("settings").jsonContainer] : results);
                         }
                     };
@@ -1194,7 +1217,7 @@
 
         function do_search_prefix(prefix) {
             // remove prefix
-            var query = input_box.val().substring(1);
+            var query = input_box.val().trim().substring(1);
             if (query && query.length) {
                 if (selected_token) {
                     deselect_token($(selected_token), POSITION.AFTER);
