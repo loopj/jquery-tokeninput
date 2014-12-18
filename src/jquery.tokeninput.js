@@ -1056,7 +1056,7 @@
 
       // compute the dynamic URL
       function computeURL() {
-					var settings = $(input).data("settings");
+          var settings = $(input).data("settings");
           return typeof settings.url == 'function' ? settings.url.call(settings) : settings.url;
       }
 
