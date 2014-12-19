@@ -1056,11 +1056,8 @@
 
       // compute the dynamic URL
       function computeURL() {
-          var url = $(input).data("settings").url;
-          if(typeof $(input).data("settings").url == 'function') {
-              url = $(input).data("settings").url.call($(input).data("settings"));
-          }
-          return url;
+          var settings = $(input).data("settings");
+          return typeof settings.url == 'function' ? settings.url.call(settings) : settings.url;
       }
 
       // Bring browser focus to the specified object.
