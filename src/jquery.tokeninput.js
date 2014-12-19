@@ -34,6 +34,7 @@
     theme: null,
     zindex: 999,
     resultsLimit: null,
+    dropdownParent: 'body',
 
     enableHTML: false,
 
@@ -446,7 +447,7 @@
       // The list to store the dropdown items in
       var dropdown = $("<div/>")
           .addClass($(input).data("settings").classes.dropdown)
-          .appendTo("body")
+          .appendTo($(input).data("settings").dropdownParent)
           .hide();
 
       // Magic element to help us resize the text input
@@ -798,11 +799,12 @@
       }
 
       function show_dropdown() {
+    	  var parent = $($(input).data("settings").dropdownParent);
           dropdown
               .css({
                   position: "absolute",
-                  top: token_list.offset().top + token_list.outerHeight(true),
-                  left: token_list.offset().left,
+                  top: token_list.offset().top + token_list.outerHeight(true) - parent.offset().top,
+                  left: token_list.offset().left - parent.offset().left,
                   width: token_list.width(),
                   'z-index': $(input).data("settings").zindex
               })
