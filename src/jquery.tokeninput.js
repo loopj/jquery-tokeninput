@@ -34,7 +34,7 @@
     theme: null,
     zindex: 999,
     resultsLimit: null,
-
+    maxHeight: "300px",
     enableHTML: false,
 
     resultsFormatter: function(item) {
@@ -802,6 +802,8 @@
               .css({
                   position: "absolute",
                   top: token_list.offset().top + token_list.outerHeight(true),
+                  "overflow": "auto",
+                  "max-height": $(input).data("settings").maxHeight || DEFAULT_SETTINGS.maxHeight,
                   left: token_list.offset().left,
                   width: token_list.width(),
                   'z-index': $(input).data("settings").zindex
