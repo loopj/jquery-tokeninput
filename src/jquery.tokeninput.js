@@ -9,6 +9,10 @@
  */
 ;(function ($) {
   var DEFAULT_SETTINGS = {
+
+    token_prefix: [],
+    prefix_object: [],
+
     // Search settings
     method: "GET",
     queryParam: "q",
@@ -216,8 +220,24 @@
               }
           }
       } else if (typeof(url_or_data) === "object") {
-          // Set the local data to search through
-          $(input).data("settings").local_data = url_or_data;
+            //If using the prefix method
+            if (url_or_data.prefix === true) {
+                $(input).data("settings").prefix = true;
+                // Get all prefix token type and put in array
+                var keys_for_token_type_object = Object.keys(url_or_data);
+                // Iterate object for each prefix
+                for (var key in keys_for_token_type_object) {
+                    var token_prefix = keys_for_token_type_object[key]
+                    if (typeof(url_or_data[token_prefix]) === 'object') {
+                        //Add token pre fix to input settings
+                        $(input).data("settings").token_prefix.push(token_prefix);
+                        $(input).data("settings").prefix_object.push(url_or_data[token_prefix]);
+                    }
+                }
+            } else {
+                // Set the local data to search through
+                $(input).data("settings").local_data = url_or_data;
+            }
       }
 
       // Build class names
@@ -338,8 +358,17 @@
                       } else if($(this).val().length === 1) {
                           hide_dropdown();
                       } else {
-                          // set a timeout just long enough to let this function finish.
-                          setTimeout(function(){ do_search(); }, 5);
+                          if ($(input).data("settings").prefix === true) {
+                                if ($.inArray($(this).val().charAt(0), $(input).data("settings").token_prefix)) {
+                                    find_in_prefix($(this).val().charAt(0));
+
+                                }
+                            } else {
+                                // set a timeout just long enough to let this function finish.
+                                setTimeout(function() {
+                                    do_search();
+                                }, 5);
+                            }
                       }
                       break;
 
@@ -358,9 +387,16 @@
                           add_freetagging_tokens();
                         }
                       } else {
-                        $(this).val("");
-                        if($(input).data("settings").allowTabOut) {
-                          return true;
+                        var prefix = $(this).val().trim().charAt(0);
+                        // index 1 is boolean value for free taging prefix
+                        var allow_freetagging = url_or_data[prefix][1].freetagging;
+                        if (allow_freetagging) {
+                            add_freetagging_tokens();
+                        } else {
+                            $(this).val("");
+                            if ($(input).data("settings").allowTabOut) {
+                                return true;
+                            }
                         }
                       }
                       event.stopPropagation();
@@ -372,10 +408,34 @@
                     hide_dropdown();
                     return true;
 
+                  case KEY.SPACE:
+                    if ($(input).data("settings").prefix === true) {
+                        var prefix = $(this).val().trim().charAt(0);
+                        try {
+                            // index 1 is boolean value for free taging prefix
+                            var allow_freetagging = url_or_data[prefix][1].freetagging;
+                            if (allow_freetagging) {
+                                add_freetagging_tokens();
+                            }
+                        } catch (error) {
+                            return false;
+                        }
+
+
+                    }
+                    break;
+
                   default:
                     if (String.fromCharCode(event.which)) {
-                      // set a timeout just long enough to let this function finish.
-                      setTimeout(function(){ do_search(); }, 5);
+                        // set a timeout just long enough to let this function finish.
+                        if ($(input).data("settings").prefix === true) {
+                            find_in_prefix($(this).val().trim().charAt(0));
+                        } else {
+                            setTimeout(function() {
+                                do_search();
+                            }, 5);
+                        }
+
                     }
                     break;
               }
@@ -398,8 +458,7 @@
 
           //return the object to this can be referenced in the callback functions.
           return hiddenInput;
-        })
-      ;
+        });
 
       // Keep a reference to the selected token and dropdown item
       var selected_token = null;
@@ -1050,14 +1109,78 @@
                       results = $(input).data("settings").onResult.call(hiddenInput, results);
                   }
                   populateDropdown(query, results);
+              }else if ($(input).data("settings").prefix) {
+                  // Getting url. The url will be in index 0
+                  var url = url_or_data[arguments[1]][0];
+                  // Extract existing get params
+                  var ajax_params = {};
+                  ajax_params.data = {};
+                  if (url.indexOf("?") > -1) {
+                      var parts = url.split("?");
+                      ajax_params.url = parts[0];
+
+                      var param_array = parts[1].split("&");
+                      $.each(param_array, function(index, value) {
+                          var kv = value.split("=");
+                          ajax_params.data[kv[0]] = kv[1];
+                      });
+                  } else {
+                      ajax_params.url = url;
+                  }
+
+                  // Prepare the request
+                  ajax_params.data[$(input).data("settings").queryParam] = query;
+                  ajax_params.type = $(input).data("settings").method;
+                  ajax_params.dataType = $(input).data("settings").contentType;
+                  if ($(input).data("settings").crossDomain) {
+                      ajax_params.dataType = "jsonp";
+                  }
+
+                  // exclude current tokens?
+                  // send exclude list to the server, so it can also exclude existing tokens
+                  if ($(input).data("settings").excludeCurrent) {
+                      var currentTokens = $(input).data("tokenInputObject").getTokens();
+                      var tokenList = $.map(currentTokens, function(el) {
+                          if (typeof $(input).data("settings").tokenValue == 'function')
+                              return $(input).data("settings").tokenValue.call(this, el);
+
+                          return el[$(input).data("settings").tokenValue];
+                      });
+
+                      ajax_params.data[$(input).data("settings").excludeCurrentParameter] = tokenList.join($(input).data("settings").tokenDelimiter);
+                  }
+
+                  // Attach the success callback
+                  ajax_params.success = function(results) {
+                      cache.add(cache_key, $(input).data("settings").jsonContainer ? results[$(input).data("settings").jsonContainer] : results);
+                      if ($.isFunction($(input).data("settings").onResult)) {
+                          results = $(input).data("settings").onResult.call(hiddenInput, results);
+                      }
+
+                      // only populate the dropdown if the results are associated with the active search query
+                      if (input_box.val().trim().substring(1) === query) {
+                          populateDropdown(query, $(input).data("settings").jsonContainer ? results[$(input).data("settings").jsonContainer] : results);
+                      }
+                  };
+
+                  // Provide a beforeSend callback
+                  if (settings.onSend) {
+                      settings.onSend(ajax_params);
+                  }
+
+                  // Make the request
+                  $.ajax(ajax_params);
               }
           }
       }
 
       // compute the dynamic URL
       function computeURL() {
-          var settings = $(input).data("settings");
-          return typeof settings.url == 'function' ? settings.url.call(settings) : settings.url;
+          var url = $(input).data("settings").url;
+            if (typeof $(input).data("settings").url == 'function') {
+                url = $(input).data("settings").url.call($(input).data("settings"));
+            }
+            return url;
       }
 
       // Bring browser focus to the specified object.
@@ -1073,7 +1196,39 @@
 			50
 		  );
       }
+
+      function find_in_prefix(prefix) {
+          if ($.inArray(prefix, $(input).data("settings").token_prefix) >= 0) {
+              // set a timeout just long enough to let this function finish.
+              setTimeout(function() {
+                  do_search_prefix(prefix);
+              }, 5);
+          }
+        }
+
+        function do_search_prefix(prefix) {
+            // remove prefix
+            var query = input_box.val().trim().substring(1);
+            if (query && query.length) {
+                if (selected_token) {
+                    deselect_token($(selected_token), POSITION.AFTER);
+                }
+
+                if (query.length >= $(input).data("settings").minChars) {
+                    show_dropdown_searching();
+                    clearTimeout(timeout);
+
+                    timeout = setTimeout(function() {
+                        run_search(query, prefix);
+                    }, $(input).data("settings").searchDelay);
+                } else {
+                    hide_dropdown();
+                }
+            }
+        }
   };
+
+
 
   // Really basic cache for the results
   $.TokenList.Cache = function (options) {
