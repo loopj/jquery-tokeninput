@@ -47,6 +47,8 @@
       return "<li><p>" + (this.enableHTML ? string : _escapeHTML(string)) + "</p></li>";
     },
 
+    dropdownStyle: null,
+
     // Tokenization settings
     tokenLimit: null,
     tokenDelimiter: ",",
@@ -798,15 +800,33 @@
       }
 
       function show_dropdown() {
-          dropdown
-              .css({
-                  position: "absolute",
-                  top: token_list.offset().top + token_list.outerHeight(true),
-                  left: token_list.offset().left,
-                  width: token_list.width(),
-                  'z-index': $(input).data("settings").zindex
-              })
-              .show();
+          var style = {};
+          if(typeof $(input).data("settings").dropdownStyle == 'function') {
+            style = $(input).data("settings").dropdownStyle.call(dropdown, token_list, input_box) || {};
+          }
+          $.each(['position', 'top', 'left', 'width', 'zIndex', 'z-index'], function(index, name) {
+            if (style.hasOwnProperty(name)) return;
+            switch(name) {
+              case 'position':
+                style.position = 'absolute';
+                break;
+              case 'top':
+                style.top = token_list.offset().top + token_list.outerHeight(true);
+                break;
+              case 'left':
+                style.left = token_list.offset().left;
+                break;
+              case 'width':
+                style.width = token_list.width();
+                break;
+              case 'zIndex':
+              case 'z-index':
+                style.zIndex = $(input).data("settings").zindex;
+                break;
+            }
+          });
+          
+          dropdown.css(style).show();
       }
 
       function show_dropdown_searching () {
