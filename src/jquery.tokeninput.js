@@ -57,6 +57,7 @@
     allowFreeTagging: false,
     allowTabOut: false,
     autoSelectFirstResult: false,
+    autoSelectOnBlur: false,
 
     // Callbacks
     onResult: null,
@@ -246,6 +247,9 @@
       // Keep track of the timeout, old vals
       var timeout;
       var input_val;
+      
+      // Keep track of pending searches
+      var pendingSearch = false;
 
       // Create a new text input an attach keyup events
       var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\"/>")
@@ -263,6 +267,11 @@
               token_list.addClass($(input).data("settings").classes.focused);
           })
           .blur(function () {
+			  if($(input).data("settings").autoSelectOnBlur && selected_dropdown_item) {
+                add_token($(selected_dropdown_item).data("tokeninput"));
+                hiddenInput.change();
+              }
+			  
               hide_dropdown();
 
               if ($(input).data("settings").allowFreeTagging) {
@@ -357,7 +366,7 @@
                         } else {
                           add_freetagging_tokens();
                         }
-                      } else {
+                      } else if (pendingSearch == false) {
                         $(this).val("");
                         if($(input).data("settings").allowTabOut) {
                           return true;
@@ -446,7 +455,7 @@
       // The list to store the dropdown items in
       var dropdown = $("<div/>")
           .addClass($(input).data("settings").classes.dropdown)
-          .appendTo("body")
+          .appendTo(input_box.parent()) //.appendTo("body") // attach the dropdown in a container around the parent DOM element instead of at the end of the document
           .hide();
 
       // Magic element to help us resize the text input
@@ -795,6 +804,7 @@
       function hide_dropdown () {
           dropdown.hide().empty();
           selected_dropdown_item = null;
+          pendingSearch = false;
       }
 
       function show_dropdown() {
@@ -925,6 +935,8 @@
                   show_dropdown();
               }
           }
+          
+          pendingSearch = false;
       }
 
       // Highlight an item in the results dropdown
@@ -948,6 +960,7 @@
       // Do a search and show the "searching" dropdown if the input is longer
       // than $(input).data("settings").minChars
       function do_search() {
+          pendingSearch = true;
           var query = input_box.val();
 
           if(query && query.length) {
@@ -965,6 +978,8 @@
               } else {
                   hide_dropdown();
               }
+          } else {
+              pendingSearch = false;
           }
       }
 
@@ -1042,13 +1057,14 @@
               } else if($(input).data("settings").local_data) {
                   // Do the search through local data
                   var results = $.grep($(input).data("settings").local_data, function (row) {
-                      return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+                      return row[$(input).data("settings").propertyToSearch].toLowerCase().replace(/<\/?[^>]+(>|$)/g, "").indexOf(query.toLowerCase()) > -1;
                   });
 
-                  cache.add(cache_key, results);
                   if($.isFunction($(input).data("settings").onResult)) {
                       results = $(input).data("settings").onResult.call(hiddenInput, results);
                   }
+				  
+                  cache.add(cache_key, results);
                   populateDropdown(query, results);
               }
           }
