@@ -1055,10 +1055,11 @@
                       return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
                   });
 
-                  cache.add(cache_key, results);
                   if($.isFunction($(input).data("settings").onResult)) {
                       results = $(input).data("settings").onResult.call(hidden_input, results);
                   }
+				  
+                  cache.add(cache_key, results);
                   populate_dropdown(query, results);
               }
           }
