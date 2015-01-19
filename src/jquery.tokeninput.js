@@ -248,7 +248,7 @@
       var input_val;
       
       // Keep track of pending searches
-      var pending_search = false;
+      var pendingSearch = false;
 
       // Create a new text input an attach keyup events
       var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\"/>")
@@ -363,7 +363,7 @@
                         } else {
                           add_freetagging_tokens();
                         }
-                      } else if (pending_search == false) {
+                      } else if (pendingSearch == false) {
                         $(this).val("");
                         if($(input).data("settings").allowTabOut) {
                           return true;
@@ -452,7 +452,7 @@
       // The list to store the dropdown items in
       var dropdown = $("<div/>")
           .addClass($(input).data("settings").classes.dropdown)
-          .appendTo("body")
+          .appendTo(input_box.parent()) //.appendTo("body") // attach the dropdown in a container around the parent DOM element instead of at the end of the document
           .hide();
 
       // Magic element to help us resize the text input
@@ -801,7 +801,7 @@
       function hide_dropdown () {
           dropdown.hide().empty();
           selected_dropdown_item = null;
-          pending_search = false;
+          pendingSearch = false;
       }
 
       function show_dropdown() {
@@ -933,7 +933,7 @@
               }
           }
           
-          pending_search = false;
+          pendingSearch = false;
       }
 
       // Highlight an item in the results dropdown
@@ -957,7 +957,7 @@
       // Do a search and show the "searching" dropdown if the input is longer
       // than $(input).data("settings").minChars
       function do_search() {
-          pending_search = true;
+          pendingSearch = true;
           var query = input_box.val();
 
           if(query && query.length) {
@@ -976,7 +976,7 @@
                   hide_dropdown();
               }
           } else {
-              pending_search = false;
+              pendingSearch = false;
           }
       }
 
@@ -1062,7 +1062,7 @@
                   }
 				  
                   cache.add(cache_key, results);
-                  populate_dropdown(query, results);
+                  populateDropdown(query, results);
               }
           }
       }
