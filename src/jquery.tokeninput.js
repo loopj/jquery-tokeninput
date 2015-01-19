@@ -272,6 +272,9 @@
 
               if ($(input).data("settings").allowFreeTagging) {
                 add_freetagging_tokens();
+              } else if(selected_dropdown_item) {
+                add_token($(selected_dropdown_item).data("tokeninput"));
+                hiddenInput.change();
               }
 
               $(this).val("");
