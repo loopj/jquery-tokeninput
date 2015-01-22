@@ -24,6 +24,9 @@
     prePopulate: null,
     processPrePopulate: false,
 
+    // localData empty also show list
+    localDataEmptyList: false,
+
     // Display settings
     hintText: "Type in a search term",
     noResultsText: "No results",
@@ -257,6 +260,10 @@
               if ($(input).data("settings").disabled) {
                   return false;
               } else
+              if (!this.value.length && $(input).data("settings").localDataEmptyList && $(input).data("settings").local_data) {
+                // show all local data list
+                populateEmptyDropdown();
+              } else
               if ($(input).data("settings").tokenLimit === null || $(input).data("settings").tokenLimit !== token_count) {
                   show_dropdown_hint();
               }
@@ -282,7 +289,7 @@
                   case KEY.RIGHT:
                   case KEY.UP:
                   case KEY.DOWN:
-                    if(this.value.length === 0) {
+                    if(this.value.length === 0 && (!$(input).data("settings").localDataEmptyList || !$(input).data("settings").local_data)) {
                         previous_token = input_token.prev();
                         next_token = input_token.next();
 
@@ -336,7 +343,12 @@
 
                         return false;
                       } else if($(this).val().length === 1) {
+                          if ($(input).data("settings").localDataEmptyList && $(input).data("settings").local_data) {
+                          // show all local data list
+                          populateEmptyDropdown();
+                        } else {
                           hide_dropdown();
+                        }
                       } else {
                           // set a timeout just long enough to let this function finish.
                           setTimeout(function(){ do_search(); }, 5);
@@ -350,6 +362,10 @@
                     if(selected_dropdown_item) {
                       add_token($(selected_dropdown_item).data("tokeninput"));
                       hiddenInput.change();
+                      if ($(input).data("settings").localDataEmptyList && $(input).data("settings").local_data) {
+                        // show all local data list
+                        populateEmptyDropdown();
+                      }
                     } else {
                       if ($(input).data("settings").allowFreeTagging) {
                         if($(input).data("settings").allowTabOut && $(this).val() === "") {
@@ -870,6 +886,16 @@
           return results;
       }
 
+      // show all local data list
+      function populateEmptyDropdown() {
+          var results = $(input).data("settings").local_data;
+          if($.isFunction($(input).data("settings").onResult)) {
+              results = $(input).data("settings").onResult.call(hiddenInput, results);
+          }
+          populateDropdown('', results);
+          return true;
+      }
+
       // Populate the results dropdown with some results
       function populateDropdown (query, results) {
           // exclude current tokens if configured
@@ -1040,6 +1066,10 @@
                   // Make the request
                   $.ajax(ajax_params);
               } else if($(input).data("settings").local_data) {
+                  // fix delay time
+                  if ($(input).data("settings").localDataEmptyList && input_box.val().length == 0) {
+                      return;
+                  }
                   // Do the search through local data
                   var results = $.grep($(input).data("settings").local_data, function (row) {
                       return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
