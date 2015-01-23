@@ -143,8 +143,13 @@
           var settings = $.extend({}, DEFAULT_SETTINGS, options || {});
 
           return this.each(function () {
-              $(this).data("settings", settings);
-              $(this).data("tokenInputObject", new $.TokenList(this, url_or_data_or_function, settings));
+              $(this).data("settings", settings)
+                     .data("tokenInputObject", new $.TokenList(this, url_or_data_or_function, settings));
+
+              // Initialization is done
+              if (typeof settings.onReady === "function") {
+                  settings.onReady.call($(this));
+              }
           });
       },
       clear: function() {
@@ -161,6 +166,9 @@
       },
       get: function() {
           return this.data("tokenInputObject").getTokens();
+      },
+      $: function(query) {
+          return this.data("tokenInputObject").$(query);
       },
       toggleDisabled: function(disable) {
           this.data("tokenInputObject").toggleDisabled(disable);
@@ -485,10 +493,6 @@
           toggleDisabled(true);
       }
 
-      // Initialization is done
-      if (typeof($(input).data("settings").onReady) === "function") {
-        $(input).data("settings").onReady.call();
-      }
 
       //
       // Public functions
@@ -530,6 +534,10 @@
 
       this.toggleDisabled = function(disable) {
           toggleDisabled(disable);
+      };
+
+      this.$ = function(query) {
+          return token_list.find(query);
       };
 
       // Resize input to maximum width so the placeholder can be seen
