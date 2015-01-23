@@ -696,7 +696,7 @@
               selected_token = token.get(0);
 
               // Hide input box
-              input_box.val("");
+              input_box.val("").focus();
 
               // Hide dropdown if it is visible (eg if we clicked to select token)
               hide_dropdown();
