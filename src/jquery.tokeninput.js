@@ -34,6 +34,7 @@
     theme: null,
     zindex: 999,
     resultsLimit: null,
+    displayHint: true,
 
     enableHTML: false,
 
@@ -258,7 +259,9 @@
                   return false;
               } else
               if ($(input).data("settings").tokenLimit === null || $(input).data("settings").tokenLimit !== token_count) {
-                  show_dropdown_hint();
+                  if (settings.displayHint) {
+                      show_dropdown_hint();
+                  }
               }
               token_list.addClass($(input).data("settings").classes.focused);
           })
