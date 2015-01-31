@@ -221,18 +221,17 @@
       }
 
       // Build class names
-      if($(input).data("settings").classes) {
-          // Use custom class names
-          $(input).data("settings").classes = $.extend({}, DEFAULT_CLASSES, $(input).data("settings").classes);
-      } else if($(input).data("settings").theme) {
-          // Use theme-suffixed default class names
-          $(input).data("settings").classes = {};
-          $.each(DEFAULT_CLASSES, function(key, value) {
-              $(input).data("settings").classes[key] = value + "-" + $(input).data("settings").theme;
-          });
-      } else {
-          $(input).data("settings").classes = DEFAULT_CLASSES;
-      }
+      $(input).data("settings").classes = $(input).data("settings").classes || {};
+
+      $.each(DEFAULT_CLASSES, function (key, value) {
+          // Use custom class names in conjunction with themed or default settings
+          var classes = $(input).data("settings").classes;
+          var defaultClass = $.grep([value, $(input).data("settings").theme], function (n) {
+              return n != null;
+          }).join('-');
+
+          classes[key] || (classes[key] = defaultClass);
+      });
 
       // Save the tokens
       var saved_tokens = [];
