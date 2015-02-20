@@ -801,7 +801,7 @@
           dropdown
               .css({
                   position: "absolute",
-				  width: $(token_list).width(),
+                  width: $(token_list).width(),
                   top: token_list.offset().top + token_list.outerHeight(true),
                   left: token_list.offset().left,
                   width: token_list.width(),
