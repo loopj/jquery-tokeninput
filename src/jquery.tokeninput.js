@@ -643,51 +643,46 @@
       }
 
       // Add a token to the token list based on user input
-      function add_token (item) {
-          var callback = $(input).data("settings").onAdd;
+    function add_token (item) {
+        var callback = settings.onAdd;
 
-          // See if the token already exists and select it if we don't want duplicates
-          if(token_count > 0 && $(input).data("settings").preventDuplicates) {
-              var found_existing_token = null;
-              token_list.children().each(function () {
-                  var existing_token = $(this);
-                  var existing_data = $.data(existing_token.get(0), "tokeninput");
-                  if(existing_data && existing_data[settings.tokenValue] === item[settings.tokenValue]) {
-                      found_existing_token = existing_token;
-                      return false;
-                  }
-              });
+        // See if the token already exists and select it if we don't want duplicates
+        if(token_count > 0 && settings.preventDuplicates) {
+            var found_existing_token = null;
+            token_list.children().each(function () {
+                var existing_token = $(this);
+                var existing_data = $.data(existing_token.get(0), "tokeninput");
+                if(existing_data && existing_data.id === item.id) {
+                    found_existing_token = existing_token;
+                    return false;
+                }
+            });
 
-              if(found_existing_token) {
-                  select_token(found_existing_token);
-                  input_token.insertAfter(found_existing_token);
-                  focusWithTimeout(input_box);
-                  return;
-              }
-          }
+            if(found_existing_token) {
+                select_token(found_existing_token);
+                input_token.insertAfter(found_existing_token);
+                input_box.focus();
+                return;
+            }
+        }
 
-          // Squeeze input_box so we force no unnecessary line break
-          input_box.width(1);
+        // Insert the new tokens
+        if(settings.tokenLimit == null || token_count < settings.tokenLimit) {
+            insert_token(item);
+            checkTokenLimit();
+        }
 
-          // Insert the new tokens
-          if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
-              insert_token(item);
-              // Remove the placeholder so it's not seen after you've added a token
-              input_box.attr("placeholder", null);
-              checkTokenLimit();
-          }
+        // Clear input box
+        input_box.val("");
 
-          // Clear input box
-          input_box.val("");
+        // Don't show the help dropdown, they've got the idea
+        hide_dropdown();
 
-          // Don't show the help dropdown, they've got the idea
-          hide_dropdown();
-
-          // Execute the onAdd callback if defined
-          if($.isFunction(callback)) {
-              callback.call(hiddenInput,item);
-          }
-      }
+        // Execute the onAdd callback if defined
+        if($.isFunction(callback)) {
+            callback.call(hiddenInput,item);
+        }
+    }
 
       // Select a token in the token list
       function select_token (token) {
