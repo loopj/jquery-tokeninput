@@ -71,6 +71,8 @@
 
     // Keep track if the input is currently in disabled mode
     disabled: false
+
+    rightAligned: false
   };
 
   // Default classes to use when theming
@@ -88,6 +90,9 @@
     inputToken           : "token-input-input-token",
     focused              : "token-input-focused",
     disabled             : "token-input-disabled"
+    rightAlignedDropdown : "keep-right",
+    rightAlignedInput    : "token-input-right",
+    addTokenOnRight      : "token-on-right"
   };
 
   // Input box position "enum"
@@ -408,7 +413,10 @@
 
       // The list to store the token items in
       var token_list = $("<ul />")
-          .addClass($(input).data("settings").classes.tokenList)
+          if($(input).data("settings").rightAligned) {
+            token_list.addClass($(input).data("settings").classes.rightAlignedInput);
+          }
+          token_list.addClass($(input).data("settings").classes.tokenList)
           .click(function (event) {
               var li = $(event.target).closest("li");
               if(li && li.get(0) && $.data(li.get(0), "tokeninput")) {
@@ -605,6 +613,10 @@
           if(readonly) $this_token.addClass($(input).data("settings").classes.tokenReadOnly);
 
           $this_token.addClass($(input).data("settings").classes.token).insertBefore(input_token);
+
+          if($(input).data("settings").rightAligned){
+            $this_token.addClass($(input).data("settings").classes.addTokenOnRight)
+          }
 
           // The 'delete token' button
           if(!readonly) {
@@ -811,14 +823,16 @@
 
       function show_dropdown_searching () {
           if($(input).data("settings").searchingText) {
-              dropdown.html("<p>" + escapeHTML($(input).data("settings").searchingText) + "</p>");
+            var alignment_class = ($(input).data("settings").rightAligned)? $(input).data("settings").classes.rightAlignedDropdown : ""
+              dropdown.html("<p class="+alignment_class+">" + escapeHTML($(input).data("settings").searchingText) + "</p>");
               show_dropdown();
           }
       }
 
       function show_dropdown_hint () {
           if($(input).data("settings").hintText) {
-              dropdown.html("<p>" + escapeHTML($(input).data("settings").hintText) + "</p>");
+            var alignment_class = ($(input).data("settings").rightAligned)? $(input).data("settings").classes.rightAlignedDropdown : ""
+              dropdown.html("<p class="+alignment_class+">" + escapeHTML($(input).data("settings").hintText) + "</p>");
               show_dropdown();
           }
       }
@@ -904,6 +918,8 @@
                   } else {
                       this_li.addClass($(input).data("settings").classes.dropdownItem2);
                   }
+                  if($(input).data("settings").rightAligned)
+                    this_li.addClass($(input).data("settings").classes.rightAlignedDropdown);
 
                   if(index === 0 && $(input).data("settings").autoSelectFirstResult) {
                       select_dropdown_item(this_li);
@@ -921,7 +937,8 @@
               }
           } else {
               if($(input).data("settings").noResultsText) {
-                  dropdown.html("<p>" + escapeHTML($(input).data("settings").noResultsText) + "</p>");
+                  var alignment_class = ($(input).data("settings").rightAligned)? $(input).data("settings").classes.rightAlignedDropdown : ""
+                  dropdown.html("<p  class="+alignment_class+">" + escapeHTML($(input).data("settings").noResultsText) + "</p>");
                   show_dropdown();
               }
           }
