@@ -70,7 +70,7 @@
     idPrefix: "token-input-",
 
     // Keep track if the input is currently in disabled mode
-    disabled: false
+    disabled: false,
 
     rightAligned: false
   };
