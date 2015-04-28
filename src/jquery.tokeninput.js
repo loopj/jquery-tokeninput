@@ -803,7 +803,7 @@
                   position: "absolute",
                   top: token_list.offset().top + token_list.outerHeight(true),
                   left: token_list.offset().left,
-                  width: token_list.width(),
+                  width: token_list.outerWidth(),
                   'z-index': $(input).data("settings").zindex
               })
               .show();
