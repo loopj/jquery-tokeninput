@@ -89,7 +89,7 @@
     selectedDropdownItem : "token-input-selected-dropdown-item",
     inputToken           : "token-input-input-token",
     focused              : "token-input-focused",
-    disabled             : "token-input-disabled"
+    disabled             : "token-input-disabled",
     rightAlignedDropdown : "keep-right",
     rightAlignedInput    : "token-input-right",
     addTokenOnRight      : "token-on-right"
