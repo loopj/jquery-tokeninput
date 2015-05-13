@@ -65,6 +65,8 @@
     onFreeTaggingAdd: null,
     onDelete: null,
     onReady: null,
+    onSelectedToken: null,
+    onUnselectedToken: null,
 
     // Other settings
     idPrefix: "token-input-",
@@ -695,6 +697,11 @@
               token.addClass($(input).data("settings").classes.selectedToken);
               selected_token = token.get(0);
 
+              // Call selected token callback
+              if (typeof($(input).data("settings").onSelectedToken) === "function") {
+                  $(input).data("settings").onSelectedToken.call(null,selected_token, $.data(selected_token,"tokeninput"));
+              }
+
               // Hide input box
               input_box.val("");
 
@@ -706,6 +713,7 @@
       // Deselect a token in the token list
       function deselect_token (token, position) {
           token.removeClass($(input).data("settings").classes.selectedToken);
+          unselected_token = selected_token;
           selected_token = null;
 
           if(position === POSITION.BEFORE) {
@@ -721,6 +729,11 @@
 
           // Show the input box and give it focus again
           focusWithTimeout(input_box);
+
+          // Call selected token callback
+          if (typeof($(input).data("settings").onUnselectedToken) === "function") {
+              $(input).data("settings").onUnselectedToken.call(null,unselected_token,$.data(unselected_token,"tokeninput"));
+          }
       }
 
       // Toggle selection of a token in the token list

@@ -746,5 +746,32 @@
         </script>
     </div>
 
+    <h2>Token Selection Callbacks</h2>
+    <div>
+        <input type="text" id="demo-input-local-selection-callbacks" name="blah" />
+        <input type="button" value="Submit" />
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#demo-input-local-selection-callbacks").tokenInput([
+                    {id: 7, name: "Ruby"},
+                    {id: 11, name: "Python"},
+                    {id: 13, name: "JavaScript"},
+                    {id: 17, name: "ActionScript"},
+                    {id: 19, name: "Scheme"},
+                    {id: 23, name: "Lisp"},
+                    {id: 29, name: "C#"},
+                    {id: 31, name: "Fortran"},
+                    {id: 37, name: "Visual Basic"},
+                    {id: 41, name: "C"},
+                    {id: 43, name: "C++"},
+                    {id: 47, name: "Java"}
+                ], {
+                   onSelectedToken: function(element,token) { console.log("Token Selected: ", element,token); },
+                   onUnselectedToken: function(element,token) { console.log("Token Unselected: ", element,token); }
+                });
+            });
+        </script>
+    </div>
+
 </body>
 </html>
