@@ -198,6 +198,12 @@
       //
       // Initialization
       //
+      
+      // an input field is only initialized once
+      if( $(input).data("tokenInputInitialized") ) {
+        return true;
+      }      
+      $(input).data("tokenInputInitialized", true);
 
       // Configure the data source
       if (typeof(url_or_data) === "string" || typeof(url_or_data) === "function") {
