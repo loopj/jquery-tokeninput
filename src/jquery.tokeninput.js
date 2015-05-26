@@ -64,6 +64,7 @@
     onAdd: null,
     onFreeTaggingAdd: null,
     onDelete: null,
+    onClear: null,
     onReady: null,
 
     // Other settings
@@ -495,11 +496,7 @@
       //
 
       this.clear = function() {
-          token_list.children("li").each(function() {
-              if ($(this).children("input").length === 0) {
-                  delete_token($(this));
-              }
-          });
+          clear_tokens(token_list);
       };
 
       this.add = function(item) {
@@ -518,7 +515,7 @@
                       }
                   }
                   if (match) {
-                      delete_token($(this));
+                      remove_token($(this));
                   }
               }
           });
@@ -737,12 +734,10 @@
               select_token(token);
           }
       }
-
-      // Delete a token from the token list
+      
       function delete_token (token) {
           // Remove the id from the saved list
           var token_data = $.data(token.get(0), "tokeninput");
-          var callback = $(input).data("settings").onDelete;
 
           var index = token.prevAll().length;
           if(index > selected_token_index) index--;
@@ -772,10 +767,34 @@
                   .val("");
               focusWithTimeout(input_box);
           }
+      }
+
+      // Delete a token from the token list
+      function remove_token (token) {
+          var callback = $(input).data("settings").onDelete;
+          var token_data = $.data(token.get(0), "tokeninput");
+          
+          delete_token(token);
 
           // Execute the onDelete callback if defined
           if($.isFunction(callback)) {
               callback.call(hiddenInput,token_data);
+          }
+      }
+
+      // Clear all tokens from the token list
+      function clear_tokens (tokens) {
+          var callback = $(input).data("settings").onClear;
+          
+          tokens.children("li").each(function() {
+              if ($(this).children("input").length === 0) {
+              	delete_token($(this));
+              }
+          });
+
+          // Execute the onClear callback if defined
+          if($.isFunction(callback)) {
+              callback.call(hiddenInput);
           }
       }
 
