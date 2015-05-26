@@ -648,7 +648,7 @@
       }
 
       // Insert/Add token, used by preload_token and add_token
-      function put_token (token) {
+      function add_insert_token (token) {
           // See if the token already exists and select it if we don't want duplicates
           if(token_count > 0 && $(input).data("settings").preventDuplicates) {
               var found_existing_token = null;
@@ -693,7 +693,7 @@
           
           tokens.children("li").each(function() {
               if ($(this).children("input").length === 0) {
-                put_token($(this));
+                add_insert_token($(this));
               }
           });
 
@@ -707,7 +707,7 @@
       function add_token (token) {
           var callback = $(input).data("settings").onAdd;
 
-          put_token(token);
+          add_insert_token(token);
 
           // Execute the onAdd callback if defined
           if($.isFunction(callback)) {
