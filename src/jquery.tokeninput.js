@@ -503,12 +503,18 @@
           clear_tokens(token_list);
       };
 
-      this.preload = function(items) {
-          preload_token(items);
-      };
-
       this.add = function(item) {
           add_token(item);
+      };
+
+      this.preload = function(items) {
+        if (items && items.length) {
+            $.each(items, function (index, value) {
+                insert_token(value);
+                checkTokenLimit();
+                input_box.attr("placeholder", null)
+            });
+        }
       };
 
       this.remove = function(item) {
@@ -602,7 +608,7 @@
           });
       }
 
-      // Inner function to a token to the list
+      // Inner function to add token to the list
       function insert_token(item) {
           var $this_token = $($(input).data("settings").tokenFormatter(item));
           var readonly = item.readonly === true;
@@ -647,15 +653,17 @@
           return $this_token;
       }
 
-      // Insert/Add token, used by preload_token and add_token
-      function add_insert_token (token) {
+      // Add a token to the token list based on user input
+      function add_token (item) {
+          var callback = $(input).data("settings").onAdd;
+
           // See if the token already exists and select it if we don't want duplicates
           if(token_count > 0 && $(input).data("settings").preventDuplicates) {
               var found_existing_token = null;
               token_list.children().each(function () {
                   var existing_token = $(this);
                   var existing_data = $.data(existing_token.get(0), "tokeninput");
-                  if(existing_data && existing_data[settings.tokenValue] === token[settings.tokenValue]) {
+                  if(existing_data && existing_data[settings.tokenValue] === item[settings.tokenValue]) {
                       found_existing_token = existing_token;
                       return false;
                   }
@@ -674,7 +682,7 @@
 
           // Insert the new tokens
           if($(input).data("settings").tokenLimit == null || token_count < $(input).data("settings").tokenLimit) {
-              insert_token(token);
+              insert_token(item);
               // Remove the placeholder so it's not seen after you've added a token
               input_box.attr("placeholder", null);
               checkTokenLimit();
@@ -685,33 +693,10 @@
 
           // Don't show the help dropdown, they've got the idea
           hide_dropdown();
-      }
-
-      // Preload tokens to the token list based on user input
-      function preload_token (tokens) {
-          var callback = $(input).data("settings").onReady;
-          
-          tokens.children("li").each(function() {
-              if ($(this).children("input").length === 0) {
-                add_insert_token($(this));
-              }
-          });
-
-          // Execute the onReady callback if defined
-          if($.isFunction(callback)) {
-              callback.call(hiddenInput);
-          }
-      }
-
-      // Add a token to the token list based on user input
-      function add_token (token) {
-          var callback = $(input).data("settings").onAdd;
-
-          add_insert_token(token);
 
           // Execute the onAdd callback if defined
           if($.isFunction(callback)) {
-              callback.call(hiddenInput,token);
+              callback.call(hiddenInput,item);
           }
       }
 
