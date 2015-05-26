@@ -735,7 +735,8 @@
           }
       }
       
-      function delete_token (token) {
+      // Remove a token from the token list, called by delete_token and clear_tokens
+      function remove_token (token) {
           // Remove the id from the saved list
           var token_data = $.data(token.get(0), "tokeninput");
 
@@ -770,11 +771,11 @@
       }
 
       // Delete a token from the token list
-      function remove_token (token) {
+      function delete_token (token) {
           var callback = $(input).data("settings").onDelete;
           var token_data = $.data(token.get(0), "tokeninput");
           
-          delete_token(token);
+          remove_token(token);
 
           // Execute the onDelete callback if defined
           if($.isFunction(callback)) {
@@ -788,7 +789,7 @@
           
           tokens.children("li").each(function() {
               if ($(this).children("input").length === 0) {
-              	delete_token($(this));
+              	remove_token($(this));
               }
           });
 
