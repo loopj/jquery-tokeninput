@@ -64,6 +64,7 @@
     onAdd: null,
     onFreeTaggingAdd: null,
     onDelete: null,
+    onClear: null,
     onReady: null,
 
     // Other settings
@@ -149,6 +150,10 @@
       },
       clear: function() {
           this.data("tokenInputObject").clear();
+          return this;
+      },
+      preload: function(items) {
+          this.data("tokenInputObject").preload(items);
           return this;
       },
       add: function(item) {
@@ -495,15 +500,21 @@
       //
 
       this.clear = function() {
-          token_list.children("li").each(function() {
-              if ($(this).children("input").length === 0) {
-                  delete_token($(this));
-              }
-          });
+          clear_tokens(token_list);
       };
 
       this.add = function(item) {
           add_token(item);
+      };
+
+      this.preload = function(items) {
+        if (items && items.length) {
+            $.each(items, function (index, value) {
+                insert_token(value);
+                checkTokenLimit();
+                input_box.attr("placeholder", null)
+            });
+        }
       };
 
       this.remove = function(item) {
@@ -518,7 +529,7 @@
                       }
                   }
                   if (match) {
-                      delete_token($(this));
+                      remove_token($(this));
                   }
               }
           });
@@ -597,7 +608,7 @@
           });
       }
 
-      // Inner function to a token to the list
+      // Inner function to add token to the list
       function insert_token(item) {
           var $this_token = $($(input).data("settings").tokenFormatter(item));
           var readonly = item.readonly === true;
@@ -737,12 +748,11 @@
               select_token(token);
           }
       }
-
-      // Delete a token from the token list
-      function delete_token (token) {
+      
+      // Remove a token from the token list, called by delete_token and clear_tokens
+      function remove_token (token) {
           // Remove the id from the saved list
           var token_data = $.data(token.get(0), "tokeninput");
-          var callback = $(input).data("settings").onDelete;
 
           var index = token.prevAll().length;
           if(index > selected_token_index) index--;
@@ -772,10 +782,34 @@
                   .val("");
               focusWithTimeout(input_box);
           }
+      }
+
+      // Delete a token from the token list
+      function delete_token (token) {
+          var callback = $(input).data("settings").onDelete;
+          var token_data = $.data(token.get(0), "tokeninput");
+          
+          remove_token(token);
 
           // Execute the onDelete callback if defined
           if($.isFunction(callback)) {
               callback.call(hiddenInput,token_data);
+          }
+      }
+
+      // Clear all tokens from the token list
+      function clear_tokens (tokens) {
+          var callback = $(input).data("settings").onClear;
+          
+          tokens.children("li").each(function() {
+              if ($(this).children("input").length === 0) {
+              	remove_token($(this));
+              }
+          });
+
+          // Execute the onClear callback if defined
+          if($.isFunction(callback)) {
+              callback.call(hiddenInput);
           }
       }
 
