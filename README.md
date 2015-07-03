@@ -9,4 +9,13 @@ Documentation, Features and Demos
 ---------------------------------
 Full details and documentation can be found on the project page here:
 
+Installation 
+-------------
+* install via npm
+  * [install npm](https://nodejs.org/download/)
+  * `npm install -g bower`
+  * `bower install jquery-tokeninput`
+* [download source](http://loopj.com/jquery-tokeninput/)
+* [fork](https://github.com/loopj/jquery-tokeninput)
+
 <http://loopj.com/jquery-tokeninput/>
