@@ -1,0 +1,26 @@
+body {
+    font-family:"Palatino";
+}
+
+.container {
+    padding: 50px;
+    margin: 0 auto;
+}
+
+.example {
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+    font-size: 0.8em;
+    overflow: auto;
+    width: auto;
+    padding: 5px;
+    background-color: #ffffe8;
+    padding-bottom: 20px;
+    outline: 1px solid #ffffa1;
+}
+
+.section {
+    width: auto;
+    padding: 5px;
+    margin: 20px;
+    padding-bottom: 20px;
+}
