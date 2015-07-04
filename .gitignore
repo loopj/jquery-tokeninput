@@ -4,3 +4,4 @@ _layouts
 gh-pages
 *.sw*
 node_modules
+bower_components

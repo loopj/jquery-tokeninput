@@ -1,5 +1,6 @@
 jQuery Tokeninput: A Tokenizing Autocomplete Text Entry
 =======================================================
+<http://loopj.com/jquery-tokeninput/>
 
 Overview
 --------
@@ -7,6 +8,14 @@ Tokeninput is a jQuery plugin which allows your users to select multiple items f
 
 Documentation, Features and Demos
 ---------------------------------
-Full details and documentation can be found on the project page here:
+Full details and documentation can be found on the project page here: <http://loopj.com/jquery-tokeninput/>
 
-<http://loopj.com/jquery-tokeninput/>
+Installation 
+-------------
+* install via npm
+  * [install npm](https://nodejs.org/download/)
+  * `npm install -g bower`
+  * `bower install jquery-tokeninput`
+* [download source](http://loopj.com/jquery-tokeninput/)
+* [fork](https://github.com/loopj/jquery-tokeninput)
+

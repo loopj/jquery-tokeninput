@@ -1,0 +1,58 @@
+body {
+    font-family:"Palatino";
+}
+a {
+    text-decoration:none;
+}
+.sideBarList {
+    padding: 5px;
+    margin: 0 auto;
+    list-style: none;
+}
+.sideBarListItem {
+    padding: 0.5em 0 0 0;
+    margin: 0.1em 0 0 0;
+}
+.left-container {
+    background-color: #f2f2f2;
+    float:left;
+    height: 100%;
+    position: fixed;
+    overflow: auto;
+}
+
+.top-container {
+    text-align: center;
+    height: 60px;
+    z-index: 0;
+    width: 100%;
+    top: 0;
+}
+.nav {
+    padding: 0.5em 0 0 0;
+    margin: 0.1em 0 0 0;
+    list-style:none;
+}
+
+.container {
+    margin: 0 0 0 250px;
+    min-width: 500px;
+}
+
+.example {
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+    font-size: 0.8em;
+    overflow: auto;
+    width: auto;
+    padding: 5px;
+    background-color: #ffffe8;
+    padding-bottom: 20px;
+    outline: 1px solid gray;
+}
+
+.section {
+    width: auto;
+    padding: 5px;
+    margin: 20px;
+    padding-bottom: 20px;
+}
