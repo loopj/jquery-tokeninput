@@ -5,7 +5,7 @@ $(document).ready(function() {
         alert("Would submit: " + $(this).siblings("input[type=text]").val());
     });
 
-    $("#basic-use").tokenInput(exampleList, { });
+    $("#demo-input-basic-use").tokenInput(exampleList, { });
     $("#demo-input-local").tokenInput(alphabetList);
     $("#demo-input").tokenInput(url, {});
     $("#demo-input-facebook-theme").tokenInput(url, {

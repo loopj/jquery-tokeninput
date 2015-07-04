@@ -10,13 +10,46 @@
 </head>
 
 <body>
+
+    <!-- left menu -->
+    <div class="left-container">
+        <ul class="sideBarList">
+            <li class="nav"> <a class="nav-link" href="http://loopj.com/jquery-tokeninput/">Back to project page</a></li>
+            <hr/>
+            <li class="sideBarListItem"> <a href="http://loopj.com/jquery-tokeninput/demo.html#basic-use">Basic Use </a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#localSearch">Local Search</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#serverBackedSearch">Sever-Backed Search </a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#theme">Theme</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#custom-labels">Labels</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#custom-delete">Delete Icon</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#pre-populated">Pre-Populated Field</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#pre-populated-with-tokenlimit">Token Limit</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#custom-limits">Delay &amp; Start Limit</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#prevent-custom-delimiter">Token Delimiter</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#prevent-duplicates">Eliminate Duplicates</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#disable-animation">Disable Animation</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#onresult">Result Modification</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#onadd-ondelete">Item Add &amp; Delete Callbacks</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#programmatically-modify">Programmatically Modify Input</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#custom-data-search">Custom Data Search</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#narrow-search">Narrow Search</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#start-disabled">Start Disabled</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#free-tagging">Free Tagging</a></li>
+            <li class="sideBarListItem"><a href="http://loopj.com/jquery-tokeninput/demo.html#exclude-repetition">Exclude Repetition</a></li>
+        </ul>
+    </div>
     <div class="container">
-        <h1>jQuery tokeninput Demos</h1>
+    <div class="top-container">
+    <h1>jQuery Tokeninput Demos</h1>
+    <ul>
+    </ul>
+    </div>
+
 
         <div class="section">
-            <h3> Basic Use </h3> <hr/>
+            <h3 id="basic-use"> Basic Use </h3> <hr/>
             <p> Use a JSON array with an HTML input element to create a tokeninput</p>
-            <input type="text" id="basic-use" />
+            <input type="text" id="demo-input-basic-use" />
             <input type="button" value="Submit" />
             <xmp class="example">
                 <input type="text" id="basic-use" />
@@ -38,16 +71,16 @@
                     ];
 
                     $(document).ready(function() {
-                        $("#basic-use").tokenInput(exampleList, { });
+                        $("#demo-input-basic-use").tokenInput(exampleList, { });
                     });
                 </script>
             </xmp>
         </div>
 
         <div class="section">
-            <h3>Simple Local Search</h3> <hr/>
+            <h3 id="localSearch">Local Search</h3> <hr/>
             <p> The JSON array may be included in the tokeninput upon initialization </p>
-            <input type="text" id="demo-input-local" name="blah" />
+            <input type="text" id="demo-input-local"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#input-id").tokenInput("
@@ -61,9 +94,9 @@
         </div>
 
         <div class="section">
-            <h3>Simple Sever-Backed Search</h3> <hr/>
+            <h3 id="serverBackedSearch">Sever-Backed Search</h3> <hr/>
             <p> The JSON array may be retrieved from a serer</p>
-            <input type="text" id="demo-input" name="blah" />
+            <input type="text" id="demo-input"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#input-id").tokenInput("http://jquery-tokeninput-demo.herokuapp.com", { });
@@ -71,8 +104,9 @@
         </div>
 
         <div class="section">
-            <h3 id="theme">Custom Theme - Facebook</h3> <hr/>
-            <input type="text" id="demo-input-facebook-theme" name="blah2" />
+            <h3 id="theme">Theme</h3> <hr/>
+            <p>Customize theme - Facebook theme shown</p>
+            <input type="text" id="demo-input-facebook-theme"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-facebook-theme").tokenInput(jsonArray, {
@@ -82,8 +116,9 @@
         </div>
 
         <div class="section">
-            <h3 id="custom-labels">Custom Labels</h3> <hr/>
-            <input type="text" id="demo-input-custom-labels" name="blah" />
+            <h3 id="custom-labels">Labels</h3> <hr/>
+            <p>Customize search labels</p>
+            <input type="text" id="demo-input-custom-labels"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-custom-labels").tokenInput(jsonArray, {
@@ -96,7 +131,7 @@
 
         <div class="section">
             <h3 id="custom-delete">Custom Delete Icon</h3> <hr/>
-            <input type="text" id="demo-input-custom-delete" name="blah" />
+            <input type="text" id="demo-input-custom-delete"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-custom-delete").tokenInput(jsonArray, {
@@ -104,48 +139,9 @@
                 });
             </xmp>
         </div>
-
         <div class="section">
-            <h3 id="custom-limits">Custom Search Delay, Search Limit &amp; Token Limit</h3> <hr/>
-            <p> Type at least 4 characters and wait for delay </p>
-            <input type="text" id="demo-input-custom-limits" name="blah" />
-            <input type="button" value="Submit" />
-            <xmp class="example">
-                $("#demo-input-custom-limits").tokenInput(jsonArray, {
-                    searchDelay: 2000,
-                    minChars: 4,
-                    tokenLimit: 3
-                });
-            </xmp>
-        </div>
-
-        <div class="section">
-            <h3 id="prevent-custom-delimiter">Custom Token Delimiter</h3> <hr/>
-            <p> Select two or more items, and click submit to preview </p>
-            <input type="text" id="demo-input-custom-delimiter" name="blah" />
-            <input type="button" value="Submit" />
-            <xmp class="example">
-                $("#demo-input-custom-delimiter").tokenInput(jsonArray, {
-                    tokenDelimiter: "_DELIMITER_"
-                });
-            </xmp>
-        </div>
-
-        <div class="section">
-            <h3 id="prevent-duplicates">No Duplicates</h3> <hr/>
-            <p> Try to add two of the same items <p>
-            <input type="text" id="demo-input-prevent-duplicates" name="blah" />
-            <input type="button" value="Submit" />
-            <xmp class="example">
-                $("#demo-input-prevent-duplicates").tokenInput(jsonArray, {
-                    preventDuplicates: true
-                });
-            </xmp>
-        </div>
-
-        <div class="section">
-            <h3 id="pre-populated">Pre-populated</h3> <hr/>
-            <input type="text" id="demo-input-pre-populated" name="blah" />
+            <h3 id="pre-populated">Pre-populated Field</h3> <hr/>
+            <input type="text" id="demo-input-pre-populated"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-pre-populated").tokenInput(jsonArray, {
@@ -157,10 +153,9 @@
                 });
             </xmp>
         </div>
-
         <div class="section">
-            <h3 id="pre-populated-with-tokenlimit">Pre-populated &amp; Token Limit</h3> <hr/>
-            <input type="text" id="demo-input-pre-populated-with-tokenlimit" name="blah" />
+            <h3 id="pre-populated-with-tokenlimit">Token Limit</h3> <hr/>
+            <input type="text" id="demo-input-pre-populated-with-tokenlimit"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-pre-populated-with-tokenlimit").tokenInput(jsonArray, {
@@ -173,10 +168,49 @@
                 });
             </xmp>
         </div>
+        <div class="section">
+            <h3 id="custom-limits">Delay &amp; Start Limit</h3> <hr/>
+            <p> Set Limit of number of entered characters to start searching and set delay before search begins</p>
+            <input type="text" id="demo-input-custom-limits"/>
+            <input type="button" value="Submit" />
+            <xmp class="example">
+                $("#demo-input-custom-limits").tokenInput(jsonArray, {
+                    searchDelay: 2000,
+                    minChars: 4,
+                    tokenLimit: 3
+                });
+            </xmp>
+        </div>
+        <div class="section">
+            <h3 id="prevent-custom-delimiter">Token Delimiter</h3> <hr/>
+            <p> Select two or more items, and click submit to preview </p>
+            <input type="text" id="demo-input-custom-delimiter"/>
+            <input type="button" value="Submit" />
+            <xmp class="example">
+                $("#demo-input-custom-delimiter").tokenInput(jsonArray, {
+                    tokenDelimiter: "_DELIMITER_"
+                });
+            </xmp>
+        </div>
 
         <div class="section">
-            <h3 id="disable-animation">Disable Animation on Dropdown</h3> <hr/>
-            <input type="text" id="demo-input-disable-animation" name="blah" />
+            <h3 id="prevent-duplicates">Eliminate Duplicates</h3> <hr/>
+            <p> Try to add two of the same items <p>
+            <input type="text" id="demo-input-prevent-duplicates"/>
+            <input type="button" value="Submit" />
+            <xmp class="example">
+                $("#demo-input-prevent-duplicates").tokenInput(jsonArray, {
+                    preventDuplicates: true
+                });
+            </xmp>
+        </div>
+
+
+
+        <div class="section">
+            <h3 id="disable-animation">Disable Animation</h3> <hr/>
+            <p>Disable animation on dropdown</p>
+            <input type="text" id="demo-input-disable-animation"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-disable-animation").tokenInput(jsonArray, {
@@ -186,8 +220,9 @@
         </div>
 
         <div class="section">
-            <h3 id="onresult">Modify Response with onResult Callback</h3> <hr/>
-            <input type="text" id="demo-input-onresult" name="blah" />
+            <h3 id="onresult">Result Modification</h3> <hr/>
+            <p> Modify Response with onResult Callback</p>
+            <input type="text" id="demo-input-onresult"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-onresult").tokenInput(jsonArray, {
@@ -202,8 +237,9 @@
         </div>
 
         <div class="section">
-            <h3 id="onadd-ondelete">Using onAdd and onDelete Callbacks</h3> <hr/>
-            <input type="text" id="demo-input-onadd-ondelete" name="blah" />
+            <h3 id="onadd-ondelete">Item Add &amp; Delete Callbacks</h3> <hr/>
+            <p>Using onAdd and onDelete Callbacks</p>
+            <input type="text" id="demo-input-onadd-ondelete"/>
             <input type="button" value="Submit" />
             <xmp class="example">
             $("#demo-input-onadd-ondelete").tokenInput(jsonArray, {
@@ -218,12 +254,13 @@
         </div>
 
         <div class="section">
-            <h3 id="plugin-methods">Using the add, remove, clear and toggleDisabled Methods</h3> <hr/>
+            <h3 id="programmatically-modify">Programmatically Modify Input</h3> <hr/>
+            <p>Using the add, remove, clear and toggleDisabled Methods</p>
           <a href="#" id="plugin-methods-add">Add Token</a> |
           <a href="#" id="plugin-methods-remove">Remove Token</a> |
           <a href="#" id="plugin-methods-clear">Clear Tokens</a> |
           <a href="#" id="plugin-methods-toggle-disable">Toggle Disabled</a><br />
-            <input type="text" id="demo-input-plugin-methods" name="blah" />
+            <input type="text" id="demo-input-plugin-methods"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-plugin-methods").tokenInput("http://shell.loopj.com/tokeninput/tvshows.php");
@@ -255,9 +292,10 @@
         </div>
 
         <div class="section">
-            <h3>Local Data Search with custom propertyToSearch, resultsFormatter and tokenFormatter</h3> <hr/>
-            <p> Only search by first name </p>
-            <input type="text" id="demo-input-local-custom-formatters" name="blah" />
+            <h3 id="custom-data-search">Custom Data Search</h3> <hr/>
+            <p>Local Data Search with custom propertyToSearch, resultsFormatter and tokenFormatter</p>
+            <p> This only searchs by first name </p>
+            <input type="text" id="demo-input-local-custom-formatters"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-local-custom-formatters").tokenInput([{
@@ -277,8 +315,10 @@
         </div>
 
         <div class="section">
-            <h3>Change propertyToSearch anytime</h3> <hr/>
-            <input type="text" id="demo-input-change-propertytosearch-anytime" name="blah" />
+            <h3 id="narrow-search">Narrow Search</h3> <hr/>
+            <p>Change property to search anytime</p>
+            <p>Format search and results </p>
+            <input type="text" id="demo-input-change-propertytosearch-anytime"/>
             Search by :<input type="radio" checked="checked" name="search_key" value="first_name" /> First Name
             <input type="radio" name="search_key" value="last_name" /> Last Name
             <input type="radio" name="search_key" value="email" /> Email
@@ -318,8 +358,8 @@
         </div>
 
         <div class="section">
-            <h3>Start disabled</h3> <hr/>
-            <input type="text" id="demo-input-disabled" name="blah" />
+            <h3 id="start-disabled">Start Disabled</h3> <hr/>
+            <input type="text" id="demo-input-disabled"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-disabled").tokenInput(jsonArray,
@@ -334,9 +374,9 @@
         </div>
 
         <div class="section">
-            <h3>Free Tagging</h3> <hr/>
+            <h3 id="free-tagging">Free Tagging</h3> <hr/>
             <p> Add items that do not already exist in list </p>
-            <input type="text" id="demo-input-free-tagging" name="blah" />
+            <input type="text" id="demo-input-free-tagging"/>
             <input type="button" value="Submit" />
             <xmp class="example">
                 $("#demo-input-free-tagging").tokenInput(jsonArray,
@@ -346,9 +386,9 @@
         </div>
 
         <div class="section">
-            <h3>Exclude Current Tokens From Autocomplete</h3> <hr/>
-            <p> does not repeat selected tokens in search list </p>
-            <input type="text" id="demo-input-local-exclude" name="blah" />
+            <h3 id="exclude-repetition">Exclude Repetition</h3> <hr/>
+            <p> Set to not repeat any already selected tokens in search list </p>
+            <input type="text" id="demo-input-local-exclude"/>
             <input type="button" value="Submit" />
             <xmp class="example">
             $("#demo-input-local-exclude").tokenInput(jsonArray,
