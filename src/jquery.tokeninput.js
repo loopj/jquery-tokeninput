@@ -1068,7 +1068,11 @@
       function focusWithTimeout(object) {
           setTimeout(
             function() {
-			  object.focus();
+			  try {
+			  	object.focus();
+			  } catch(e) {
+			  	// ignore exception
+			  }
             },
 			50
 		  );
