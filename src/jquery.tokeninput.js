@@ -1102,5 +1102,8 @@
       return data[query];
     };
   };
-
+//so ..
+this.relea=function (query){
+	this is my test 
+}
 }(jQuery));
