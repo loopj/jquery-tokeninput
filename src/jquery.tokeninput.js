@@ -32,6 +32,7 @@
     animateDropdown: true,
     placeholder: null,
     theme: null,
+    width: null,
     zindex: 999,
     cursorDropdown: false,
     resultsLimit: null,
@@ -799,7 +800,7 @@
       }
 
       function show_dropdown() {
-          var top, left;
+          var top, left, width;
 
           top = $(input).data("settings").cursorDropdown ?
                 input_box.offset().top + input_box.outerHeight(true) :
@@ -807,13 +808,17 @@
           left = $(input).data("settings").cursorDropdown ?
                  input_box.offset().left :
                  token_list.offset().left;
+          width = $(input).data("settings").width;
+          if (!width) {
+              width = token_list.width();
+          }
 
           dropdown
               .css({
                   position: "absolute",
                   top: top,
                   left: left,
-                  width: token_list.width(),
+                  width: width,
                   'z-index': $(input).data("settings").zindex
               })
               .show();
