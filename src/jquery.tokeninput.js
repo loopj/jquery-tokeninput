@@ -33,6 +33,7 @@
     placeholder: null,
     theme: null,
     zindex: 999,
+    cursorDropdown: false,
     resultsLimit: null,
 
     enableHTML: false,
@@ -798,11 +799,20 @@
       }
 
       function show_dropdown() {
+          var top, left;
+
+          top = $(input).data("settings").cursorDropdown ?
+                input_box.offset().top + input_box.outerHeight(true) :
+                token_list.offset().top + token_list.outerHeight(true);
+          left = $(input).data("settings").cursorDropdown ?
+                 input_box.offset().left :
+                 token_list.offset().left;
+
           dropdown
               .css({
                   position: "absolute",
-                  top: token_list.offset().top + token_list.outerHeight(true),
-                  left: token_list.offset().left,
+                  top: top,
+                  left: left,
                   width: token_list.width(),
                   'z-index': $(input).data("settings").zindex
               })
