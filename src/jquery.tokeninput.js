@@ -32,7 +32,9 @@
     animateDropdown: true,
     placeholder: null,
     theme: null,
+    width: null,
     zindex: 999,
+    cursorDropdown: false,
     resultsLimit: null,
 
     enableHTML: false,
@@ -798,12 +800,25 @@
       }
 
       function show_dropdown() {
+          var top, left, width;
+
+          top = $(input).data("settings").cursorDropdown ?
+                input_box.offset().top + input_box.outerHeight(true) :
+                token_list.offset().top + token_list.outerHeight(true);
+          left = $(input).data("settings").cursorDropdown ?
+                 input_box.offset().left :
+                 token_list.offset().left;
+          width = $(input).data("settings").width;
+          if (!width) {
+              width = token_list.width();
+          }
+
           dropdown
               .css({
                   position: "absolute",
-                  top: token_list.offset().top + token_list.outerHeight(true),
-                  left: token_list.offset().left,
-                  width: token_list.width(),
+                  top: top,
+                  left: left,
+                  width: width,
                   'z-index': $(input).data("settings").zindex
               })
               .show();
