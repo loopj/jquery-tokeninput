@@ -173,6 +173,7 @@
       destroy: function () {
         if (this.data("tokenInputObject")) {
           this.data("tokenInputObject").clear();
+          this.data("tokenInputObject").removeDropdown();
           var tmpInput = this;
           var closest = this.parent();
           closest.empty();
@@ -500,6 +501,10 @@
                   delete_token($(this));
               }
           });
+      };
+      
+      this.removeDropdown = function() {
+      	$(dropdown).remove();
       };
 
       this.add = function(item) {
