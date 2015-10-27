@@ -364,7 +364,6 @@
                                     return true;
                                 }
                             }
-                            console.log("focusWithTimeout(input_box);");
                             focusWithTimeout(input_box);
                             event.stopPropagation();
                             event.preventDefault();
@@ -392,17 +391,17 @@
 
         // Keep a reference to the original input box
         var hiddenInput = $(input)
-                .hide()
-                .val("")
-                .focus(function () {
-                    focusWithTimeout(input_box);
-                })
-                .blur(function () {
-                    input_box.blur();
+            .hide()
+            .val("")
+            .focus(function () {
+                focusWithTimeout(input_box);
+            })
+            .blur(function () {
+                input_box.blur();
 
-                    //return the object to this can be referenced in the callback functions.
-                    return hiddenInput;
-                })
+                //return the object to this can be referenced in the callback functions.
+                return hiddenInput;
+            })
             ;
 
         // Keep a reference to the selected token and dropdown item
@@ -1012,7 +1011,7 @@
 
                     // exclude current tokens?
                     // send exclude list to the server, so it can also exclude existing tokens
-                    if ($(input).data("settings").excludeCurrent) {
+                    if ($(input).data("settings").excludeCurrent && $(input).data("settings").excludeCurrentParameter!=null) {
                         var currentTokens = $(input).data("tokenInputObject").getTokens();
                         var tokenList = $.map(currentTokens, function (el) {
                             if(typeof $(input).data("settings").tokenValue == 'function')
