@@ -248,7 +248,7 @@
       var input_val;
 
       // Create a new text input an attach keyup events
-      var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\"/>")
+      var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\" autocorrect=\"off\"/>")
           .css({
               outline: "none"
           })
@@ -272,8 +272,8 @@
               $(this).val("");
               token_list.removeClass($(input).data("settings").classes.focused);
           })
-          .bind("keyup keydown blur update", resize_input)
-          .keydown(function (event) {
+          .bind("keyup keydown keypress blur update", resize_input)
+          .on('keydown keypress', function (event) {
               var previous_token;
               var next_token;
 
