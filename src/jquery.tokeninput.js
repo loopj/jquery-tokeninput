@@ -377,6 +377,7 @@
                       // set a timeout just long enough to let this function finish.
                       setTimeout(function(){ do_search(); }, 5);
                     }
+                    selected_dropdown_item = null;
                     break;
               }
           });
