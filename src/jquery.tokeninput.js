@@ -937,6 +937,19 @@
               item.addClass($(input).data("settings").classes.selectedDropdownItem);
               selected_dropdown_item = item.get(0);
           }
+          if (selected_dropdown_item) {
+            var selectedTop = $(selected_dropdown_item).offset().top,
+            selectedBottom = selectedTop + $(selected_dropdown_item).outerHeight(),
+            ddTop = $(dropdown).offset().top,
+            ddBottom = ddTop + $(dropdown).outerHeight(),
+            ddScrollTop = $(dropdown).scrollTop();
+
+            if (selectedBottom > ddBottom) {
+                $(dropdown).scrollTop(ddScrollTop + (selectedBottom - ddBottom));
+            } else if (ddTop > selectedTop) {
+                $(dropdown).scrollTop(ddScrollTop + (selectedTop - ddTop));
+            }
+          }
       }
 
       // Remove highlighting from an item in the results dropdown
