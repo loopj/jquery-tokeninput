@@ -247,6 +247,7 @@
       // Keep track of the timeout, old vals
       var timeout;
       var input_val;
+	  var xhr;
 
       // Create a new text input an attach keyup events
       var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\" autocorrect=\"off\"/>")
@@ -378,9 +379,7 @@
                   case KEY.ESCAPE:
                     break;
                   case KEY.BACKSPACE:
-                    if (this.value.length > 0) {
-                      do_search();
-                    }
+                    do_search();
                     break;
                   default:
                     if (String.fromCharCode(event.which)) {
@@ -958,7 +957,10 @@
       // than $(input).data("settings").minChars
       function do_search() {
           var query = input_box.val();
-
+          if(xhr) {
+            xhr.abort();
+          }
+		  clearTimeout(timeout);
           if(query && query.length) {
               if(selected_token) {
                   deselect_token($(selected_token), POSITION.AFTER);
@@ -966,8 +968,6 @@
 
               if(query.length >= $(input).data("settings").minChars) {
                   show_dropdown_searching();
-                  clearTimeout(timeout);
-
                   timeout = setTimeout(function(){
                       run_search(query);
                   }, $(input).data("settings").searchDelay);
@@ -1047,7 +1047,7 @@
                   }
 
                   // Make the request
-                  $.ajax(ajax_params);
+                  xhr = $.ajax(ajax_params);
               } else if($(input).data("settings").local_data) {
                   // Do the search through local data
                   var results = $.grep($(input).data("settings").local_data, function (row) {
