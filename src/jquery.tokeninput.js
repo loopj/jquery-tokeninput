@@ -6,6 +6,9 @@
  * Licensed jointly under the GPL and MIT licenses,
  * choose which one suits your project best!
  *
+ * Custom WeSpire Functions: ['onBeforeAdd', 'onAfterAdd']
+ * ------------------------------------------------------------------------------------------------------
+ * Each function works similar to 'onAdd', but runs at either the beginning or end of the 'add_token' method.
  */
 ;(function ($) {
   var DEFAULT_SETTINGS = {
@@ -61,7 +64,8 @@
     // Callbacks
     onResult: null,
     onCachedResult: null,
-    onAdd: null,
+    onBeforeAdd: null,
+    onAfterAdd: null,
     onFreeTaggingAdd: null,
     onDelete: null,
     onReady: null,
@@ -644,7 +648,18 @@
 
       // Add a token to the token list based on user input
       function add_token (item) {
-          var callback = $(input).data("settings").onAdd;
+          var onBeforeAddCallback = $(input).data("settings").onBeforeAdd;
+          var onAfterAddCallback = $(input).data("settings").onAfterAdd;
+
+          // Execute the onBeforeAdd callback if defined
+          if($.isFunction(onBeforeAddCallback)) {
+            // Return false inside 'onBeforeAdd' to halt the function completely i.e. disable a token from being added.
+            if (onBeforeAddCallback.call(hiddenInput,item) == false) {
+              return;
+            } else {
+              onBeforeAddCallback.call(hiddenInput,item);
+            }
+          }
 
           // See if the token already exists and select it if we don't want duplicates
           if(token_count > 0 && $(input).data("settings").preventDuplicates) {
@@ -683,9 +698,9 @@
           // Don't show the help dropdown, they've got the idea
           hide_dropdown();
 
-          // Execute the onAdd callback if defined
-          if($.isFunction(callback)) {
-              callback.call(hiddenInput,item);
+          // Execute the onAfterAdd callback if defined
+          if($.isFunction(onAfterAddCallback)) {
+              onAfterAddCallback.call(hiddenInput,item);
           }
       }
 
