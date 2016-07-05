@@ -446,7 +446,7 @@
       // The list to store the dropdown items in
       var dropdown = $("<div/>")
           .addClass($(input).data("settings").classes.dropdown)
-          .appendTo("body")
+          .appendTo(document.body)
           .hide();
 
       // Magic element to help us resize the text input
