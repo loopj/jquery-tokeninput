@@ -999,6 +999,9 @@
 
                   // Prepare the request
                   ajax_params.data[$(input).data("settings").queryParam] = query;
+                  if($(input).data("settings").additionalData){
+                      ajax_params.data=$.merge(ajax_params.data,$(input).data("settings").additionalData);
+                  }
                   ajax_params.type = $(input).data("settings").method;
                   ajax_params.dataType = $(input).data("settings").contentType;
                   if ($(input).data("settings").crossDomain) {
