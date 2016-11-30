@@ -573,8 +573,17 @@
 
           // Get width left on the current line
           var width_left = token_list.width() - input_box.offset().left - token_list.offset().left;
+          
           // Enter new content into resizer and resize input accordingly
-          input_resizer.html(_escapeHTML(input_val) || _escapeHTML(settings.placeholder));
+          var resizer_html = _escapeHTML(input_val);
+
+          // Resize with placeholder when there are no tokens & input_val is empty
+          if (!token_count && !resizer_html) {
+              resizer_html = _escapeHTML(settings.placeholder);
+          }
+
+          input_resizer.html(resizer_html);
+          
           // Get maximum width, minimum the size of input and maximum the widget's width
           input_box.width(Math.min(token_list.width(),
                                    Math.max(width_left, input_resizer.width() + 30)));
