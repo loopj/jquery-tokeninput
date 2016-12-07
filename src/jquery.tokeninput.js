@@ -38,12 +38,12 @@
     enableHTML: false,
 
     resultsFormatter: function(item) {
-      var string = item[this.propertyToSearch];
+      var string = this.getPropertyToSearch(item);
       return "<li>" + (this.enableHTML ? string : _escapeHTML(string)) + "</li>";
     },
 
     tokenFormatter: function(item) {
-      var string = item[this.propertyToSearch];
+      var string = this.getPropertyToSearch(item);
       return "<li><p>" + (this.enableHTML ? string : _escapeHTML(string)) + "</p></li>";
     },
 
@@ -52,6 +52,31 @@
     tokenDelimiter: ",",
     preventDuplicates: false,
     tokenValue: "id",
+    getTokenValue: function(item){
+      var tokenValue = this.tokenValue || this.propertyToSearch || null;
+      if(tokenValue != null)
+        return item[tokenValue];
+      return item;
+    },
+    getPropertyToSearch: function(item){
+        var propertyToSearch = this.propertyToSearch || this.tokenValue || null;
+      if(propertyToSearch != null)
+        return item[propertyToSearch];
+      return item;
+    },
+    createFreeTaggingToken: function(token){
+      var object;
+      var tokenValue = this.tokenValue || this.propertyToSearch || null;
+      var propertyToSearch = this.propertyToSearch || this.tokenValue || null;
+      if(tokenValue != null || propertyToSearch != null){
+          object = {};
+          object[tokenValue || propertyToSearch] = token;
+          object[propertyToSearch || tokenValue] = token;
+      } else {
+          object = token;
+      }
+      return object;
+    },
 
     // Behavioral settings
     allowFreeTagging: false,
@@ -591,8 +616,7 @@
             if ($.isFunction($(input).data("settings").onFreeTaggingAdd)) {
               token = $(input).data("settings").onFreeTaggingAdd.call(hiddenInput, token);
             }
-            var object = {};
-            object[$(input).data("settings").tokenValue] = object[$(input).data("settings").propertyToSearch] = token;
+            var object = $(input).data("settings").createFreeTaggingToken(token);
             add_token(object);
           });
       }
@@ -652,7 +676,7 @@
               token_list.children().each(function () {
                   var existing_token = $(this);
                   var existing_data = $.data(existing_token.get(0), "tokeninput");
-                  if(existing_data && existing_data[settings.tokenValue] === item[settings.tokenValue]) {
+                  if(existing_data && settings.getTokenValue(existing_data) === settings.getTokenValue(item)) {
                       found_existing_token = existing_token;
                       return false;
                   }
@@ -782,10 +806,7 @@
       // Update the hidden input box value
       function update_hiddenInput(saved_tokens, hiddenInput) {
           var token_values = $.map(saved_tokens, function (el) {
-              if(typeof $(input).data("settings").tokenValue == 'function')
-                return $(input).data("settings").tokenValue.call(this, el);
-
-              return el[$(input).data("settings").tokenValue];
+              return $(input).data("settings").getTokenValue(el);
           });
           hiddenInput.val(token_values.join($(input).data("settings").tokenDelimiter));
 
@@ -853,7 +874,7 @@
                   $.each(results, function(index, value) {
                       var notFound = true;
                       $.each(currentTokens, function(cIndex, cValue) {
-                          if (value[$(input).data("settings").propertyToSearch] == cValue[$(input).data("settings").propertyToSearch]) {
+                          if ($(input).data("settings").getPropertyToSearch(value) == $(input).data("settings").getPropertyToSearch(cValue)) {
                               notFound = false;
                               return false;
                           }
@@ -896,7 +917,7 @@
               $.each(results, function(index, value) {
                   var this_li = $(input).data("settings").resultsFormatter(value);
 
-                  this_li = find_value_and_highlight_term(this_li ,value[$(input).data("settings").propertyToSearch], query);
+                  this_li = find_value_and_highlight_term(this_li ,$(input).data("settings").getPropertyToSearch(value), query);
                   this_li = $(this_li).appendTo(dropdown_ul);
 
                   if(index % 2) {
@@ -1010,10 +1031,7 @@
                   if ($(input).data("settings").excludeCurrent) {
                       var currentTokens = $(input).data("tokenInputObject").getTokens();
                       var tokenList = $.map(currentTokens, function (el) {
-                          if(typeof $(input).data("settings").tokenValue == 'function')
-                              return $(input).data("settings").tokenValue.call(this, el);
-
-                          return el[$(input).data("settings").tokenValue];
+                          return $(input).data("settings").getTokenValue(el);
                       });
 
                       ajax_params.data[$(input).data("settings").excludeCurrentParameter] = tokenList.join($(input).data("settings").tokenDelimiter);
@@ -1042,7 +1060,7 @@
               } else if($(input).data("settings").local_data) {
                   // Do the search through local data
                   var results = $.grep($(input).data("settings").local_data, function (row) {
-                      return row[$(input).data("settings").propertyToSearch].toLowerCase().indexOf(query.toLowerCase()) > -1;
+                      return $(input).data("settings").getPropertyToSearch(row).toLowerCase().indexOf(query.toLowerCase()) > -1;
                   });
 
                   cache.add(cache_key, results);
