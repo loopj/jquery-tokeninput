@@ -998,7 +998,14 @@
                   }
 
                   // Prepare the request
-                  ajax_params.data[$(input).data("settings").queryParam] = query;
+                  if($(input).data("settings").queryParam.substr)
+                    ajax_params.data[$(input).data("settings").queryParam] = query;
+                  else { //object
+                    $.each($(input).data("settings").queryParam,function(index,value){
+                      ajax_params.data[index]=value;
+                    });
+                  }
+                  
                   ajax_params.type = $(input).data("settings").method;
                   ajax_params.dataType = $(input).data("settings").contentType;
                   if ($(input).data("settings").crossDomain) {
