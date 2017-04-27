@@ -329,8 +329,10 @@
 
                       if (this.value.length === 0) {
                         if (selected_token) {
-                          delete_token($(selected_token));
-                          hidden_input.change();
+                          var deleted = delete_token($(selected_token));
+                          if (deleted){
+                            hidden_input.change();
+                          }
                         } else if(previous_token.length) {
                           select_token($(previous_token.get(0)));
                         }
@@ -743,6 +745,9 @@
       function delete_token (token) {
           // Remove the id from the saved list
           var token_data = $.data(token.get(0), "tokeninput");
+
+          if (token_data.readonly) { return false; }
+
           var callback = $(input).data("settings").onDelete;
 
           var index = token.prevAll().length;
@@ -778,6 +783,8 @@
           if($.isFunction(callback)) {
               callback.call(hidden_input,token_data);
           }
+
+          return true;
       }
 
       // Update the hidden input box value
