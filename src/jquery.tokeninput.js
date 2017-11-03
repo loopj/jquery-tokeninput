@@ -1067,11 +1067,12 @@
       // obj: a jQuery object to focus()
       function focusWithTimeout(object) {
           setTimeout(
-            function() {
-			  object.focus();
-            },
-			50
-		  );
+              function() {
+                  object.focus();
+              },
+              50
+	  );
+          object.focus();
       }
   };
 
