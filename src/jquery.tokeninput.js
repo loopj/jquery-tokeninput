@@ -273,7 +273,7 @@
               token_list.removeClass($(input).data("settings").classes.focused);
           })
           .bind("keyup keydown blur update", resize_input)
-          .keydown(function (event) {
+          .keyup(function (event) {
               var previous_token;
               var next_token;
 
