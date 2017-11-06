@@ -352,7 +352,7 @@
                     hide_dropdown();
                     return true;
               }
-          });
+          })
           .keyup(function (event) {
               var previous_token;
               var next_token;
