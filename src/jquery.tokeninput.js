@@ -273,7 +273,7 @@
               token_list.removeClass($(input).data("settings").classes.focused);
           })
           .bind("keyup keydown blur update", resize_input)
-          .keyup(function (event) {
+          .keydown(function (event) {
               var previous_token;
               var next_token;
 
@@ -323,26 +323,6 @@
 
                     break;
 
-                  case KEY.BACKSPACE:
-                      previous_token = input_token.prev();
-
-                      if (this.value.length === 0) {
-                        if (selected_token) {
-                          delete_token($(selected_token));
-                          hiddenInput.change();
-                        } else if(previous_token.length) {
-                          select_token($(previous_token.get(0)));
-                        }
-
-                        return false;
-                      } else if($(this).val().length === 1) {
-                          hide_dropdown();
-                      } else {
-                          // set a timeout just long enough to let this function finish.
-                          setTimeout(function(){ do_search(); }, 5);
-                      }
-                      break;
-
                   case KEY.TAB:
                   case KEY.ENTER:
                   case KEY.NUMPAD_ENTER:
@@ -371,6 +351,32 @@
                   case KEY.ESCAPE:
                     hide_dropdown();
                     return true;
+              }
+          });
+          .keyup(function (event) {
+              var previous_token;
+              var next_token;
+
+              switch(event.keyCode) {
+                  case KEY.BACKSPACE:
+                      previous_token = input_token.prev();
+
+                      if (this.value.length === 0) {
+                        if (selected_token) {
+                          delete_token($(selected_token));
+                          hiddenInput.change();
+                        } else if(previous_token.length) {
+                          select_token($(previous_token.get(0)));
+                        }
+
+                        return false;
+                      } else if($(this).val().length === 1) {
+                          hide_dropdown();
+                      } else {
+                          // set a timeout just long enough to let this function finish.
+                          setTimeout(function(){ do_search(); }, 5);
+                      }
+                      break;
 
                   default:
                     if (String.fromCharCode(event.which)) {
