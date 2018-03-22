@@ -6,6 +6,9 @@
  * Licensed jointly under the GPL and MIT licenses,
  * choose which one suits your project best!
  *
+ * EDITED by antonio.fortunato
+ * here the fork: https://github.com/ilFortu/jquery-tokeninput
+ * enabled to show all results when the option minChars:0
  */
 ;(function ($) {
   var DEFAULT_SETTINGS = {
