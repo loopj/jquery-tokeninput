@@ -6,6 +6,9 @@
  * Licensed jointly under the GPL and MIT licenses,
  * choose which one suits your project best!
  *
+ * EDITED by antonio.fortunato
+ * here the fork: https://github.com/ilFortu/jquery-tokeninput
+ * enabled to show all results when the option minChars:0
  */
 ;(function ($) {
   var DEFAULT_SETTINGS = {
@@ -258,7 +261,16 @@
                   return false;
               } else
               if ($(input).data("settings").tokenLimit === null || $(input).data("settings").tokenLimit !== token_count) {
-                  show_dropdown_hint();
+                  if ($(input).data("settings").minChars == 0) {
+
+                        // set a timeout just long enough to let this function finish.
+                        setTimeout(function () {
+                            do_search();
+                        }, 5);
+                    } else {
+
+                        show_dropdown_hint();
+                    }
               }
               token_list.addClass($(input).data("settings").classes.focused);
           })
@@ -950,7 +962,7 @@
       function do_search() {
           var query = input_box.val();
 
-          if(query && query.length) {
+          if ((query && query.length) || $(input).data("settings").minChars == 0) {
               if(selected_token) {
                   deselect_token($(selected_token), POSITION.AFTER);
               }
