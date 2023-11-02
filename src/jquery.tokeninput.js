@@ -112,8 +112,9 @@
     UP           : 38,
     RIGHT        : 39,
     DOWN         : 40,
-    NUMPAD_ENTER : 108,
-    COMMA        : 188
+    DELETE       : 46,
+    COMMA        : 188,
+    PERIOD       : 190
   };
 
   var HTML_ESCAPES = {
@@ -246,9 +247,10 @@
       // Keep track of the timeout, old vals
       var timeout;
       var input_val;
+	  var xhr;
 
       // Create a new text input an attach keyup events
-      var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\"/>")
+      var input_box = $("<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\" autocorrect=\"off\"/>")
           .css({
               outline: "none"
           })
@@ -277,7 +279,7 @@
               var previous_token;
               var next_token;
 
-              switch(event.keyCode) {
+              switch(event.which) {
                   case KEY.LEFT:
                   case KEY.RIGHT:
                   case KEY.UP:
@@ -289,22 +291,22 @@
                         if((previous_token.length && previous_token.get(0) === selected_token) ||
 						   (next_token.length && next_token.get(0) === selected_token)) {
                             // Check if there is a previous/next token and it is selected
-                            if(event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) {
+                            if(event.which === KEY.LEFT || event.which === KEY.UP) {
                                 deselect_token($(selected_token), POSITION.BEFORE);
                             } else {
                                 deselect_token($(selected_token), POSITION.AFTER);
                             }
-                        } else if((event.keyCode === KEY.LEFT || event.keyCode === KEY.UP) && previous_token.length) {
+                        } else if((event.which === KEY.LEFT || event.which === KEY.UP) && previous_token.length) {
                             // We are moving left, select the previous token if it exists
                             select_token($(previous_token.get(0)));
-                        } else if((event.keyCode === KEY.RIGHT || event.keyCode === KEY.DOWN) && next_token.length) {
+                        } else if((event.which === KEY.RIGHT || event.which === KEY.DOWN) && next_token.length) {
                             // We are moving right, select the next token if it exists
                             select_token($(next_token.get(0)));
                         }
                     } else {
                       var dropdown_item = null;
 
-                      if (event.keyCode === KEY.DOWN || event.keyCode === KEY.RIGHT) {
+                      if (event.which === KEY.DOWN || event.which === KEY.RIGHT) {
                         dropdown_item = $(dropdown).find('li').first();
 
                         if (selected_dropdown_item) {
@@ -335,17 +337,11 @@
                         }
 
                         return false;
-                      } else if($(this).val().length === 1) {
-                          hide_dropdown();
-                      } else {
-                          // set a timeout just long enough to let this function finish.
-                          setTimeout(function(){ do_search(); }, 5);
                       }
                       break;
 
                   case KEY.TAB:
                   case KEY.ENTER:
-                  case KEY.NUMPAD_ENTER:
                   case KEY.COMMA:
                     if(selected_dropdown_item) {
                       add_token($(selected_dropdown_item).data("tokeninput"));
@@ -363,19 +359,31 @@
                           return true;
                         }
                       }
-                      event.stopPropagation();
-                      event.preventDefault();
                     }
                     return false;
 
                   case KEY.ESCAPE:
                     hide_dropdown();
                     return true;
-
+              }
+          })
+          .keyup(function (event) {
+              switch(event.which) {
+                  case KEY.LEFT:
+                  case KEY.RIGHT:
+                  case KEY.UP:
+                  case KEY.DOWN:
+                  case KEY.TAB:
+                  case KEY.ENTER:
+                  case KEY.COMMA:
+                  case KEY.ESCAPE:
+                    break;
+                  case KEY.BACKSPACE:
+                    do_search();
+                    break;
                   default:
                     if (String.fromCharCode(event.which)) {
-                      // set a timeout just long enough to let this function finish.
-                      setTimeout(function(){ do_search(); }, 5);
+                      do_search();
                     }
                     break;
               }
@@ -949,7 +957,10 @@
       // than $(input).data("settings").minChars
       function do_search() {
           var query = input_box.val();
-
+          if(xhr) {
+            xhr.abort();
+          }
+		  clearTimeout(timeout);
           if(query && query.length) {
               if(selected_token) {
                   deselect_token($(selected_token), POSITION.AFTER);
@@ -957,8 +968,6 @@
 
               if(query.length >= $(input).data("settings").minChars) {
                   show_dropdown_searching();
-                  clearTimeout(timeout);
-
                   timeout = setTimeout(function(){
                       run_search(query);
                   }, $(input).data("settings").searchDelay);
@@ -1038,7 +1047,7 @@
                   }
 
                   // Make the request
-                  $.ajax(ajax_params);
+                  xhr = $.ajax(ajax_params);
               } else if($(input).data("settings").local_data) {
                   // Do the search through local data
                   var results = $.grep($(input).data("settings").local_data, function (row) {
