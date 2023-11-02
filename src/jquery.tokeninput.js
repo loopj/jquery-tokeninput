@@ -642,7 +642,7 @@
           return $this_token;
       }
 
-      // Add a token to the token list based on user input
+    // Add a token to the token list based on user input
       function add_token (item) {
           var callback = $(input).data("settings").onAdd;
 
@@ -652,7 +652,7 @@
               token_list.children().each(function () {
                   var existing_token = $(this);
                   var existing_data = $.data(existing_token.get(0), "tokeninput");
-                  if(existing_data && existing_data[settings.tokenValue] === item[settings.tokenValue]) {
+                  if(existing_data && existing_data.id === item.id) {
                       found_existing_token = existing_token;
                       return false;
                   }
