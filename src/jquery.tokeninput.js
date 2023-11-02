@@ -258,7 +258,11 @@
                   return false;
               } else
               if ($(input).data("settings").tokenLimit === null || $(input).data("settings").tokenLimit !== token_count) {
-                  show_dropdown_hint();
+                  if ($(input).data("settings").minChars == 0) {
+                      do_search();
+                  } else {
+                      show_dropdown_hint();
+                  }
               }
               token_list.addClass($(input).data("settings").classes.focused);
           })
@@ -950,7 +954,7 @@
       function do_search() {
           var query = input_box.val();
 
-          if(query && query.length) {
+          if((query && query.length) || !$(input).data("settings").minChars) {
               if(selected_token) {
                   deselect_token($(selected_token), POSITION.AFTER);
               }
