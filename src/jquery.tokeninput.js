@@ -76,6 +76,7 @@
   // Default classes to use when theming
   var DEFAULT_CLASSES = {
     tokenList            : "token-input-list",
+    tokenListHasToken    : "token-input-has-token",
     token                : "token-input-token",
     tokenReadOnly        : "token-input-token-readonly",
     tokenDelete          : "token-input-delete-token",
@@ -795,9 +796,18 @@
       function hide_dropdown () {
           dropdown.hide().empty();
           selected_dropdown_item = null;
+          
+          // Removes class from token list if it contains no tokens
+	      if(token_count == 0) {
+		      token_list.removeClass(settings.classes.tokenListHasToken);
+	      }
       }
 
       function show_dropdown() {
+          
+          // Adds class to token list if it contains tokens
+    	  token_list.addClass(settings.classes.tokenListHasToken);
+          
           dropdown
               .css({
                   position: "absolute",
