@@ -269,7 +269,6 @@
                 add_freetagging_tokens();
               }
 
-              $(this).val("");
               token_list.removeClass($(input).data("settings").classes.focused);
           })
           .bind("keyup keydown blur update", resize_input)
