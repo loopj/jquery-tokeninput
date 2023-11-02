@@ -61,6 +61,7 @@
     // Callbacks
     onResult: null,
     onCachedResult: null,
+    onBeforeAdd: null,
     onAdd: null,
     onFreeTaggingAdd: null,
     onDelete: null,
@@ -644,6 +645,15 @@
 
       // Add a token to the token list based on user input
       function add_token (item) {
+          var callback_before = $(input).data("settings").onBeforeAdd;
+
+          // Execute the onBeforeAdd callback if defined
+          if($.isFunction(callback_before)) {
+              if(!callback_before.call(hidden_input,item)){
+                  return false;
+              }
+          }
+
           var callback = $(input).data("settings").onAdd;
 
           // See if the token already exists and select it if we don't want duplicates
